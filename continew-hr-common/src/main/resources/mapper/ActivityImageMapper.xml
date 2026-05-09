@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.continew.admin.hrcommon.mapper.ActivityImageMapper">
+
+    <!-- 自定义分页查询活动图片 -->
+    <select id="customPage" resultType="top.continew.admin.hrcommon.model.resp.ApiActivityImageResp">
+        SELECT
+            activity_id AS activityId,
+            img_url AS imageUrl
+        FROM biz_activity_image as bai
+        ${ew.customSqlSegment}
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

@@ -1,0 +1,58 @@
+-- liquibase formatted sql
+
+-- changeset weilai:10001
+-- comment 新增订单状态字典
+INSERT INTO `sys_dict` (`id`, `name`, `code`, `description`, `is_system`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (802245744131051550, '订单状态', 'order_status', '订单状态', b'0', 1, '2026-01-15 18:38:10', NULL, NULL, 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (802245919943692322, '待处理', '1', 'warning', 1, '待处理', 1, 802245744131051550, 1, '2026-01-15 18:38:52', 1, '2026-01-15 18:39:45', 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (802245966429163557, '已采购', '2', 'primary', 2, '已采购', 1, 802245744131051550, 1, '2026-01-15 18:39:03', 1, '2026-01-15 18:39:42', 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (802246013669609512, '已完成', '3', 'success', 3, '已完成', 1, 802245744131051550, 1, '2026-01-15 18:39:15', 1, '2026-01-15 18:39:38', 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (802246057495892011, '已取消', '4', 'default', 4, '已取消', 1, 802245744131051550, 1, '2026-01-15 18:39:25', 1, '2026-01-15 18:39:34', 0);
+
+-- changeset weilai:10002
+-- comment 新增钉钉相关
+INSERT INTO `sys_dict` (`id`, `name`, `code`, `description`, `is_system`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (803682806109573151, '钉钉审批事件', 'dingding_event_status', NULL, b'0', 1, '2026-01-19 17:48:33', NULL, NULL, 0);
+INSERT INTO `sys_dict` (`id`, `name`, `code`, `description`, `is_system`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (803686961360408577, '钉钉审批结果', 'dingding_event_result_status', NULL, b'0', 1, '2026-01-19 18:05:03', NULL, NULL, 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (803682926460932131, '审核中', 'RUNNING', 'warning', 999, NULL, 1, 803682806109573151, 1, '2026-01-19 17:49:01', 1, '2026-01-19 18:07:01', 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (803682966638170150, '审批完成', 'COMPLETED', 'success', 999, NULL, 1, 803682806109573151, 1, '2026-01-19 17:49:11', 1, '2026-01-19 18:07:43', 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (803683037953921065, '已撤销', 'TERMINATED', 'error', 999, NULL, 1, 803682806109573151, 1, '2026-01-19 17:49:28', 1, '2026-01-19 18:07:52', 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (803683096384770092, '取消', '4', 'default', 999, NULL, 1, 803682806109573151, 1, '2026-01-19 17:49:42', 1, '2026-01-19 18:06:34', 803683096384770092);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (803687736711057436, '同意', 'agree', 'success', 999, NULL, 1, 803686961360408577, 1, '2026-01-19 18:08:08', 1, '2026-01-19 18:08:24', 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (803687767941845023, '拒绝', 'refuse', 'error', 999, NULL, 1, 803686961360408577, 1, '2026-01-19 18:08:16', 1, '2026-01-19 18:08:20', 0);
+
+-- changeset weilai:10003
+-- comment 新增积分字典
+UPDATE `sys_dict_item` SET `label` = '加班转换', `value` = '1', `color` = 'success', `sort` = 999, `description` = NULL, `status` = 1, `dict_id` = 802540391315284000, `create_user` = 1, `create_time` = '2026-01-16 14:09:21', `update_user` = 1, `update_time` = '2026-01-21 11:01:01', `deleted` = 0 WHERE `id` = 802540480557490212;
+UPDATE `sys_dict_item` SET `label` = '兑换商品', `value` = '2', `color` = 'error', `sort` = 999, `description` = NULL, `status` = 1, `dict_id` = 802540391315284000, `create_user` = 1, `create_time` = '2026-01-16 14:09:31', `update_user` = 1, `update_time` = '2026-01-21 11:01:06', `deleted` = 0 WHERE `id` = 802540520780865575;
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (804305112280346663, '积分失效', '3', 'warning', 999, NULL, 1, 802540391315284000, 1, '2026-01-21 11:01:22', NULL, NULL, 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (804305149194416170, '积分退还', '4', 'success', 999, NULL, 1, 802540391315284000, 1, '2026-01-21 11:01:31', NULL, NULL, 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (804305178038644781, '违规清除', '5', 'error', 999, NULL, 1, 802540391315284000, 1, '2026-01-21 11:01:38', NULL, NULL, 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (804305225409114160, '积分修正', '6', 'primary', 999, NULL, 1, 802540391315284000, 1, '2026-01-21 11:01:49', NULL, NULL, 0);
+
+-- changeset weilai:10004
+-- comment 新增活动积分
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (837652924497698829, '活动获得', '7', 'warning', 999, NULL, 1, 802540391315284000, 1, '2026-04-23 11:33:40', NULL, NULL, 0);
+
+-- changeset weilai:10005
+-- comment 更新字典名称
+UPDATE `sys_dict_item` SET `label` = '活动获得', `value` = '7', `color` = 'warning', `sort` = 999, `description` = NULL, `status` = 1, `dict_id` = 802540391315284000, `create_user` = 1, `create_time` = '2026-04-23 11:33:40', `update_user` = NULL, `update_time` = NULL, `deleted` = 0 WHERE `id` = 837652924497698829;
+
+-- changeset weilai:10006
+-- comment 新增字典
+INSERT INTO `sys_dict` (`id`, `name`, `code`, `description`, `is_system`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842347656075288635, '活动类型', 'activity_type', NULL, b'0', 1, '2026-05-06 10:28:51', NULL, NULL, 0);
+INSERT INTO `sys_dict` (`id`, `name`, `code`, `description`, `is_system`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842347882492207179, '活动状态', 'activity_status', NULL, b'0', 1, '2026-05-06 10:29:45', NULL, NULL, 0);
+INSERT INTO `sys_dict` (`id`, `name`, `code`, `description`, `is_system`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842348340912857193, '参与成员类型', 'activity_member_type', NULL, b'0', 1, '2026-05-06 10:31:35', NULL, NULL, 0);
+INSERT INTO `sys_dict` (`id`, `name`, `code`, `description`, `is_system`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842350184888279211, '参与成员状态', 'activity_member_status', NULL, b'0', 1, '2026-05-06 10:38:54', NULL, NULL, 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842347689931710527, '普通活动', '1', 'default', 999, NULL, 1, 842347656075288635, 1, '2026-05-06 10:28:59', 1, '2026-05-06 10:29:23', 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842347719795155010, '分享会', '2', 'success', 999, NULL, 1, 842347656075288635, 1, '2026-05-06 10:29:06', 1, '2026-05-06 10:29:20', 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842347927803273296, '审核失败', '0', 'error', 999, NULL, 1, 842347882492207179, 1, '2026-05-06 10:29:56', NULL, NULL, 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842347966881603667, '待审核', '1', 'primary', 999, NULL, 1, 842347882492207179, 1, '2026-05-06 10:30:05', NULL, NULL, 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842348003120390230, '审核成功', '2', 'success', 999, NULL, 1, 842347882492207179, 1, '2026-05-06 10:30:14', NULL, NULL, 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842348386395889774, '演讲人', '1', 'primary', 999, NULL, 1, 842348340912857193, 1, '2026-05-06 10:31:45', NULL, NULL, 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842348451323715697, '必参加人', '2', 'warning', 999, NULL, 1, 842348340912857193, 1, '2026-05-06 10:32:01', NULL, NULL, 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842348491740029044, '主动参加', '3', 'success', 999, NULL, 1, 842348340912857193, 1, '2026-05-06 10:32:11', NULL, NULL, 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842350245026209968, '已报名', '1', 'success', 999, NULL, 1, 842350184888279211, 1, '2026-05-06 10:39:09', NULL, NULL, 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842350285513826483, '已取消', '2', 'error', 999, NULL, 1, 842350184888279211, 1, '2026-05-06 10:39:18', NULL, NULL, 0);
+
+-- changeset weilai:10007
+-- comment 更新字典
+UPDATE `sys_dict_item` SET `label` = '审核失败', `value` = '3', `color` = 'error', `sort` = 999, `description` = NULL, `status` = 1, `dict_id` = 842347882492207179, `create_user` = 1, `create_time` = '2026-05-06 10:29:56', `update_user` = 1, `update_time` = '2026-05-09 14:51:00', `deleted` = 0 WHERE `id` = 842347927803273296;

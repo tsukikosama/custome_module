@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.continew.admin.hrcommon.mapper.OvertimeWorkMapper">
+    <select id="customPage" resultType="top.continew.admin.hrcommon.model.resp.OvertimeWorkResp">
+        select
+            bow.user_id as userId,
+            su.nickname as nickname,
+            bow.convert_points,
+            bow.status,
+            bow.create_time,
+            bow.create_user,
+            bow.update_time,
+            bow.create_user,
+            bow.process_instance_id,
+            bow.start_time,
+            bow.end_time,
+            bow.result
+        from biz_overtime_work bow
+            left join sys_user su on bow.user_id = su.id
+            ${ew.customSqlSegment}
+        order by bow.create_time desc
+    </select>
+</mapper>

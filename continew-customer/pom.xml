@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>top.continew.admin</groupId>
+        <artifactId>continew-admin</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>continew-customer</artifactId>
+    <packaging>jar</packaging>
+
+    <name>${project.artifactId}</name>
+    <description>客户端 API 模块</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>top.continew.admin</groupId>
+            <artifactId>continew-common</artifactId>
+        </dependency>
+
+        <!-- HR 通用模块（用于访问用户等共享数据） -->
+        <dependency>
+            <groupId>top.continew.admin</groupId>
+            <artifactId>continew-hr-common</artifactId>
+        </dependency>
+
+        <!-- System 模块（用于访问用户和部门服务） -->
+        <dependency>
+            <groupId>top.continew.admin</groupId>
+            <artifactId>continew-system</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- ContiNew Starter 链路追踪模块 -->
+        <dependency>
+            <groupId>top.continew.starter</groupId>
+            <artifactId>continew-starter-trace</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>continew-customer</finalName>
+        <plugins>
+            <!-- Spring Boot 打包插件 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

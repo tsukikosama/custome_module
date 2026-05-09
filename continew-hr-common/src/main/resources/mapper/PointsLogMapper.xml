@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.continew.admin.hrcommon.mapper.PointsLogMapper">
+    <select id="customPage" resultType="top.continew.admin.hrcommon.model.resp.PointsLogResp">
+        select bpl.id,
+               bpl.user_id,
+               su.nickname as name ,
+               sd.name as deptName,
+               bpl.points,
+               bpl.before_points,
+               bpl.after_points,
+               bpl.remark,
+               bpl.type,
+               bpl.status,
+               bpl.invalid_time,
+               bpl.create_time,
+               bpl.create_user
+        from biz_points_log bpl
+            left join sys_user su on bpl.user_id = su.id
+            left join sys_dept sd on su.dept_id = sd.id
+        ${ew.customSqlSegment}
+        order by bpl.create_time desc
+    </select>
+</mapper>

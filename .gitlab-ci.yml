@@ -1,0 +1,84 @@
+stages:
+  - build
+  - deploy
+
+# ===================================================================
+# Backend Jobs
+# ===================================================================
+
+build-backend:
+  stage: build
+  script:
+    - echo "===== Building backend (fat-jar) ====="
+    - cd backend
+    # 使用 fat-jar profile
+    - mvn clean package -Pfat-jar -DskipTests
+    - echo "===== Generated jars ====="
+    - find . -name "*-fat.jar"
+    # 将所有 fat-jar 复制到一个统一目录
+    - mkdir -p dist
+    - find . -name "*-fat.jar" -exec cp {} dist/ \;
+    - ls -lh dist/
+  artifacts:
+    paths:
+      - backend/dist/
+    expire_in: 1 hour
+  when: manual
+  only:
+    - feat-no-stock-version
+deploy-backend:
+  stage: deploy
+  needs: ["build-backend"]
+  script:
+    - echo "Deploying backend to production..."
+    - echo "$SSH_PRIVATE_KEY" > private_key
+    - chmod 600 private_key
+    # 创建服务器目录
+    - ssh -i private_key -o StrictHostKeyChecking=no root@52.195.156.13 "mkdir -p /hr/backend/jars"
+    # 同步所有 fat-jar
+    - rsync -avz -e "ssh -i private_key -o StrictHostKeyChecking=no" backend/dist/*.jar root@52.195.156.13:/hr/backend/jars/
+    # 列出服务器上的 jar（用于确认）
+    - ssh -i private_key -o StrictHostKeyChecking=no root@52.195.156.13 "ls -lh /hr/backend/jars/"
+    - ssh -i private_key -o StrictHostKeyChecking=no root@52.195.156.13 "cd /hr/backend && sh api.sh restart"
+  when: manual
+  only:
+    - feat-no-stock-version
+
+# ===================================================================
+# Frontend Jobs
+# ===================================================================
+
+build-frontend:
+  stage: build
+  # Use a node image that is cached on your runner for faster execution
+  image: node:18
+  before_script:
+    - node -v
+    - npm -v
+  script:
+    - echo "Building frontend..."
+    - cd front
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - front/dist/
+    expire_in: 1 hour
+  when: manual
+  only:
+    - feat-no-stock-version
+
+deploy-frontend:
+  stage: deploy
+  needs: ["build-frontend"]
+  script:
+    - echo "Deploying frontend to production..."
+    - echo "$SSH_PRIVATE_KEY" > private_key
+    - chmod 600 private_key
+    # 创建目标目录
+    - ssh -i private_key -o StrictHostKeyChecking=no -o ServerAliveInterval=60 root@52.195.156.13 "mkdir -p /hr/frontend"
+    # 使用 rsync 传输，添加超时和重试参数
+    - rsync -avz --delete -e "ssh -i private_key -o StrictHostKeyChecking=no -o ServerAliveInterval=60" front/dist/ root@52.195.156.13:/hr/frontend/
+  when: manual
+  only:
+    - feat-no-stock-version

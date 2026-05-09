@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.continew.admin.hrcommon.mapper.ProductOrderLogMapper">
+    
+    <!-- 根据订单ID查询该订单的全部日志数据 -->
+    <select id="selectListByOrderId" resultType="top.continew.admin.hrcommon.model.resp.OrderLogResp">
+        SELECT 
+            bpol.status, after_status, remark, su.nickname as createUser, bpol.create_time
+        FROM 
+            biz_product_order_log bpol
+        left join sys_user su on bpol.create_user = su.id
+        WHERE 
+            order_id = #{orderId}
+            AND bpol.deleted = 0
+        ORDER BY 
+            bpol.create_time ASC
+    </select>
+</mapper>
