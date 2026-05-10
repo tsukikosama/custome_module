@@ -149,6 +149,24 @@ public class UserInfoResp implements Serializable {
 
     private Integer points;
 
+    /**
+     * 职位
+     */
+    @Schema(description = "职位", example = "软件工程师")
+    private String jobTitle;
+
+    /**
+     * 入职日期
+     */
+    @Schema(description = "入职日期", example = "2023-01-01T00:00:00")
+    private LocalDateTime hiredDate;
+
+    /**
+     * 生日
+     */
+    @Schema(description = "生日", example = "1995-06-15")
+    private java.time.LocalDate birthday;
+
     public LocalDate getRegistrationDate() {
         return createTime.toLocalDate();
     }

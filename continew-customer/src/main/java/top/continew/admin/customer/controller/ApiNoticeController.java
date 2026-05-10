@@ -59,4 +59,10 @@ public class ApiNoticeController {
     public void read(@Parameter(description = "公告ID", required = true, example = "1") @PathVariable Long id) {
         noticeService.readNotice(id);
     }
+
+    @Operation(summary = "查询未读公告数量", description = "查询当前登录用户的未读公告数量")
+    @GetMapping("/unread-count")
+    public Integer getUnreadCount() {
+        return noticeService.getUnreadCount();
+    }
 }

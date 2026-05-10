@@ -31,6 +31,7 @@ import top.continew.starter.security.mask.annotation.JsonMask;
 import top.continew.starter.security.mask.enums.MaskType;
 
 import java.io.Serial;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -131,10 +132,29 @@ public class UserResp extends BaseDetailResp {
 
     @Schema(description = "积分", example = "0")
     private Integer points;
+
     @Schema(description = "钉钉id", example = "0")
     private String dingdingId;
 
     private String unionId;
+
+    /**
+     * 职位
+     */
+    @Schema(description = "职位", example = "软件工程师")
+    private String jobTitle;
+
+    /**
+     * 入职日期
+     */
+    @Schema(description = "入职日期", example = "2023-01-01T00:00:00")
+    private LocalDateTime hiredDate;
+
+    /**
+     * 生日
+     */
+    @Schema(description = "生日", example = "1995-06-15")
+    private java.time.LocalDate birthday;
 
     @Override
     public Boolean getDisabled() {

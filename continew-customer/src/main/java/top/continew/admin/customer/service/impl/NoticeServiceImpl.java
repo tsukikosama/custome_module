@@ -101,4 +101,16 @@ public class NoticeServiceImpl implements NoticeService {
             noticeLogMapper.insert(noticeLog);
         }
     }
+
+    @Override
+    public Integer getUnreadCount() {
+        // 获取当前登录用户ID
+        Long userId = StpUtil.getLoginIdAsLong();
+
+        // 查询未读公告ID列表（noticeMethod 为 null 表示查询所有通知方式）
+        java.util.List<Long> unreadIds = noticeMapper.selectUnreadIdsByUserId(null, userId);
+
+        // 返回未读数量
+        return unreadIds.size();
+    }
 }

@@ -28,6 +28,7 @@ import top.continew.starter.extension.crud.validation.CrudValidationGroup;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -114,4 +115,23 @@ public class UserReq implements Serializable {
      */
     @Schema(description = "状态", example = "1")
     private DisEnableStatusEnum status;
+
+    /**
+     * 职位
+     */
+    @Schema(description = "职位", example = "软件工程师")
+    @Length(max = 100, message = "职位长度不能超过 {max} 个字符")
+    private String jobTitle;
+
+    /**
+     * 入职日期
+     */
+    @Schema(description = "入职日期", example = "2023-01-01T00:00:00")
+    private LocalDateTime hiredDate;
+
+    /**
+     * 生日
+     */
+    @Schema(description = "生日", example = "1995-06-15")
+    private java.time.LocalDate birthday;
 }

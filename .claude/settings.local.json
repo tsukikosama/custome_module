@@ -11,7 +11,8 @@
       "Bash(mvn spring-boot:run)",
       "Bash(mvn spring-boot:run -Dspotless.check.skip=true -Dspotless.apply.skip=true)",
       "Bash(jps -l)",
-      "Bash(mvn compiler:compile -DskipTests)"
+      "Bash(mvn compiler:compile -DskipTests)",
+      "Bash(hired\")"
     ]
   }
 }

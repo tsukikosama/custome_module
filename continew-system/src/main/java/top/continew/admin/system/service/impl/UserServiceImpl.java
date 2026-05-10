@@ -19,6 +19,8 @@ package top.continew.admin.system.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.UUID;
@@ -90,6 +92,7 @@ import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -503,6 +506,10 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
                 userDO.setUsername("lf" + user.getMobile());
                 userDO.setNickname(user.getName());
                 userDO.setPassword("123456");
+                userDO.setJobTitle(user.getTitle());
+                if (user.getHiredDate() != null){
+                    userDO.setHiredDate(LocalDateTimeUtil.of(user.getHiredDate()));
+                }
                 userDO.setUnionId(user.getUnionid());
                 userDO.setGender(GenderEnum.UNKNOWN);
                 userDO.setEmail(user.getEmail());
@@ -515,7 +522,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
                 savePhone.add(user.getMobile());
             }
         }
-        this.baseMapper.insertBatch(users);
+        this.saveBatch(users, 500);
         log.info("本次一共保存{}个用户", users.size());
     }
 
@@ -673,11 +680,15 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
                 userDO.setEmail(user.getEmail());
                 userDO.setPhone(user.getMobile());
                 userDO.setDeptId(item);
+                userDO.setJobTitle(user.getTitle());
+                if (user.getHiredDate() != null){
+                    userDO.setHiredDate(LocalDateTimeUtil.of(user.getHiredDate()));
+                }
                 userMap.put(userDO.getId(), userDO); // 去重
             }
         }
         List<UserDO> users = new ArrayList<>(userMap.values());
-        this.baseMapper.updateBatchById(users);
+        this.updateBatchById(users, 500);
         // 为没有角色3的用户追加角色3（确保每个用户至少有角色3，保留原有角色）
         for (UserDO user : users) {
             List<Long> currentRoleIds = userRoleService.listRoleIdByUserId(user.getId());
@@ -709,6 +720,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
         List<LocalDateTime> createTimeList = query.getCreateTime();
         Long deptId = query.getDeptId();
         List<Long> userIdList = query.getUserIds();
+
         // 获取排除用户 ID 列表
         List<Long> excludeUserIdList = null;
         if (query.getRoleId() != null) {
@@ -741,10 +753,10 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
      */
     private void doImportUser(List<UserDO> insertList, List<UserDO> updateList, List<UserRoleDO> userRoleDOList) {
         if (CollUtil.isNotEmpty(insertList)) {
-            baseMapper.insert(insertList);
+            this.saveBatch(insertList, 500);
         }
         if (CollUtil.isNotEmpty(updateList)) {
-            baseMapper.updateBatchById(updateList);
+            this.updateBatchById(updateList, 500);
             userRoleService.deleteByUserIds(CollUtils.mapToList(updateList, UserDO::getId));
         }
         if (CollUtil.isNotEmpty(userRoleDOList)) {

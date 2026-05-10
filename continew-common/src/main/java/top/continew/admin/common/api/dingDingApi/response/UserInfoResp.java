@@ -16,6 +16,7 @@
 
 package top.continew.admin.common.api.dingDingApi.response;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Data;
 
 import java.util.List;
@@ -31,17 +32,21 @@ public class UserInfoResp {
     private boolean admin;
     private String remark;
     private String title;
+    @JSONField(name = "hired_date")
     private Long hiredDate; // 时间戳
     private String userid;
     private String workPlace;
+    @JSONField(name = "dept_id_list")
     private List<Long> deptIdList; // JSON 数组
     private String jobNumber;
     private String email;
+    @JSONField(name = "dept_order")
     private String deptOrder;
     private String mobile;
     private boolean active;
     private String telephone;
     private String avatar;
+    @JSONField(name = "hide_mobile")
     private boolean hideMobile;
     private String orgEmail;
     private String name;

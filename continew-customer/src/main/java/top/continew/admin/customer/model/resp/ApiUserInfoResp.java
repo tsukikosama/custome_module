@@ -94,4 +94,22 @@ public class ApiUserInfoResp {
      */
     @Schema(description = "部门名称", example = "技术部")
     private String deptName;
+
+    /**
+     * 职位
+     */
+    @Schema(description = "职位", example = "软件工程师")
+    private String jobTitle;
+
+    /**
+     * 入职日期
+     */
+    @Schema(description = "入职日期", example = "2023-01-15T09:00:00")
+    private java.time.LocalDateTime hiredDate;
+
+    /**
+     * 生日
+     */
+    @Schema(description = "生日", example = "1995-06-15")
+    private java.time.LocalDate birthday;
 }

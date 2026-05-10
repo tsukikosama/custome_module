@@ -231,7 +231,7 @@ public class DingTalkApiService {
 
     /**
      * 获取指定部门的人员信息
-     * 
+     *
      * @return
      */
     public List<UserInfoResp> getAllUserInfo(Long deptId) {
@@ -247,7 +247,7 @@ public class DingTalkApiService {
             JSONArray result = jsonObject.getJSONObject("result").getJSONArray("list");
             return jsonArrayToList(result, UserInfoResp.class);
         } catch (Exception e) {
-            log.error("获取部门人员信息失败:{}", e.getMessage());
+            log.error("获取部门人员信息失败:{}", e.getMessage(), e);
         }
         return null;
     }

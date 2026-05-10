@@ -385,3 +385,19 @@ ALTER TABLE biz_activity
 -- comment 轮播图新增内容
 ALTER TABLE `biz_activity_image`
     ADD COLUMN `content` text NULL COMMENT '文章内容' AFTER `create_user`;
+
+-- changeset weilai:10027
+-- comment 新增职位 和 入职日期
+ALTER TABLE `sys_user`
+    ADD COLUMN `job_title` varchar(64) NULL COMMENT '职位' AFTER `union_id`,
+    ADD COLUMN `hired_date` datetime NULL COMMENT '入职时间' AFTER `job_title`;
+
+-- changeset weilai:10028
+-- comment 新增生日
+ALTER TABLE `sys_user`
+    ADD COLUMN `birthday` datetime NULL COMMENT '生日' AFTER `union_id`;
+
+-- changeset weilai:10029
+-- comment 来源非必填
+ALTER TABLE `biz_points_log`
+    MODIFY COLUMN `ref_id` bigint NULL COMMENT '来源id' AFTER `type`;

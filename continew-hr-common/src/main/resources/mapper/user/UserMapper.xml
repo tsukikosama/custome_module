@@ -21,7 +21,12 @@
             t1.pwd_reset_time,
             t1.dept_id,
             t2.name AS deptName,
-            t1.points
+            t1.points,
+            t1.dingding_id,
+            t1.union_id,
+            t1.job_title,
+            t1.hired_date,
+            t1.birthday
         FROM sys_user AS t1
         LEFT JOIN sys_dept AS t2 ON t2.id = t1.dept_id
     </sql>

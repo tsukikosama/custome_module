@@ -49,4 +49,11 @@ public interface NoticeService {
      * @param id 公告ID
      */
     void readNotice(Long id);
+
+    /**
+     * 查询当前用户未读公告数量
+     *
+     * @return 未读公告数量
+     */
+    Integer getUnreadCount();
 }

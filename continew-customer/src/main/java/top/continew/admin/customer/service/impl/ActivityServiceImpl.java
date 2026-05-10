@@ -16,6 +16,7 @@
 
 package top.continew.admin.customer.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -122,7 +123,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(ActivityCreateReq req) {
-        Long userId = UserContextHolder.getUserId();
+        Long userId = StpUtil.getLoginIdAsLong();
 
         // 创建活动实体
         ActivityDO activity = new ActivityDO();
@@ -139,7 +140,7 @@ public class ActivityServiceImpl implements ActivityService {
         activity.setStatus(ActivityStatusEnum.PENDING);
         // 默认不置顶
         activity.setIsTop(false);
-
+        activity.setCreateUser(userId);
         // 插入活动记录
         activityMapper.insert(activity);
         log.info("用户创建活动申请成功，用户ID：{}，活动ID：{}", userId, activity.getId());
@@ -155,6 +156,7 @@ public class ActivityServiceImpl implements ActivityService {
         creatorMember.setType(ActivityMemberType.SPEAKER);
         // 已报名
         creatorMember.setStatus(1);
+        creatorMember.setCreateUser(userId);
         membersToInsert.add(creatorMember);
 
         // 添加必须参加的人员
@@ -174,6 +176,7 @@ public class ActivityServiceImpl implements ActivityService {
                     member.setType(ActivityMemberType.MANDATORY);
                     // 已报名
                     member.setStatus(1);
+                    member.setCreateUser(userId);
                     membersToInsert.add(member);
                 }
             }

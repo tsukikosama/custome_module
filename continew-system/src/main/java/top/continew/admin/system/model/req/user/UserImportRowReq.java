@@ -96,4 +96,20 @@ public class UserImportRowReq implements Serializable {
      * 描述
      */
     private String description;
+
+    /**
+     * 职位
+     */
+    @Length(max = 100, message = "职位长度不能超过 {max} 个字符")
+    private String jobTitle;
+
+    /**
+     * 入职日期
+     */
+    private String hiredDate;
+
+    /**
+     * 生日
+     */
+    private String birthday;
 }

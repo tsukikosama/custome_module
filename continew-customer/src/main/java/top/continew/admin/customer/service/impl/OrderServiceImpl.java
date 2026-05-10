@@ -133,6 +133,7 @@ public class OrderServiceImpl implements OrderService {
         pointsLog.setAfterPoints(afterPoints);
         pointsLog.setRemark("兑换商品：" + product.getName());
         pointsLog.setStatus(PointsStatusEnum.VALID);
+        pointsLog.setCreateUser(userId);
         pointsLogMapper.insert(pointsLog);
 
         return OrderCreateResp.builder().orderId(order.getId()).orderNo(orderNo).build();
