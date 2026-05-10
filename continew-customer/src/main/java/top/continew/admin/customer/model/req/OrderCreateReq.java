@@ -51,4 +51,10 @@ public class OrderCreateReq implements Serializable {
     @NotNull(message = "商品数量不能为空")
     @Min(value = 1, message = "商品数量必须大于0")
     private Integer productNum;
+
+    /**
+     * 备注
+     */
+    @Schema(description = "备注", example = "请在工作日送达")
+    private String remark;
 }

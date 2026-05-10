@@ -56,4 +56,9 @@ public class CarouselImageDO extends BaseCreateDO {
      * 跳转路径
      */
     private String jumpPath;
+
+    /**
+     * 轮播图内容
+     */
+    private String content;
 }

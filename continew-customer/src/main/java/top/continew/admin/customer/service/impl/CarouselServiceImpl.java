@@ -53,6 +53,15 @@ public class CarouselServiceImpl implements CarouselService {
         return carouselImages.stream().map(this::convertToApiResp).collect(Collectors.toList());
     }
 
+    @Override
+    public ApiCarouselResp getById(Long id) {
+        CarouselImageDO carouselImage = carouselImageMapper.selectById(id);
+        if (carouselImage == null) {
+            return null;
+        }
+        return convertToApiResp(carouselImage);
+    }
+
     /**
      * 转换为客户端API响应格式
      *
@@ -66,6 +75,7 @@ public class CarouselServiceImpl implements CarouselService {
         apiResp.setSort(carouselImage.getSort());
         apiResp.setTitle(carouselImage.getTitle());
         apiResp.setJumpPath(carouselImage.getJumpPath());
+        apiResp.setContent(carouselImage.getContent());
         return apiResp;
     }
 }

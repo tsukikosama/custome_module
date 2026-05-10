@@ -51,4 +51,12 @@ public interface WishService {
      * @return 心愿分页结果
      */
     PageResp<ApiWishResp> allWish(WishPageReq req);
+
+    /**
+     * 取消心愿
+     * 校验心愿状态是否为"心愿中"，如果是则删除该心愿记录
+     *
+     * @param id 心愿ID
+     */
+    void cancelWish(Long id);
 }

@@ -62,4 +62,10 @@ public class ApiWishController {
     public PageResp<ApiWishResp> allWish(@Valid WishPageReq req) {
         return wishService.allWish(req);
     }
+
+    @Operation(summary = "取消心愿", description = "校验心愿状态是否为心愿中，如果是则删除该心愿记录")
+    @DeleteMapping("/cancel/{id}")
+    public void cancelWish(@PathVariable Long id) {
+        wishService.cancelWish(id);
+    }
 }

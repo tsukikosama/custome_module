@@ -292,6 +292,30 @@ public class ActivityServiceImpl implements ActivityService {
         log.info("用户取消活动报名成功，用户ID：{}，活动ID：{}", userId, activityId);
     }
 
+    @Override
+    public java.util.List<ApiActivityResp> listPinnedActivities() {
+        // 构建查询条件
+        QueryWrapper<ActivityDO> wrapper = new QueryWrapper<>();
+
+        // 只查询已审核通过的活动
+        wrapper.eq("ba.status", ActivityStatusEnum.APPROVED.getValue());
+
+        // 只查询置顶的活动
+        wrapper.eq("ba.is_top", true);
+
+        // 按活动开始时间倒序
+        wrapper.orderByDesc("ba.start_time");
+
+        // 创建分页对象，设置一个较大的页大小来获取所有置顶活动
+        Page<ActivityDO> page = new Page<>(1, 100);
+
+        // 执行查询
+        IPage<ApiActivityResp> result = activityMapper.apiPage(page, wrapper);
+
+        // 返回记录列表
+        return result.getRecords();
+    }
+
     /**
      * 发送活动报名成功的钉钉消息
      *

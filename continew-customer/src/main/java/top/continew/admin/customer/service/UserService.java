@@ -17,6 +17,7 @@
 package top.continew.admin.customer.service;
 
 import top.continew.admin.auth.model.resp.UserInfoResp;
+import top.continew.admin.customer.model.req.PasswordUpdateReq;
 import top.continew.admin.customer.model.resp.UserRecord;
 import top.continew.admin.customer.model.resp.UserStatResp;
 
@@ -45,9 +46,11 @@ public interface UserService {
     UserStatResp getStat();
 
     /**
-     * 重置密码
+     * 修改密码
+     *
+     * @param passwordUpdateReq 修改密码请求
      */
-    void resetPassword();
+    void updatePassword(PasswordUpdateReq passwordUpdateReq);
 
     /**
      * 查询所有在职用户

@@ -18,6 +18,7 @@ package top.continew.admin.hrcommon.model.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -73,6 +74,7 @@ public class WishDO extends BaseIdDO {
     /**
      * 是否已删除（0：否；id：是）
      */
+    @TableLogic(value = "0", delval = "id")
     private Long deleted;
 
     /**

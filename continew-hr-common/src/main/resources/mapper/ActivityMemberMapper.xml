@@ -40,4 +40,15 @@
     <!-- 批量插入活动参与用户 -->
 
 
+    <!-- 统计用户参与的活动 -->
+    <select id="statUserActivities" resultType="top.continew.admin.hrcommon.model.resp.UserActivityStatResp">
+        SELECT
+            COUNT(am.activity_id) as activityCount,
+            GROUP_CONCAT(am.activity_id SEPARATOR ',') as activityIds
+        FROM biz_activity_member am
+        WHERE am.user_id = #{userId}
+          AND am.status = 1
+          AND am.deleted = 0
+    </select>
+
 </mapper>

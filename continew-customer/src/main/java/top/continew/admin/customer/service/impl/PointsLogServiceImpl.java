@@ -86,12 +86,17 @@ public class PointsLogServiceImpl implements PointsLogService {
         }
 
         // 按时间范围筛选（支持两种方式：times数组 或 startTime+endTime）
-        LocalDateTime[] timeRange = req.getTimes();
-        if (timeRange == null || timeRange.length != 2) {
+        LocalDateTime[] timeRange = null;
+        String[] times = req.getTimes();
+        if (times != null && times.length == 2) {
+            // 如果有times数组，解析为LocalDateTime
+            timeRange = new LocalDateTime[] {
+                LocalDateTime.parse(times[0], DATE_TIME_FORMATTER),
+                LocalDateTime.parse(times[1], DATE_TIME_FORMATTER)
+            };
+        } else if (req.getStartTime() != null && req.getEndTime() != null) {
             // 如果没有times数组，尝试使用startTime和endTime
-            if (req.getStartTime() != null && req.getEndTime() != null) {
-                timeRange = new LocalDateTime[] {req.getStartTime(), req.getEndTime()};
-            }
+            timeRange = new LocalDateTime[] {req.getStartTime(), req.getEndTime()};
         }
         if (timeRange != null && timeRange.length == 2) {
             wrapper.ge("create_time", timeRange[0]).le("create_time", timeRange[1]);

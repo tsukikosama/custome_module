@@ -70,6 +70,7 @@ import top.continew.admin.hrcommon.model.entity.dept.DeptDO;
 import top.continew.admin.hrcommon.model.entity.user.UserDO;
 import top.continew.admin.hrcommon.model.entity.user.UserRoleDO;
 import top.continew.admin.hrcommon.model.enums.PointsStatusEnum;
+import top.continew.admin.hrcommon.model.enums.PointsTypeEnum;
 import top.continew.admin.hrcommon.model.resp.user.UserDetailResp;
 import top.continew.admin.system.enums.OptionCategoryEnum;
 import top.continew.admin.system.model.entity.RoleDO;
@@ -605,10 +606,10 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
                 UserPointChangeReq changeReq = new UserPointChangeReq();
                 changeReq.setUserId(user.getId());
                 changeReq.setPoints(row.getPoints());
+                // 根据积分正负值自动判断类型：正值为增加，负值为扣除
                 changeReq.setType(req.getType());
                 changeReq.setRefId(req.getRefId());
                 changeReq.setRemark(req.getRemark());
-
                 this.changePoints(changeReq);
                 successCount++;
             } catch (Exception e) {

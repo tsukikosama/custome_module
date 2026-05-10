@@ -66,4 +66,11 @@ public interface ActivityService {
      * @param activityId 活动ID
      */
     void cancelParticipate(Long activityId);
+
+    /**
+     * 获取置顶活动列表
+     *
+     * @return 置顶活动列表
+     */
+    java.util.List<ApiActivityResp> listPinnedActivities();
 }

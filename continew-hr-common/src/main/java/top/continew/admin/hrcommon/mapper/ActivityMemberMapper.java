@@ -23,6 +23,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import top.continew.admin.controller.biz.model.entity.ActivityMemberDO;
 import top.continew.admin.hrcommon.model.resp.ActivityMemberCustomResp;
+import top.continew.admin.hrcommon.model.resp.UserActivityStatResp;
 import top.continew.starter.data.mapper.BaseMapper;
 
 /**
@@ -49,5 +50,13 @@ public interface ActivityMemberMapper extends BaseMapper<ActivityMemberDO> {
      * @param activityMembers 活动参与用户列表
      * @return 插入的记录数
      */
+
+    /**
+     * 统计用户参与的活动
+     *
+     * @param userId 用户ID
+     * @return 用户活动统计响应
+     */
+    UserActivityStatResp statUserActivities(@Param("userId") Long userId);
 
 }

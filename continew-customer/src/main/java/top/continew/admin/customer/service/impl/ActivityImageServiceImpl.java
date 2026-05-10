@@ -16,6 +16,7 @@
 
 package top.continew.admin.customer.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -27,6 +28,7 @@ import top.continew.admin.hrcommon.model.entity.ActivityImageDO;
 import top.continew.admin.hrcommon.model.resp.ApiActivityImageResp;
 import top.continew.admin.customer.model.req.ActivityImageCreateReq;
 import top.continew.admin.customer.service.ActivityImageService;
+import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 
 /**
@@ -67,5 +69,22 @@ public class ActivityImageServiceImpl implements ActivityImageService {
 
         // 保存到数据库
         activityImageMapper.insert(activityImage);
+    }
+
+    @Override
+    public void delete(Long id) {
+        // 获取当前登录用户ID
+        Long userId = StpUtil.getLoginIdAsLong();
+
+        // 查询图片是否存在
+        ActivityImageDO activityImage = activityImageMapper.selectById(id);
+        CheckUtils.throwIfNull(activityImage, "图片不存在");
+
+        // 校验是否为图片创建者
+        CheckUtils.throwIf(!userId.equals(activityImage.getCreateUser()), "只能删除自己上传的图片");
+
+        // 删除图片
+        activityImageMapper.deleteById(id);
+        log.info("删除活动图片成功，图片ID：{}，操作用户：{}", id, userId);
     }
 }

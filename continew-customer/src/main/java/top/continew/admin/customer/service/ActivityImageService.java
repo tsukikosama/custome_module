@@ -44,4 +44,11 @@ public interface ActivityImageService {
      * @param req 创建请求
      */
     void save(ActivityImageCreateReq req);
+
+    /**
+     * 删除活动图片
+     *
+     * @param id 图片ID
+     */
+    void delete(Long id);
 }

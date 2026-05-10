@@ -80,4 +80,10 @@ public class ApiActivityController {
         activityService.cancelParticipate(activityId);
         return R.ok();
     }
+
+    @Operation(summary = "获取置顶活动", description = "获取全部已审核通过的置顶活动")
+    @GetMapping("/pinned")
+    public R<java.util.List<ApiActivityResp>> listPinnedActivities() {
+        return R.ok(activityService.listPinnedActivities());
+    }
 }

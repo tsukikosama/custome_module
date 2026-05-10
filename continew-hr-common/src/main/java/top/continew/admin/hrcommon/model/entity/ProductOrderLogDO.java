@@ -22,6 +22,7 @@ import lombok.Data;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import top.continew.admin.hrcommon.model.enums.OrderStatusEnum;
 import top.continew.starter.extension.crud.model.entity.BaseIdDO;
 
 import java.io.Serial;
@@ -48,7 +49,7 @@ public class ProductOrderLogDO extends BaseIdDO {
     /**
      * 订单状态
      */
-    private Integer status;
+    private OrderStatusEnum status;
 
     /**
      * 备注

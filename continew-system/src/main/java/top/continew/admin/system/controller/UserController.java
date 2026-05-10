@@ -140,7 +140,7 @@ public class UserController extends BaseController<UserService, UserResp, UserDe
     @PostMapping("/points/import")
     public UserPointImportResp importPoints(@RequestParam("file") @NotNull(message = "文件不能为空") MultipartFile file,
                                             @RequestParam("type") @NotNull(message = "积分类型不能为空") PointsTypeEnum type,
-                                            @RequestParam("refId") @NotNull(message = "来源ID不能为空") Long refId,
+                                            @RequestParam(value ="refId" , required = false)  Long refId,
                                             @RequestParam(value = "remark", required = false) String remark) {
 
         UserPointImportReq req = new UserPointImportReq();

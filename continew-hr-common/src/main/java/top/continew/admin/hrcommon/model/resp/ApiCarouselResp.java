@@ -63,4 +63,10 @@ public class ApiCarouselResp {
      */
     @Schema(description = "跳转路径（可为空）", example = "/pages/activity/detail/1")
     private String jumpPath;
+
+    /**
+     * 轮播图内容
+     */
+    @Schema(description = "轮播图内容描述（可为空）", example = "欢迎参加新员工入职培训活动")
+    private String content;
 }

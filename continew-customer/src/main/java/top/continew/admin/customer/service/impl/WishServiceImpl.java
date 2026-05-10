@@ -153,6 +153,31 @@ public class WishServiceImpl implements WishService {
         return PageResp.build(apiPage);
     }
 
+    @Override
+    public void cancelWish(Long id) {
+        // 获取当前登录用户ID
+        Long userId = StpUtil.getLoginIdAsLong();
+
+        // 查询心愿记录
+        WishDO wishDO = wishMapper.selectById(id);
+        if (wishDO == null) {
+            throw new RuntimeException("心愿记录不存在");
+        }
+
+        // 校验是否为当前用户的心愿
+        if (!wishDO.getCreateUser().equals(userId)) {
+            throw new RuntimeException("无权操作此心愿记录");
+        }
+
+        // 校验心愿状态是否为"心愿中"
+        if (wishDO.getStatus() != WishStatusEnum.IN_PROGRESS) {
+            throw new RuntimeException("只能取消心愿中的记录");
+        }
+
+        // 使用MyBatis Plus的逻辑删除功能
+        wishMapper.deleteById(id);
+    }
+
     /**
      * 将 WishDO 转换为客户端API响应格式
      *

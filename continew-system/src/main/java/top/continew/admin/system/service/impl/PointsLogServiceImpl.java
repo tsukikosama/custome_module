@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Lazy;
@@ -33,10 +34,14 @@ import top.continew.admin.hrcommon.model.resp.PointsLogDetailResp;
 import top.continew.admin.hrcommon.model.resp.PointsLogResp;
 import top.continew.admin.system.service.PointsLogService;
 import top.continew.admin.system.service.UserService;
+import top.continew.starter.excel.util.ExcelUtils;
 import top.continew.starter.extension.crud.model.query.PageQuery;
+import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 import top.continew.admin.hrcommon.model.entity.PointsLogDO;
 import top.continew.admin.hrcommon.mapper.PointsLogMapper;
+
+import java.util.List;
 
 /**
  * 积分日志业务实现
@@ -73,4 +78,12 @@ public class PointsLogServiceImpl extends BaseServiceImpl<PointsLogMapper, Point
             .getSize()), wrapper);
         return PageResp.build(page);
     }
+
+    @Override
+    public void export(PointsLogQuery query, SortQuery sortQuery, HttpServletResponse response) {
+        QueryWrapper<PointsLogDO> wrapper = this.buildQueryWrapper(query);
+        List<PointsLogResp> list = this.baseMapper.customList(wrapper);
+        ExcelUtils.export(list, "积分日志数据", PointsLogResp.class, response);
+    }
+
 }

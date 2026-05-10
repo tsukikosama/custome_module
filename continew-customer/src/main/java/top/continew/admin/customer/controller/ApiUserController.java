@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.continew.admin.auth.model.resp.UserInfoResp;
+import top.continew.admin.customer.model.req.PasswordUpdateReq;
 import top.continew.admin.customer.model.resp.UserRecord;
 import top.continew.admin.customer.model.resp.UserStatResp;
 import top.continew.admin.customer.service.UserService;
@@ -57,10 +58,10 @@ public class ApiUserController {
         return userService.getStat();
     }
 
-    @Operation(summary = "重置密码", description = "用户重置密码，系统自动生成新密码并通过钉钉发送")
-    @PostMapping("/password/reset")
-    public void resetPassword() {
-        userService.resetPassword();
+    @Operation(summary = "修改密码", description = "用户修改密码，需要验证旧密码")
+    @PostMapping("/password/update")
+    public void updatePassword(@Validated @RequestBody PasswordUpdateReq passwordUpdateReq) {
+        userService.updatePassword(passwordUpdateReq);
     }
 
     @Operation(summary = "查询所有在职用户", description = "查询所有在职用户的ID和昵称列表")

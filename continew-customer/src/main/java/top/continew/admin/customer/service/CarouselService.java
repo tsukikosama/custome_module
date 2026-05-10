@@ -34,4 +34,12 @@ public interface CarouselService {
      * @return 轮播图列表
      */
     List<ApiCarouselResp> list();
+
+    /**
+     * 根据ID查询轮播图详情
+     *
+     * @param id 轮播图ID
+     * @return 轮播图详情
+     */
+    ApiCarouselResp getById(Long id);
 }

@@ -63,6 +63,7 @@ public class OrderServiceImpl implements OrderService {
     private final ProductMapper productMapper;
     private final PointsLogMapper pointsLogMapper;
     private final UserMapper userMapper;
+    private final top.continew.admin.hrcommon.mapper.ProductOrderLogMapper productOrderLogMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -113,8 +114,17 @@ public class OrderServiceImpl implements OrderService {
         order.setProductNum(req.getProductNum());
         order.setStatus(OrderStatusEnum.PENDING);
         order.setCostPoints(costPoints);
+        order.setRemark(req.getRemark());
         order.setCreateUser(userId);
         orderMapper.insert(order);
+
+        // 7.1 创建订单日志
+        top.continew.admin.hrcommon.model.entity.ProductOrderLogDO orderLog = new top.continew.admin.hrcommon.model.entity.ProductOrderLogDO();
+        orderLog.setOrderId(order.getId());
+        orderLog.setStatus(OrderStatusEnum.PENDING);
+        orderLog.setRemark("创建订单");
+        orderLog.setCreateUser(userId);
+        productOrderLogMapper.insert(orderLog);
 
         // 8. 扣除用户积分并记录积分日志
         Integer afterPoints = userPoints - costPoints.intValue();
@@ -161,6 +171,14 @@ public class OrderServiceImpl implements OrderService {
         order.setCancelTime(LocalDateTime.now());
         order.setUpdateUser(userId);
         orderMapper.updateById(order);
+
+        // 4.1 创建订单日志
+        top.continew.admin.hrcommon.model.entity.ProductOrderLogDO orderLog = new top.continew.admin.hrcommon.model.entity.ProductOrderLogDO();
+        orderLog.setOrderId(order.getId());
+        orderLog.setStatus(OrderStatusEnum.CANCELLED);
+        orderLog.setRemark("用户取消订单");
+        orderLog.setCreateUser(userId);
+        productOrderLogMapper.insert(orderLog);
 
         // 5. 退还积分
         Integer refundPoints = order.getCostPoints().intValue();
@@ -273,5 +291,13 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatusEnum.COMPLETED);
         order.setUpdateUser(userId);
         orderMapper.updateById(order);
+
+        // 4.1 创建订单日志
+        top.continew.admin.hrcommon.model.entity.ProductOrderLogDO orderLog = new top.continew.admin.hrcommon.model.entity.ProductOrderLogDO();
+        orderLog.setOrderId(order.getId());
+        orderLog.setStatus(OrderStatusEnum.COMPLETED);
+        orderLog.setRemark("用户确认收货");
+        orderLog.setCreateUser(userId);
+        productOrderLogMapper.insert(orderLog);
     }
 }

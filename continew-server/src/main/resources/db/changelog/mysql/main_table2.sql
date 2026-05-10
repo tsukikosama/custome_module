@@ -401,3 +401,8 @@ ALTER TABLE `sys_user`
 -- comment 来源非必填
 ALTER TABLE `biz_points_log`
     MODIFY COLUMN `ref_id` bigint NULL COMMENT '来源id' AFTER `type`;
+
+-- changeset weilai:10030
+-- comment 轮播图新增内容
+ALTER TABLE `biz_carousel_image`
+    ADD COLUMN `content` text  NULL COMMENT '文章内容' AFTER `create_user`;

@@ -18,7 +18,11 @@ package top.continew.admin.system.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.aliyun.dingtalktodo_1_0.models.CreateTodoTaskRequest;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +49,10 @@ import top.continew.admin.system.model.req.user.UserPointChangeReq;
 import top.continew.admin.hrcommon.model.resp.OrderDetailResp;
 import top.continew.admin.system.service.*;
 import top.continew.starter.core.util.validation.CheckUtils;
+import top.continew.starter.excel.util.ExcelUtils;
+import top.continew.starter.extension.crud.model.query.PageQuery;
+import top.continew.starter.extension.crud.model.query.SortQuery;
+import top.continew.starter.extension.crud.model.resp.PageResp;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -229,12 +237,22 @@ public class OrderServiceImpl extends BaseServiceImpl<OrderMapper, OrderDO, Orde
         super.update(req, id);
     }
 
-    //    @Override
-    //    public PageResp<OrderResp> page(OrderQuery query, PageQuery pageQuery) {
-    //        QueryWrapper<OrderDO> wrapper = this.buildQueryWrapper(query);
-    //        wrapper.eq("bo.deleted", 0);
-    //        IPage<OrderResp> page = this.baseMapper.customPage(new Page((long)pageQuery.getPage(), (long)pageQuery
-    //            .getSize()), wrapper);
-    //        return PageResp.build(page);
-    //    }
+    @Override
+    public PageResp<OrderResp> page(OrderQuery query, PageQuery pageQuery) {
+        QueryWrapper<OrderDO> wrapper = this.buildQueryWrapper(query);
+        wrapper.eq("bo.deleted", 0);
+        IPage<OrderResp> page = this.baseMapper.customPage(new Page((long)pageQuery.getPage(), (long)pageQuery
+            .getSize()), wrapper);
+        return PageResp.build(page);
+    }
+
+    @Override
+    public void export(OrderQuery query, SortQuery sortQuery, HttpServletResponse response) {
+        QueryWrapper<OrderDO> wrapper = this.buildQueryWrapper(query);
+        wrapper.eq("bo.deleted", 0);
+        List<OrderResp> list = this.baseMapper.customList(wrapper);
+        ExcelUtils.export(list, "订单数据", OrderResp.class, response);
+    }
+
+
 }

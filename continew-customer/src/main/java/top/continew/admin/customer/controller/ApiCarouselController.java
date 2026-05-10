@@ -49,4 +49,11 @@ public class ApiCarouselController {
     public List<ApiCarouselResp> list() {
         return carouselService.list();
     }
+
+    @Log(ignore = true)
+    @Operation(summary = "查询轮播图详情", description = "根据ID查询单个轮播图的详细信息")
+    @GetMapping("/{id}")
+    public ApiCarouselResp getById(@PathVariable Long id) {
+        return carouselService.getById(id);
+    }
 }

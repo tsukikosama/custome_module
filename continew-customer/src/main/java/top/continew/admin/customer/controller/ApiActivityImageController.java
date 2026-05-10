@@ -58,4 +58,11 @@ public class ApiActivityImageController {
     public void save(@RequestBody @Valid ActivityImageCreateReq req) {
         activityImageService.save(req);
     }
+
+    @Operation(summary = "删除活动图片", description = "删除指定的活动图片，只能删除自己上传的图片")
+    @Parameter(name = "id", description = "图片ID", required = true, example = "1")
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        activityImageService.delete(id);
+    }
 }

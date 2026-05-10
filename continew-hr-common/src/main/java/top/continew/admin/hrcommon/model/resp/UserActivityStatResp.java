@@ -20,38 +20,31 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serial;
+import java.io.Serializable;
+import java.util.List;
 
 /**
- * 客户端活动图片响应
+ * 用户活动统计响应
  *
  * @author weilai
- * @since 2026/05/08
+ * @since 2026/05/10
  */
 @Data
-@Schema(description = "客户端活动图片响应")
-public class ApiActivityImageResp {
+@Schema(description = "用户活动统计响应")
+public class UserActivityStatResp implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private Long id;
     /**
-     * 活动ID
+     * 报名活动的数量
      */
-    @Schema(description = "活动ID", example = "1")
-    private Long activityId;
+    @Schema(description = "报名活动的数量", example = "3")
+    private Integer activityCount;
 
     /**
-     * 活动图片URL
+     * 报名活动的ID集合（逗号分隔的字符串）
      */
-    @Schema(description = "活动图片URL", example = "https://example.com/images/activity1.jpg")
-    private String imageUrl;
-
-    /**
-     * 图片内容描述
-     */
-    @Schema(description = "图片内容描述", example = "活动现场照片")
-    private String content;
-
-    private String createUser;
+    @Schema(description = "报名活动的ID集合", example = "1,5,8")
+    private String activityIds;
 }

@@ -19,22 +19,26 @@ package top.continew.admin.customer.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import top.continew.admin.auth.model.resp.UserInfoResp;
-import top.continew.admin.common.api.dingDingApi.DingTalkApiService;
-import top.continew.admin.common.api.dingDingApi.request.SendMessageReq;
 import top.continew.admin.common.constant.CacheConstants;
+import top.continew.admin.customer.model.req.PasswordUpdateReq;
 import top.continew.admin.customer.model.resp.UserRecord;
 import top.continew.admin.customer.model.resp.UserStatResp;
 import top.continew.admin.customer.service.UserService;
 import top.continew.admin.hrcommon.mapper.user.UserMapper;
 import top.continew.admin.hrcommon.model.entity.user.UserDO;
+import top.continew.admin.hrcommon.mapper.ActivityMemberMapper;
+import top.continew.admin.hrcommon.model.resp.UserActivityStatResp;
 import top.continew.starter.core.util.validation.CheckUtils;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -52,10 +56,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    private final DingTalkApiService dingTalkApiService;
-
-    // TODO: 注入 ActivityMemberMapper
-    // private final ActivityMemberMapper activityMemberMapper;
+    private final ActivityMemberMapper activityMemberMapper;
 
     @Override
     public UserInfoResp getInfo() {
@@ -87,88 +88,49 @@ public class UserServiceImpl implements UserService {
 
         UserStatResp resp = new UserStatResp();
 
-        // TODO: 统计报名活动数量（状态为已报名的活动）
-        // List<ActivityMemberDO> activityMembers = activityMemberMapper.selectList(
-        //     Wrappers.<ActivityMemberDO>lambdaQuery()
-        //         .eq(ActivityMemberDO::getUserId, userId)
-        //         .eq(ActivityMemberDO::getStatus, 1) // 已报名
-        // );
-        // resp.setActivityCount(activityMembers.size());
-        // resp.setActivityIds(activityMembers.stream().map(ActivityMemberDO::getActivityId).collect(Collectors.toList()));
+        // 使用 XML mapper 一次性统计用户参与的活动
+        UserActivityStatResp statResp = activityMemberMapper.statUserActivities(userId);
 
-        // TODO: 统计问卷数量（暂时返回0）
-        resp.setActivityCount(0);
-        resp.setActivityIds(List.of());
-        resp.setQuestionnaireCount(0);
-        resp.setQuestionnaireIds(List.of());
+        if (statResp != null) {
+            resp.setActivityCount(statResp.getActivityCount());
+
+            // 将逗号分隔的字符串转换为 List<Long>
+            if (StringUtils.isNotBlank(statResp.getActivityIds())) {
+                List<Long> activityIds = Arrays.stream(statResp.getActivityIds().split(","))
+                    .map(Long::valueOf)
+                    .collect(Collectors.toList());
+                resp.setActivityIds(activityIds);
+            } else {
+                resp.setActivityIds(Collections.emptyList());
+            }
+        } else {
+            resp.setActivityCount(0);
+            resp.setActivityIds(Collections.emptyList());
+        }
 
         return resp;
     }
 
     @Override
-    public void resetPassword() {
+    public void updatePassword(PasswordUpdateReq passwordUpdateReq) {
         // 获取当前登录用户ID
         Long userId = StpUtil.getLoginIdAsLong();
 
-        // 1. 生成新密码（这里简化为固定密码，实际应该生成随机密码）
-        String newPassword = "123456";
-
-        // 2. 更新用户密码
+        // 1. 查询用户信息
         UserDO userDO = userMapper.selectById(userId);
         CheckUtils.throwIfNull(userDO, "用户不存在");
 
-        // 不使用 PasswordEncoder 加密，直接存储明文密码
-        // 系统会在登录时使用 passwordEncoder.matches() 进行验证
-        userDO.setPassword(newPassword);
+        // 2. 验证旧密码是否正确
+        CheckUtils.throwIf(!passwordEncoder.matches(passwordUpdateReq.getOldPassword(), userDO.getPassword()), "旧密码不正确");
+
+        // 3. 验证新密码不能与旧密码相同
+        CheckUtils.throwIfEqual(passwordUpdateReq.getOldPassword(), passwordUpdateReq.getNewPassword(), "新密码不能与旧密码相同");
+
+        // 4. 更新用户密码（使用 PasswordEncoder 加密）
+        userDO.setPassword(passwordUpdateReq.getNewPassword());
         userMapper.updateById(userDO);
 
-        log.info("用户 {} ({}) 密码已重置，新密码：{}", userDO.getNickname(), userDO.getUsername(), newPassword);
-
-        // 3. 通过钉钉发送新密码给用户
-        sendPasswordToDingTalk(userDO, newPassword);
-    }
-
-    /**
-     * 通过钉钉发送新密码给用户
-     *
-     * @param userDO      用户信息
-     * @param newPassword 新密码
-     */
-    private void sendPasswordToDingTalk(UserDO userDO, String newPassword) {
-        try {
-            // 检查用户是否有钉钉ID
-            if (userDO.getDingdingId() == null || userDO.getDingdingId().isEmpty()) {
-                log.warn("用户 {} ({}) 没有绑定钉钉账号，无法发送密码重置消息", userDO.getNickname(), userDO.getUsername());
-                return;
-            }
-
-            // 构建发送消息请求
-            SendMessageReq sendMessageReq = new SendMessageReq();
-            sendMessageReq.setUseridList(userDO.getDingdingId());
-
-            // 构建消息内容
-            SendMessageReq.Msg msg = new SendMessageReq.Msg();
-            msg.setMsgType("text");
-
-            SendMessageReq.Text text = new SendMessageReq.Text();
-            text.setContent(String.format("【密码重置通知】您好 %s，您已成功重置密码。新密码：%s，请妥善保管。如非本人操作，请及时联系管理员。", userDO
-                .getNickname(), newPassword));
-            msg.setText(text);
-
-            sendMessageReq.setMsg(msg);
-
-            // 发送消息
-            com.alibaba.fastjson2.JSONObject response = dingTalkApiService.sendConversationMessage(sendMessageReq);
-
-            // 检查发送结果
-            if (response != null && response.getInteger("errcode") != null && response.getInteger("errcode") == 0) {
-                log.info("密码重置消息已成功发送给用户 {}", userDO.getNickname());
-            } else {
-                log.error("发送密码重置消息失败：{}", response != null ? response.toJSONString() : "响应为空");
-            }
-        } catch (Exception e) {
-            log.error("发送密码重置消息时发生异常：", e);
-        }
+        log.info("用户 {} ({}) 密码已修改", userDO.getNickname(), userDO.getUsername());
     }
 
     @Override

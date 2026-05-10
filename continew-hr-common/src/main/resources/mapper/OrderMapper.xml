@@ -52,4 +52,25 @@
         ${ew.customSqlSegment}
         order by bo.create_time desc
     </select>
+
+    <select id="customList" resultType="top.continew.admin.hrcommon.model.resp.OrderResp">
+        select DISTINCT
+               bo.id,
+               bo.order_no,
+               bo.product_id,
+               bp.name as productName,
+               bo.product_num,
+               bo.status,
+               bo.cost_points,
+               bo.remark,
+               bo.create_time,
+               su.nickname as customerName,
+               su2.nickname AS updateUserString
+        from biz_order bo
+            left join biz_product bp on bo.product_id = bp.id
+            left join sys_user su on bo.create_user = su.id
+            left join sys_user su2 ON bo.update_user = su2.id
+        ${ew.customSqlSegment}
+        order by bo.status asc, bo.create_time desc
+    </select>
 </mapper>

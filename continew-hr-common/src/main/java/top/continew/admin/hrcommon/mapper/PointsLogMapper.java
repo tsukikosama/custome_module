@@ -26,6 +26,8 @@ import top.continew.admin.hrcommon.model.entity.PointsLogDO;
 import top.continew.admin.hrcommon.model.resp.PointsLogResp;
 import top.continew.starter.data.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * 积分日志 Mapper
  *
@@ -35,4 +37,12 @@ import top.continew.starter.data.mapper.BaseMapper;
 @Mapper
 public interface PointsLogMapper extends BaseMapper<PointsLogDO> {
     IPage<PointsLogResp> customPage(Page page, @Param(Constants.WRAPPER) QueryWrapper<PointsLogDO> wrapper);
+
+    /**
+     * 查询积分日志列表（不分页）
+     *
+     * @param wrapper 查询条件
+     * @return 积分日志响应列表
+     */
+    List<PointsLogResp> customList(@Param(Constants.WRAPPER) QueryWrapper<PointsLogDO> wrapper);
 }

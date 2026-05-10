@@ -31,14 +31,20 @@ import top.continew.admin.controller.biz.model.entity.ActivityMemberDO;
 import top.continew.admin.hrcommon.mapper.ActivityMapper;
 import top.continew.admin.hrcommon.mapper.ActivityMemberMapper;
 import top.continew.admin.hrcommon.model.entity.ActivityDO;
+import top.continew.admin.hrcommon.model.entity.user.UserDO;
 import top.continew.admin.hrcommon.model.enums.ActivityMemberType;
 import top.continew.admin.hrcommon.model.enums.ActivityStatusEnum;
+import top.continew.admin.hrcommon.model.enums.NoticeScopeEnum;
+import top.continew.admin.hrcommon.model.enums.NoticeStatusEnum;
 import top.continew.admin.hrcommon.model.resp.ActivityDetailResp;
 import top.continew.admin.hrcommon.model.resp.ActivityResp;
+import top.continew.admin.hrcommon.model.req.NoticeReq;
 import top.continew.admin.system.model.query.ActivityQuery;
 import top.continew.admin.system.model.req.ActivityReq;
 import top.continew.admin.system.model.req.ActivityReviewReq;
 import top.continew.admin.system.service.ActivityService;
+import top.continew.admin.system.service.NoticeService;
+import top.continew.admin.system.service.UserService;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.extension.crud.model.query.PageQuery;
 import top.continew.starter.extension.crud.model.query.SortQuery;
@@ -60,6 +66,8 @@ import java.util.List;
 public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, ActivityDO, ActivityResp, ActivityDetailResp, ActivityQuery, ActivityReq> implements ActivityService {
 
     private final ActivityMemberMapper activityMemberMapper;
+    private final NoticeService noticeService;
+    private final UserService userService;
 
     @Override
     public PageResp<ActivityResp> page(ActivityQuery query, PageQuery pageQuery) {
@@ -143,7 +151,7 @@ public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, Activit
                             activityMemberMapper.update(null, Wrappers.<ActivityMemberDO>lambdaUpdate()
                                 .eq(ActivityMemberDO::getActivityId, activityId)
                                 .eq(ActivityMemberDO::getUserId, userId)
-                                .set(ActivityMemberDO::getStatus, 1));
+                                 .set(ActivityMemberDO::getStatus, 1));
                             log.info("用户重新报名成功，活动ID：{}，用户ID：{}", activityId, userId);
                         } else {
                             log.warn("该用户已存在活动参与记录，活动ID：{}，用户ID：{}，跳过插入", activityId, userId);
@@ -184,6 +192,47 @@ public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, Activit
         CheckUtils.throwIf(rows == 0, "审核失败");
 
         log.info("活动审核成功，活动ID：{}，审核结果：{}", req.getId(), req.getStatus().getDescription());
+
+        // 如果审核失败，给活动创建者发送通知
+        if (ActivityStatusEnum.FAILED.equals(req.getStatus())) {
+            sendAuditFailureNotice(activity, req.getAuditRemark());
+        }
+    }
+
+    /**
+     * 发送审核失败通知
+     *
+     * @param activity    活动信息
+     * @param auditRemark 审核备注
+     */
+    private void sendAuditFailureNotice(ActivityDO activity, String auditRemark) {
+        try {
+            // 获取活动创建者信息
+            UserDO creator = userService.getById(activity.getCreateUser());
+            if (creator == null) {
+                log.warn("活动创建者不存在，用户ID：{}", activity.getCreateUser());
+                return;
+            }
+
+            // 创建通知
+            NoticeReq noticeReq = new NoticeReq();
+            noticeReq.setTitle("活动审核失败通知");
+            noticeReq.setContent(String.format("您创建的活动「%s」审核未通过。%s",
+                activity.getTitle(),
+                auditRemark != null && !auditRemark.trim().isEmpty() ? "失败原因：" + auditRemark : "请重新提交活动申请。"));
+            noticeReq.setStatus(NoticeStatusEnum.PUBLISHED);
+            noticeReq.setType("1");
+            noticeReq.setNoticeScope(NoticeScopeEnum.USER);
+            noticeReq.setNoticeMethods(List.of(1));
+            noticeReq.setNoticeUsers(List.of(creator.getId().toString()));
+            noticeReq.setIsTiming(false);
+
+            noticeService.create(noticeReq);
+            log.info("活动审核失败通知发送成功，活动ID：{}，用户ID：{}", activity.getId(), creator.getId());
+        } catch (Exception e) {
+            // 记录错误日志，但不影响审核流程
+            log.error("发送活动审核失败通知失败，活动ID：{}", activity.getId(), e);
+        }
     }
 
     @Override

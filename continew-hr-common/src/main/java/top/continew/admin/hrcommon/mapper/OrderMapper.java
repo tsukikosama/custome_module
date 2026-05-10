@@ -26,6 +26,8 @@ import top.continew.admin.hrcommon.model.entity.OrderDO;
 import top.continew.admin.hrcommon.model.resp.OrderResp;
 import top.continew.starter.data.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * 订单 Mapper
  *
@@ -44,6 +46,14 @@ public interface OrderMapper extends BaseMapper<OrderDO> {
     Integer countByProductInCurrentMonth(@Param("productId") Long productId);
 
     IPage<OrderResp> customPage(@Param("page") Page page, @Param(Constants.WRAPPER) QueryWrapper<OrderDO> wrapper);
+
+    /**
+     * 查询订单列表（不分页）
+     *
+     * @param wrapper 查询条件
+     * @return 订单响应列表
+     */
+    List<OrderResp> customList(@Param(Constants.WRAPPER) QueryWrapper<OrderDO> wrapper);
 
     /**
      * 客户端分页查询订单

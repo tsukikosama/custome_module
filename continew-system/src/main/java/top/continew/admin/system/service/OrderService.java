@@ -16,14 +16,15 @@
 
 package top.continew.admin.system.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import top.continew.admin.common.base.service.BaseService;
 import top.continew.admin.hrcommon.model.entity.OrderDO;
 import top.continew.admin.hrcommon.model.resp.OrderDetailResp;
 import top.continew.admin.hrcommon.model.resp.OrderResp;
 import top.continew.admin.system.model.query.OrderQuery;
 import top.continew.admin.system.model.req.OrderReq;
-
 import top.continew.starter.data.service.IService;
+import top.continew.starter.extension.crud.model.query.SortQuery;
 
 /**
  * 订单业务接口
@@ -39,4 +40,13 @@ public interface OrderService extends BaseService<OrderResp, OrderDetailResp, Or
      * @param orderId 订单ID
      */
     void cancelOrder(Long orderId);
+
+    /**
+     * 导出订单数据
+     *
+     * @param query     查询条件
+     * @param sortQuery 排序条件
+     * @param response  HTTP响应
+     */
+    void export(OrderQuery query, SortQuery sortQuery, HttpServletResponse response);
 }

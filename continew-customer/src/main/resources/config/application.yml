@@ -363,6 +363,7 @@ auth:
       - /auth/user/info
       - /auth/logout
       - /system/user/password
+      - /api/password/update
 
 --- ### 钉钉API配置
 dingtalk:
