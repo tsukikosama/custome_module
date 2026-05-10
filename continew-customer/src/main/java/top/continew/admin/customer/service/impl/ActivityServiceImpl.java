@@ -316,6 +316,15 @@ public class ActivityServiceImpl implements ActivityService {
         return result.getRecords();
     }
 
+    @Override
+    public java.util.List<ApiActivityResp> listRecentParticipatedActivities() {
+        // 获取当前登录用户ID
+        Long userId = StpUtil.getLoginIdAsLong();
+
+        // 查询用户最近参与的5条活动
+        return activityMapper.listRecentParticipatedActivities(userId);
+    }
+
     /**
      * 发送活动报名成功的钉钉消息
      *

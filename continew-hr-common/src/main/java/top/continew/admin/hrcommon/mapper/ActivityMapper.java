@@ -72,4 +72,12 @@ public interface ActivityMapper extends BaseMapper<ActivityDO> {
      */
     ApiActivityDetailResp getActivityMemberInfo(@Param("activityId") Long activityId);
 
+    /**
+     * 查询用户最近参与的活动列表（最多5条）
+     *
+     * @param userId 用户ID
+     * @return 活动列表
+     */
+    java.util.List<ApiActivityResp> listRecentParticipatedActivities(@Param("userId") Long userId);
+
 }

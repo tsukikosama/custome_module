@@ -193,9 +193,41 @@ public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, Activit
 
         log.info("活动审核成功，活动ID：{}，审核结果：{}", req.getId(), req.getStatus().getDescription());
 
-        // 如果审核失败，给活动创建者发送通知
-        if (ActivityStatusEnum.FAILED.equals(req.getStatus())) {
+        // 如果审核通过，给所有用户发送通知
+        if (ActivityStatusEnum.APPROVED.equals(req.getStatus())) {
+            sendAuditSuccessNotice(activity);
+        } else if (ActivityStatusEnum.FAILED.equals(req.getStatus())) {
+            // 如果审核失败，给活动创建者发送通知
             sendAuditFailureNotice(activity, req.getAuditRemark());
+        }
+    }
+
+    /**
+     * 发送审核通过通知
+     *
+     * @param activity 活动信息
+     */
+    private void sendAuditSuccessNotice(ActivityDO activity) {
+        try {
+            // 创建通知
+            NoticeReq noticeReq = new NoticeReq();
+            noticeReq.setTitle("新活动通知");
+            noticeReq.setContent(String.format("新活动「%s」已发布，活动时间：%s 至 %s，欢迎参加！",
+                activity.getTitle(),
+                activity.getStartTime(),
+                activity.getEndTime()));
+            noticeReq.setStatus(NoticeStatusEnum.PUBLISHED);
+            noticeReq.setType("1");
+            // 发送给所有用户
+            noticeReq.setNoticeScope(NoticeScopeEnum.ALL);
+            noticeReq.setNoticeMethods(List.of(1));
+            noticeReq.setIsTiming(false);
+
+            noticeService.create(noticeReq);
+            log.info("活动审核通过通知发送成功，活动ID：{}", activity.getId());
+        } catch (Exception e) {
+            // 记录错误日志，但不影响审核流程
+            log.error("发送活动审核通过通知失败，活动ID：{}", activity.getId(), e);
         }
     }
 

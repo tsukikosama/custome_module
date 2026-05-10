@@ -86,4 +86,10 @@ public class ApiActivityController {
     public R<java.util.List<ApiActivityResp>> listPinnedActivities() {
         return R.ok(activityService.listPinnedActivities());
     }
+
+    @Operation(summary = "查询最近参与的活动", description = "查询当前用户最近参与的5条活动")
+    @GetMapping("/recent")
+    public R<java.util.List<ApiActivityResp>> listRecentParticipatedActivities() {
+        return R.ok(activityService.listRecentParticipatedActivities());
+    }
 }

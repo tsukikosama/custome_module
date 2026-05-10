@@ -100,6 +100,28 @@
           AND ba.status = 2
     </select>
 
+    <!-- 查询用户最近参与的活动列表（最多5条） -->
+    <select id="listRecentParticipatedActivities" resultType="top.continew.admin.hrcommon.model.resp.ApiActivityResp">
+        SELECT
+            ba.id,
+            ba.title,
+            ba.image,
+            ba.start_time AS startTime,
+            ba.end_time AS endTime,
+            ba.create_time AS createTime,
+            su.nickname AS createUser,
+            ba.type
+        FROM biz_activity ba
+        INNER JOIN biz_activity_member bam ON ba.id = bam.activity_id
+        LEFT JOIN sys_user su ON ba.create_user = su.id
+        WHERE bam.user_id = #{userId}
+          AND bam.status = 1
+          AND bam.deleted = 0
+          AND ba.deleted = 0
+          AND ba.status = 2
+        ORDER BY ba.create_time DESC
+        LIMIT 5
+    </select>
 
 
 </mapper>

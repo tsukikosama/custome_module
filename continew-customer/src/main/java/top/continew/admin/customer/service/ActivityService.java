@@ -73,4 +73,11 @@ public interface ActivityService {
      * @return 置顶活动列表
      */
     java.util.List<ApiActivityResp> listPinnedActivities();
+
+    /**
+     * 查询用户最近参与的活动列表（最多5条）
+     *
+     * @return 最近参与的活动列表
+     */
+    java.util.List<ApiActivityResp> listRecentParticipatedActivities();
 }
