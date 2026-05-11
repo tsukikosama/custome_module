@@ -81,7 +81,7 @@ public class WishServiceImpl implements WishService {
         Long userId = StpUtil.getLoginIdAsLong();
 
         // 创建分页对象
-        Page<WishDO> page = new Page<>(req.getCurrent(), req.getSize());
+        Page<WishDO> page = new Page<>(req.getPage(), req.getSize());
 
         // 构建查询条件
         QueryWrapper<WishDO> wrapper = new QueryWrapper<>();
@@ -125,7 +125,7 @@ public class WishServiceImpl implements WishService {
     @Override
     public PageResp<ApiWishResp> allWish(WishPageReq req) {
         // 创建分页对象
-        Page<WishDO> page = new Page<>(req.getCurrent(), req.getSize());
+        Page<WishDO> page = new Page<>(req.getPage(), req.getSize());
 
         // 构建查询条件
         QueryWrapper<WishDO> wrapper = new QueryWrapper<>();

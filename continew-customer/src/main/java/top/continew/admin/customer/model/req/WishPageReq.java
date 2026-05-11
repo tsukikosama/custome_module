@@ -44,7 +44,7 @@ public class WishPageReq implements Serializable {
     @Schema(description = "当前页码", example = "1")
     @NotNull(message = "当前页码不能为空")
     @Min(value = 1, message = "当前页码必须大于0")
-    private Integer current;
+    private Integer page;
 
     /**
      * 每页数量
