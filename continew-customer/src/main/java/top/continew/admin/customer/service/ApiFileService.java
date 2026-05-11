@@ -14,18 +14,28 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.mapper;
+package top.continew.admin.customer.service;
 
-import org.apache.ibatis.annotations.Mapper;
-import top.continew.admin.system.model.entity.StorageDO;
-import top.continew.starter.data.mapper.BaseMapper;
+import org.springframework.web.multipart.MultipartFile;
+import top.continew.admin.customer.model.resp.ApiFileUploadResp;
+
+import java.io.IOException;
 
 /**
- * 存储 Mapper
+ * 客户端文件上传业务接口
  *
- * @author Charles7c
- * @since 2023/12/26 22:09
+ * @author weilai
+ * @since 2026/05/11
  */
-@Mapper
-public interface StorageMapper extends BaseMapper<StorageDO> {
+public interface ApiFileService {
+
+    /**
+     * 上传文件
+     *
+     * @param file       文件
+     * @param parentPath 上级目录
+     * @return 文件上传响应
+     * @throws IOException IO异常
+     */
+    ApiFileUploadResp upload(MultipartFile file, String parentPath) throws IOException;
 }

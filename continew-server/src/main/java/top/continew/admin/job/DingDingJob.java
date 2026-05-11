@@ -161,6 +161,13 @@ public class DingDingJob {
             overtimeWorkService.saveBatch(overtimeWorkDOList, overtimeWorkDOList.size());
         }
         for (OvertimeWorkDO overtimeWorkDO : overtimeWorkDOList) {
+            // 校验用户是否属于运营一组或运营二组
+            Long deptId = userService.getById(overtimeWorkDO.getUserId()).getDeptId();
+            if (deptId == null || (!deptId.equals(1036800379L) && !deptId.equals(1036971284L))) {
+                // 不属于运营一组或运营二组，跳过积分转换
+                continue;
+            }
+
             UserPointChangeReq req = new UserPointChangeReq();
             req.setUserId(overtimeWorkDO.getUserId());
             req.setPoints(overtimeWorkDO.getConvertPoints());

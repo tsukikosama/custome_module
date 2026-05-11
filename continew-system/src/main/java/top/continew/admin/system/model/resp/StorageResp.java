@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import top.continew.admin.common.base.model.resp.BaseDetailResp;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
-import top.continew.admin.system.enums.StorageTypeEnum;
+import top.continew.admin.hrcommon.model.enums.StorageTypeEnum;
 
 import java.io.Serial;
 

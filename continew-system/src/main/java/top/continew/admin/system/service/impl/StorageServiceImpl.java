@@ -29,21 +29,25 @@ import org.dromara.x.file.storage.core.platform.FileStorage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.common.base.service.BaseServiceImpl;
+import top.continew.admin.common.constant.RegexConstants;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.model.req.CommonStatusUpdateReq;
 import top.continew.admin.common.util.SecureUtils;
-import top.continew.admin.system.enums.StorageTypeEnum;
-import top.continew.admin.system.mapper.StorageMapper;
-import top.continew.admin.system.model.entity.StorageDO;
+import top.continew.admin.hrcommon.model.enums.StorageTypeEnum;
+import top.continew.admin.hrcommon.model.entity.StorageDO;
 import top.continew.admin.system.model.query.StorageQuery;
 import top.continew.admin.system.model.req.StorageReq;
 import top.continew.admin.system.model.resp.StorageResp;
 import top.continew.admin.system.service.FileService;
 import top.continew.admin.system.service.StorageService;
+import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.SpringWebUtils;
+import top.continew.starter.core.util.URLUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.core.util.validation.ValidationUtils;
+import top.continew.admin.hrcommon.mapper.StorageMapper;
+import cn.hutool.core.util.ReUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -72,8 +76,8 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
         }
         // 指定配置参数校验及预处理
         StorageTypeEnum storageType = req.getType();
-        storageType.validate(req);
-        storageType.pretreatment(req);
+        this.validate(storageType, req);
+        this.pretreatment(storageType, req);
         // 校验存储编码
         this.checkCodeRepeat(req.getCode(), null);
         // 需要独立操作来指定默认存储
@@ -81,6 +85,41 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
         // 加载存储引擎
         if (DisEnableStatusEnum.ENABLE.equals(req.getStatus())) {
             this.load(BeanUtil.copyProperties(req, StorageDO.class));
+        }
+    }
+
+    /**
+     * 校验存储配置
+     */
+    private void validate(StorageTypeEnum storageType, StorageReq req) {
+        switch (storageType) {
+            case LOCAL -> {
+                ValidationUtils.throwIf(StrUtil.isNotBlank(req.getDomain()) && !URLUtils.isHttpUrl(req
+                    .getDomain()), "访问路径格式不正确");
+            }
+            case OSS -> {
+                ValidationUtils.throwIf(StrUtil.isNotBlank(req.getDomain()) && !ReUtil
+                    .isMatch(RegexConstants.URL_HTTP_NOT_IP, req.getDomain()), "域名格式不正确");
+            }
+        }
+    }
+
+    /**
+     * 预处理存储配置
+     */
+    private void pretreatment(StorageTypeEnum storageType, StorageReq req) {
+        // 域名需要以 "/" 结尾（x-file-storage 在拼接路径时都是直接 + 拼接，所以规范要求每一级都要以 "/" 结尾，且后面路径不能以 "/" 开头）
+        if (StrUtil.isNotBlank(req.getDomain())) {
+            req.setDomain(StrUtil.appendIfMissing(req.getDomain(), StringConstants.SLASH));
+        }
+        // 回收站路径需要以 "/" 结尾
+        if (Boolean.TRUE.equals(req.getRecycleBinEnabled())) {
+            req.setRecycleBinPath(StrUtil.appendIfMissing(StrUtil.removePrefix(req
+                .getRecycleBinPath(), StringConstants.SLASH), StringConstants.SLASH));
+        }
+        // 本地存储路径需要以 "/" 结尾
+        if (StorageTypeEnum.LOCAL.equals(storageType)) {
+            req.setBucketName(StrUtil.appendIfMissing(req.getBucketName(), StringConstants.SLASH));
         }
     }
 
@@ -101,8 +140,8 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
             .equals(newStatus), "[{}] 是默认存储，不允许禁用", oldStorage.getName());
         // 指定配置参数校验及预处理
         StorageTypeEnum storageType = req.getType();
-        storageType.validate(req);
-        storageType.pretreatment(req);
+        this.validate(storageType, req);
+        this.pretreatment(storageType, req);
         // 卸载存储引擎
         this.unload(oldStorage);
         // 加载存储引擎
@@ -186,6 +225,7 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
                 FileStorageProperties.LocalPlusConfig config = new FileStorageProperties.LocalPlusConfig();
                 config.setPlatform(storage.getCode());
                 config.setStoragePath(storage.getBucketName());
+                config.setDomain(storage.getDomain());
                 fileStorageList.addAll(FileStorageServiceBuilder.buildLocalPlusFileStorage(Collections
                     .singletonList(config)));
                 // 注册资源映射
@@ -199,6 +239,7 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
                 config.setSecretKey(storage.getSecretKey());
                 config.setEndPoint(storage.getEndpoint());
                 config.setBucketName(storage.getBucketName());
+                config.setDomain(storage.getDomain());
                 fileStorageList.addAll(FileStorageServiceBuilder.buildAmazonS3FileStorage(Collections
                     .singletonList(config), null));
             }

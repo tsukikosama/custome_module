@@ -23,7 +23,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
-import top.continew.admin.system.model.entity.StorageDO;
+import top.continew.admin.hrcommon.model.entity.StorageDO;
 import top.continew.admin.system.service.StorageService;
 
 import java.util.List;

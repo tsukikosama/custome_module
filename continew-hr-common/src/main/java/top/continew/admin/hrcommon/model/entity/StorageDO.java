@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.model.entity;
+package top.continew.admin.hrcommon.model.entity;
 
 import cn.hutool.core.lang.RegexPool;
 import cn.hutool.core.util.ReUtil;
@@ -24,7 +24,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.continew.admin.common.base.model.entity.BaseDO;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
-import top.continew.admin.system.enums.StorageTypeEnum;
+import top.continew.admin.hrcommon.model.enums.StorageTypeEnum;
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.encrypt.field.annotation.FieldEncrypt;
 

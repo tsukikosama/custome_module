@@ -24,9 +24,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import top.continew.admin.auth.model.resp.UserInfoResp;
 import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.customer.model.req.PasswordUpdateReq;
+import top.continew.admin.customer.model.resp.UserInfoResp;
 import top.continew.admin.customer.model.resp.UserRecord;
 import top.continew.admin.customer.model.resp.UserStatResp;
 import top.continew.admin.customer.service.UserService;
@@ -67,18 +67,16 @@ public class UserServiceImpl implements UserService {
         UserDO userDO = userMapper.selectById(userId);
         CheckUtils.throwIfNull(userDO, "用户不存在");
 
-        UserInfoResp resp = new UserInfoResp();
-        resp.setId(userDO.getId());
-        resp.setUsername(userDO.getUsername());
-        resp.setNickname(userDO.getNickname());
-        resp.setAvatar(userDO.getAvatar());
-        resp.setPhone(userDO.getPhone());
-        resp.setEmail(userDO.getEmail());
-        resp.setPoints(userDO.getPoints());
-        // TODO: 查询部门名称
-        resp.setDeptName("");
-
-        return resp;
+        return UserInfoResp.builder()
+            .id(userDO.getId())
+            .username(userDO.getUsername())
+            .nickname(userDO.getNickname())
+            .deptId(userDO.getDeptId())
+            .mobile(userDO.getPhone())
+            .email(userDO.getEmail())
+            .gender(userDO.getGender() != null ? userDO.getGender().getValue() : null)
+            .avatar(userDO.getAvatar())
+            .build();
     }
 
     @Override

@@ -16,8 +16,8 @@
 
 package top.continew.admin.customer.service;
 
-import top.continew.admin.auth.model.resp.UserInfoResp;
 import top.continew.admin.customer.model.req.PasswordUpdateReq;
+import top.continew.admin.customer.model.resp.UserInfoResp;
 import top.continew.admin.customer.model.resp.UserRecord;
 import top.continew.admin.customer.model.resp.UserStatResp;
 

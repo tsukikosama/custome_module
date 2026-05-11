@@ -27,7 +27,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import top.continew.admin.common.constant.RegexConstants;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
-import top.continew.admin.system.enums.StorageTypeEnum;
+import top.continew.admin.hrcommon.model.enums.StorageTypeEnum;
 import top.continew.admin.system.validation.ValidationGroup;
 
 import java.io.Serial;

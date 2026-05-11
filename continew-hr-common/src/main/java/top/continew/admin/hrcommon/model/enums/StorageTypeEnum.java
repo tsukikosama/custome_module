@@ -14,24 +14,32 @@
  * limitations under the License.
  */
 
-package top.continew.admin.customer;
+package top.continew.admin.hrcommon.model.enums;
 
-import org.dromara.x.file.storage.spring.EnableFileStorage;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import top.continew.starter.core.enums.BaseEnum;
 
 /**
- * 员工客户端应用启动类
+ * 存储类型枚举
  *
- * @author weilai
- * @since 2026/05/07
+ * @author Charles7c
+ * @since 2023/12/27 21:45
  */
-@SpringBootApplication(scanBasePackages = {"top.continew.admin.customer", "top.continew.admin.common",
-    "top.continew.admin.hrcommon", "top.continew.starter"})
-@EnableFileStorage
-public class CustomerApplication {
+@Getter
+@RequiredArgsConstructor
+public enum StorageTypeEnum implements BaseEnum<Integer> {
 
-    public static void main(String[] args) {
-        SpringApplication.run(CustomerApplication.class, args);
-    }
+    /**
+     * 本地存储
+     */
+    LOCAL(1, "本地存储"),
+
+    /**
+     * 对象存储
+     */
+    OSS(2, "对象存储");
+
+    private final Integer value;
+    private final String description;
 }

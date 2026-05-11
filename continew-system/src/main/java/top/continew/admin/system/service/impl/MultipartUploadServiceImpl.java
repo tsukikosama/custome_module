@@ -28,7 +28,7 @@ import top.continew.admin.system.factory.StorageHandlerFactory;
 import top.continew.admin.system.handler.StorageHandler;
 import top.continew.admin.system.handler.impl.LocalStorageHandler;
 import top.continew.admin.system.model.entity.FileDO;
-import top.continew.admin.system.model.entity.StorageDO;
+import top.continew.admin.hrcommon.model.entity.StorageDO;
 import top.continew.admin.system.model.req.MultipartUploadInitReq;
 import top.continew.admin.system.model.resp.file.FilePartInfo;
 import top.continew.admin.system.model.resp.file.MultipartUploadInitResp;

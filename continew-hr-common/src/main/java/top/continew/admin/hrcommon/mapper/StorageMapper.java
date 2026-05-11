@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package top.continew.admin.customer;
+package top.continew.admin.hrcommon.mapper;
 
-import org.dromara.x.file.storage.spring.EnableFileStorage;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.apache.ibatis.annotations.Mapper;
+import top.continew.admin.hrcommon.model.entity.StorageDO;
+import top.continew.starter.data.mapper.BaseMapper;
 
 /**
- * 员工客户端应用启动类
+ * 存储 Mapper
  *
- * @author weilai
- * @since 2026/05/07
+ * @author Charles7c
+ * @since 2023/12/26 22:09
  */
-@SpringBootApplication(scanBasePackages = {"top.continew.admin.customer", "top.continew.admin.common",
-    "top.continew.admin.hrcommon", "top.continew.starter"})
-@EnableFileStorage
-public class CustomerApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(CustomerApplication.class, args);
-    }
+@Mapper
+public interface StorageMapper extends BaseMapper<StorageDO> {
 }

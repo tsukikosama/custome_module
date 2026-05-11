@@ -17,8 +17,8 @@
 package top.continew.admin.system.handler;
 
 import org.springframework.web.multipart.MultipartFile;
-import top.continew.admin.system.enums.StorageTypeEnum;
-import top.continew.admin.system.model.entity.StorageDO;
+import top.continew.admin.hrcommon.model.entity.StorageDO;
+import top.continew.admin.hrcommon.model.enums.StorageTypeEnum;
 import top.continew.admin.system.model.req.MultipartUploadInitReq;
 import top.continew.admin.system.model.resp.file.MultipartUploadInitResp;
 import top.continew.admin.system.model.resp.file.MultipartUploadResp;
