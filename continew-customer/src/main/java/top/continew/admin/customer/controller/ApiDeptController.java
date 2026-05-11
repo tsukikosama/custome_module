@@ -50,9 +50,9 @@ public class ApiDeptController {
         return R.ok(deptService.list());
     }
 
-    @Operation(summary = "查询部门详情", description = "查询单个部门的详细信息和部门成员列表")
+    @Operation(summary = "查询子部门列表", description = "查询指定部门的所有直接子部门，每个子部门包含其成员列表")
     @GetMapping("/{deptId}")
-    public R<ApiDeptDetailResp> getDetail(@Parameter(description = "部门ID", required = true) @PathVariable Long deptId) {
+    public R<List<ApiDeptDetailResp>> getDetail(@Parameter(description = "父部门ID", required = true) @PathVariable Long deptId) {
         return R.ok(deptService.getDetail(deptId));
     }
 }

@@ -28,7 +28,6 @@ import top.continew.admin.customer.model.resp.ApiDeptResp;
 import top.continew.admin.customer.service.DeptService;
 import top.continew.admin.hrcommon.model.entity.dept.DeptDO;
 import top.continew.admin.hrcommon.model.entity.user.UserDO;
-import top.continew.starter.core.exception.BusinessException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,8 +48,9 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public List<ApiDeptResp> list() {
-        // 查询所有启用的部门，按排序字段升序排列
+        // 查询 parent_id=1 的所有启用部门，按排序字段升序排列
         List<DeptDO> deptList = deptMapper.selectList(Wrappers.<DeptDO>lambdaQuery()
+            .eq(DeptDO::getParentId, 1L)
             .eq(DeptDO::getStatus, DisEnableStatusEnum.ENABLE)
             .orderByAsc(DeptDO::getSort));
 
@@ -59,21 +59,46 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    public ApiDeptDetailResp getDetail(Long deptId) {
-        // 查询部门信息
-        DeptDO dept = deptMapper.selectById(deptId);
-        if (dept == null) {
-            throw new BusinessException("部门不存在或已被删除");
+    public List<ApiDeptDetailResp> getDetail(Long deptId) {
+        // 查询所有 parentId=deptId 的启用子部门，按排序字段升序排列
+        List<DeptDO> childDeptList = deptMapper.selectList(Wrappers.<DeptDO>lambdaQuery()
+            .eq(DeptDO::getParentId, deptId)
+            .eq(DeptDO::getStatus, DisEnableStatusEnum.ENABLE)
+            .orderByAsc(DeptDO::getSort));
+
+        // 如果没有子部门，返回空列表
+        if (childDeptList.isEmpty()) {
+            return List.of();
         }
 
-        // 只允许查询启用的部门
-        if (!DisEnableStatusEnum.ENABLE.equals(dept.getStatus())) {
-            throw new BusinessException("该部门已被禁用");
-        }
+        // 为每个子部门查询其成员并转换为详情响应对象
+        return childDeptList.stream().map(this::convertToDetailResp).collect(Collectors.toList());
+    }
 
+    /**
+     * 转换为部门列表响应对象
+     *
+     * @param dept 部门实体
+     * @return 部门响应对象
+     */
+    private ApiDeptResp convertToApiResp(DeptDO dept) {
+        ApiDeptResp apiResp = new ApiDeptResp();
+        apiResp.setId(dept.getId());
+        apiResp.setName(dept.getName());
+        apiResp.setDescription(dept.getDescription());
+        return apiResp;
+    }
+
+    /**
+     * 转换为部门详情响应对象（包含成员列表）
+     *
+     * @param dept 部门实体
+     * @return 部门详情响应对象
+     */
+    private ApiDeptDetailResp convertToDetailResp(DeptDO dept) {
         // 查询该部门的启用成员
         List<UserDO> members = userMapper.selectList(Wrappers.<UserDO>lambdaQuery()
-            .eq(UserDO::getDeptId, deptId)
+            .eq(UserDO::getDeptId, dept.getId())
             .eq(UserDO::getStatus, DisEnableStatusEnum.ENABLE));
 
         // 转换为详情响应对象
@@ -90,20 +115,6 @@ public class DeptServiceImpl implements DeptService {
         detailResp.setMembers(memberResps);
 
         return detailResp;
-    }
-
-    /**
-     * 转换为部门列表响应对象
-     *
-     * @param dept 部门实体
-     * @return 部门响应对象
-     */
-    private ApiDeptResp convertToApiResp(DeptDO dept) {
-        ApiDeptResp apiResp = new ApiDeptResp();
-        apiResp.setId(dept.getId());
-        apiResp.setName(dept.getName());
-        apiResp.setDescription(dept.getDescription());
-        return apiResp;
     }
 
     /**

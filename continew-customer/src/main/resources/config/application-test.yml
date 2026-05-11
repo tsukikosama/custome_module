@@ -105,9 +105,7 @@ nextdoc4j:
 continew-starter.web.cors:
   enabled: true
   # 配置允许跨域的域名
-  allowed-origins:
-    - ${application.url}
-    - http://192.168.31.101:3000
+  allowed-origins: '*'
   # 配置允许跨域的请求方式
   allowed-methods: '*'
   # 配置允许跨域的请求头

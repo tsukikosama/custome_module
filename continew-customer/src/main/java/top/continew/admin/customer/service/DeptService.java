@@ -37,10 +37,10 @@ public interface DeptService {
     List<ApiDeptResp> list();
 
     /**
-     * 查询部门详情
+     * 查询指定部门的子部门列表
      *
-     * @param deptId 部门ID
-     * @return 部门详情
+     * @param deptId 父部门ID
+     * @return 子部门详情列表
      */
-    ApiDeptDetailResp getDetail(Long deptId);
+    List<ApiDeptDetailResp> getDetail(Long deptId);
 }
