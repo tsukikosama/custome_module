@@ -85,4 +85,12 @@
         <!-- 日志保留天数（根据国家法律，网络运行状态、网络安全事件、个人敏感信息操作等相关记录，留存的日志不少于六个月，并且进行网络多机备份。） -->
         <property name="FILE_MAX_HISTORY" value="180"/>
     </springProfile>
+    <springProfile name="test">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE_PROD"/>
+            <appender-ref ref="ASYNC_FILE"/>
+        </root>
+        <!-- 日志保留天数（根据国家法律，网络运行状态、网络安全事件、个人敏感信息操作等相关记录，留存的日志不少于六个月，并且进行网络多机备份。） -->
+        <property name="FILE_MAX_HISTORY" value="180"/>
+    </springProfile>
 </configuration>
