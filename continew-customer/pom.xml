@@ -54,12 +54,53 @@
     <build>
         <finalName>continew-customer</finalName>
         <plugins>
-            <!-- Spring Boot 打包插件 -->
+            <!-- Spring Boot 可执行 JAR 打包插件 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- 指定主启动类 -->
+                    <mainClass>top.continew.admin.customer.CustomerApplication</mainClass>
+                    <!-- 是否将系统作用域的依赖包含进去 -->
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- 胖包模式：将依赖、配置文件等打包到 jar 包之内 -->
+        <profile>
+            <id>fat-jar</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <!-- 指定主启动类 -->
+                            <mainClass>top.continew.admin.customer.CustomerApplication</mainClass>
+                            <!-- 是否将系统作用域的依赖包含进去 -->
+                            <includeSystemScope>true</includeSystemScope>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>repackage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
