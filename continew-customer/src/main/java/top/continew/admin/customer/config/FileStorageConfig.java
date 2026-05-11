@@ -17,6 +17,8 @@
 package top.continew.admin.customer.config;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.URLUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.x.file.storage.core.FileStorageProperties;
@@ -29,6 +31,7 @@ import org.springframework.context.annotation.Configuration;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.hrcommon.mapper.StorageMapper;
 import top.continew.admin.hrcommon.model.entity.StorageDO;
+import top.continew.starter.core.util.SpringWebUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -70,9 +73,17 @@ public class FileStorageConfig implements ApplicationRunner {
                 FileStorageProperties.LocalPlusConfig config = new FileStorageProperties.LocalPlusConfig();
                 config.setPlatform(storage.getCode());
                 config.setStoragePath(storage.getBucketName());
-                config.setDomain(storage.getDomain());
+                // 确保 domain 以 / 结尾
+                String domain = storage.getDomain();
+                if (domain != null && !domain.endsWith("/")) {
+                    domain = domain + "/";
+                }
+                config.setDomain(domain);
                 fileStorageList.addAll(FileStorageServiceBuilder.buildLocalPlusFileStorage(Collections
                     .singletonList(config)));
+                // 注册资源映射
+                SpringWebUtils.registerResourceHandler(MapUtil.of(URLUtil.url(domain).getPath(), storage
+                    .getBucketName()));
                 log.info("已加载本地存储：{} ({})", storage.getName(), storage.getCode());
             }
             case OSS -> {
