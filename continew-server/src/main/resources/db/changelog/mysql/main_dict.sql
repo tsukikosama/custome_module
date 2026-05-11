@@ -57,7 +57,7 @@ INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `descripti
 -- comment 更新字典
 UPDATE `sys_dict_item` SET `label` = '审核失败', `value` = '3', `color` = 'error', `sort` = 999, `description` = NULL, `status` = 1, `dict_id` = 842347882492207179, `create_user` = 1, `create_time` = '2026-05-06 10:29:56', `update_user` = 1, `update_time` = '2026-05-09 14:51:00', `deleted` = 0 WHERE `id` = 842347927803273296;
 
--- changeset weilai:10007
+-- changeset weilai:10008
 -- comment 更新字典
 INSERT INTO `sys_dict` (`id`, `name`, `code`, `description`, `is_system`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (802540391315284000, '积分类型', 'points_type', '积分类型', b'0', 1, '2026-01-16 14:09:00', NULL, NULL, 0);
 INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (804305112280346663, '积分失效', '3', 'warning', 999, NULL, 1, 802540391315284000, 1, '2026-01-21 11:01:22', NULL, NULL, 0);
