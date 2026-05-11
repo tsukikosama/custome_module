@@ -19,7 +19,6 @@ package top.continew.admin.system.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
@@ -70,7 +69,6 @@ import top.continew.admin.hrcommon.model.entity.dept.DeptDO;
 import top.continew.admin.hrcommon.model.entity.user.UserDO;
 import top.continew.admin.hrcommon.model.entity.user.UserRoleDO;
 import top.continew.admin.hrcommon.model.enums.PointsStatusEnum;
-import top.continew.admin.hrcommon.model.enums.PointsTypeEnum;
 import top.continew.admin.hrcommon.model.resp.user.UserDetailResp;
 import top.continew.admin.system.enums.OptionCategoryEnum;
 import top.continew.admin.system.model.entity.RoleDO;
@@ -93,7 +91,6 @@ import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -508,7 +505,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
                 userDO.setNickname(user.getName());
                 userDO.setPassword("123456");
                 userDO.setJobTitle(user.getTitle());
-                if (user.getHiredDate() != null){
+                if (user.getHiredDate() != null) {
                     userDO.setHiredDate(LocalDateTimeUtil.of(user.getHiredDate()));
                 }
                 userDO.setUnionId(user.getUnionid());
@@ -682,7 +679,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
                 userDO.setPhone(user.getMobile());
                 userDO.setDeptId(item);
                 userDO.setJobTitle(user.getTitle());
-                if (user.getHiredDate() != null){
+                if (user.getHiredDate() != null) {
                     userDO.setHiredDate(LocalDateTimeUtil.of(user.getHiredDate()));
                 }
                 userMap.put(userDO.getId(), userDO); // 去重

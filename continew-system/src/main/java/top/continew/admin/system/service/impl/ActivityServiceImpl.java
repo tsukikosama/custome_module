@@ -151,7 +151,7 @@ public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, Activit
                             activityMemberMapper.update(null, Wrappers.<ActivityMemberDO>lambdaUpdate()
                                 .eq(ActivityMemberDO::getActivityId, activityId)
                                 .eq(ActivityMemberDO::getUserId, userId)
-                                 .set(ActivityMemberDO::getStatus, 1));
+                                .set(ActivityMemberDO::getStatus, 1));
                             log.info("用户重新报名成功，活动ID：{}，用户ID：{}", activityId, userId);
                         } else {
                             log.warn("该用户已存在活动参与记录，活动ID：{}，用户ID：{}，跳过插入", activityId, userId);
@@ -212,10 +212,8 @@ public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, Activit
             // 创建通知
             NoticeReq noticeReq = new NoticeReq();
             noticeReq.setTitle("新活动通知");
-            noticeReq.setContent(String.format("新活动「%s」已发布，活动时间：%s 至 %s，欢迎参加！",
-                activity.getTitle(),
-                activity.getStartTime(),
-                activity.getEndTime()));
+            noticeReq.setContent(String.format("新活动「%s」已发布，活动时间：%s 至 %s，欢迎参加！", activity.getTitle(), activity
+                .getStartTime(), activity.getEndTime()));
             noticeReq.setStatus(NoticeStatusEnum.PUBLISHED);
             noticeReq.setType("1");
             // 发送给所有用户
@@ -249,9 +247,10 @@ public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, Activit
             // 创建通知
             NoticeReq noticeReq = new NoticeReq();
             noticeReq.setTitle("活动审核失败通知");
-            noticeReq.setContent(String.format("您创建的活动「%s」审核未通过。%s",
-                activity.getTitle(),
-                auditRemark != null && !auditRemark.trim().isEmpty() ? "失败原因：" + auditRemark : "请重新提交活动申请。"));
+            noticeReq.setContent(String.format("您创建的活动「%s」审核未通过。%s", activity
+                .getTitle(), auditRemark != null && !auditRemark.trim().isEmpty()
+                    ? "失败原因：" + auditRemark
+                    : "请重新提交活动申请。"));
             noticeReq.setStatus(NoticeStatusEnum.PUBLISHED);
             noticeReq.setType("1");
             noticeReq.setNoticeScope(NoticeScopeEnum.USER);

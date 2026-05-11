@@ -16,6 +16,7 @@
 
 package top.continew.admin.customer.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,7 @@ public class ApiCarouselController {
     @Log(ignore = true)
     @Operation(summary = "查询轮播图列表", description = "查询所有轮播图列表，按顺序升序排序")
     @GetMapping
+    @SaIgnore
     public List<ApiCarouselResp> list() {
         return carouselService.list();
     }

@@ -121,7 +121,8 @@ public class UserServiceImpl implements UserService {
         CheckUtils.throwIfNull(userDO, "用户不存在");
 
         // 2. 验证旧密码是否正确
-        CheckUtils.throwIf(!passwordEncoder.matches(passwordUpdateReq.getOldPassword(), userDO.getPassword()), "旧密码不正确");
+        CheckUtils.throwIf(!passwordEncoder.matches(passwordUpdateReq.getOldPassword(), userDO
+            .getPassword()), "旧密码不正确");
 
         // 3. 验证新密码不能与旧密码相同
         CheckUtils.throwIfEqual(passwordUpdateReq.getOldPassword(), passwordUpdateReq.getNewPassword(), "新密码不能与旧密码相同");

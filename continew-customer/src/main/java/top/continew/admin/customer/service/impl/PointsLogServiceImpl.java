@@ -90,10 +90,8 @@ public class PointsLogServiceImpl implements PointsLogService {
         String[] times = req.getTimes();
         if (times != null && times.length == 2) {
             // 如果有times数组，解析为LocalDateTime
-            timeRange = new LocalDateTime[] {
-                LocalDateTime.parse(times[0], DATE_TIME_FORMATTER),
-                LocalDateTime.parse(times[1], DATE_TIME_FORMATTER)
-            };
+            timeRange = new LocalDateTime[] {LocalDateTime.parse(times[0], DATE_TIME_FORMATTER), LocalDateTime
+                .parse(times[1], DATE_TIME_FORMATTER)};
         } else if (req.getStartTime() != null && req.getEndTime() != null) {
             // 如果没有times数组，尝试使用startTime和endTime
             timeRange = new LocalDateTime[] {req.getStartTime(), req.getEndTime()};

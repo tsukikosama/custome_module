@@ -39,7 +39,8 @@ import top.continew.admin.system.service.OrderService;
  */
 @Tag(name = "订单管理 API")
 @RestController
-@CrudRequestMapping(value = "/biz/order", api = {Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.BATCH_DELETE, Api.EXPORT, Api.DICT})
+@CrudRequestMapping(value = "/biz/order", api = {Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.BATCH_DELETE,
+    Api.EXPORT, Api.DICT})
 public class OrderController extends BaseController<OrderService, OrderResp, OrderDetailResp, OrderQuery, OrderReq> {
 
     @Operation(summary = "取消订单", description = "根据订单ID取消订单")
