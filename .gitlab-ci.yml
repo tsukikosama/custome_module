@@ -1,84 +1,94 @@
 stages:
-  - build
-  - deploy
+  - build_and_deploy
 
-# ===================================================================
-# Backend Jobs
-# ===================================================================
+# 把 打包 + 部署 放在同一个阶段，不拆分！
+# 这样目录不会变，文件不会丢！
+build_and_deploy_all:
+  stage: build_and_deploy
+  script:
+    # 1. 打包
+    - mvn clean package -DskipTests -P fat-jar
 
-build-backend:
-  stage: build
-  script:
-    - echo "===== Building backend (fat-jar) ====="
-    - cd backend
-    # 使用 fat-jar profile
-    - mvn clean package -Pfat-jar -DskipTests
-    - echo "===== Generated jars ====="
-    - find . -name "*-fat.jar"
-    # 将所有 fat-jar 复制到一个统一目录
-    - mkdir -p dist
-    - find . -name "*-fat.jar" -exec cp {} dist/ \;
-    - ls -lh dist/
-  artifacts:
-    paths:
-      - backend/dist/
-    expire_in: 1 hour
-  when: manual
-  only:
-    - feat-no-stock-version
-deploy-backend:
-  stage: deploy
-  needs: ["build-backend"]
-  script:
-    - echo "Deploying backend to production..."
+    # 2. 查看 jar（你能看到）
+    - find . -name "*.jar" | grep -v test
+
+    # 3. 准备私钥
     - echo "$SSH_PRIVATE_KEY" > private_key
     - chmod 600 private_key
-    # 创建服务器目录
-    - ssh -i private_key -o StrictHostKeyChecking=no root@52.195.156.13 "mkdir -p /hr/backend/jars"
-    # 同步所有 fat-jar
-    - rsync -avz -e "ssh -i private_key -o StrictHostKeyChecking=no" backend/dist/*.jar root@52.195.156.13:/hr/backend/jars/
-    # 列出服务器上的 jar（用于确认）
-    - ssh -i private_key -o StrictHostKeyChecking=no root@52.195.156.13 "ls -lh /hr/backend/jars/"
-    - ssh -i private_key -o StrictHostKeyChecking=no root@52.195.156.13 "cd /hr/backend && sh api.sh restart"
+
+    # ==================== 部署 admin ====================
+    - rsync -avz -e "ssh -p 22022 -i private_key -o StrictHostKeyChecking=no" continew-server/target/continew-admin.jar opsuser@85.137.55.229:/opt/card/webapi/
+    - ssh -p 22022 -i private_key opsuser@85.137.55.229 "
+      cd /opt/card/webapi &&
+      mkdir -p bak &&
+      [ -f continew-admin.jar ] && cp continew-admin.jar bak/continew-admin.jar.$(date +%Y%m%d%H%M%S) &&
+      sh api-service.sh stop && sleep 3 && sh api-service.sh start
+      "
+
+    # ==================== 部署 customer ====================
+    - rsync -avz -e "ssh -p 22022 -i private_key -o StrictHostKeyChecking=no" continew-customer/target/continew-customer.jar opsuser@85.137.55.229:/opt/card/clientapi/
+    - ssh -p 22022 -i private_key opsuser@85.137.55.229 "
+      cd /opt/card/clientapi &&
+      mkdir -p bak &&
+      [ -f continew-customer.jar ] && cp continew-customer.jar bak/continew-customer.jar.$(date +%Y%m%d%H%M%S) &&
+      sh api-service.sh stop && sleep 3 && sh api-service.sh start
+      "
+
   when: manual
   only:
-    - feat-no-stock-version
+    - dev
 
-# ===================================================================
-# Frontend Jobs
-# ===================================================================
 
-build-frontend:
-  stage: build
-  # Use a node image that is cached on your runner for faster execution
-  image: node:18
-  before_script:
-    - node -v
-    - npm -v
+# 打包后端
+build_and_deploy_admin:
+  stage: build_and_deploy
   script:
-    - echo "Building frontend..."
-    - cd front
-    - npm install
-    - npm run build
-  artifacts:
-    paths:
-      - front/dist/
-    expire_in: 1 hour
-  when: manual
-  only:
-    - feat-no-stock-version
+    # 1. 打包
+    - mvn clean package -DskipTests -P fat-jar
 
-deploy-frontend:
-  stage: deploy
-  needs: ["build-frontend"]
-  script:
-    - echo "Deploying frontend to production..."
+    # 2. 查看 jar（你能看到）
+    - find . -name "*.jar" | grep -v test
+
+    # 3. 准备私钥
     - echo "$SSH_PRIVATE_KEY" > private_key
     - chmod 600 private_key
-    # 创建目标目录
-    - ssh -i private_key -o StrictHostKeyChecking=no -o ServerAliveInterval=60 root@52.195.156.13 "mkdir -p /hr/frontend"
-    # 使用 rsync 传输，添加超时和重试参数
-    - rsync -avz --delete -e "ssh -i private_key -o StrictHostKeyChecking=no -o ServerAliveInterval=60" front/dist/ root@52.195.156.13:/hr/frontend/
+
+    # ==================== 部署 admin ====================
+    - rsync -avz -e "ssh -p 22022 -i private_key -o StrictHostKeyChecking=no" continew-server/target/continew-admin.jar opsuser@85.137.55.229:/opt/card/webapi/
+    - ssh -p 22022 -i private_key opsuser@85.137.55.229 "
+      cd /opt/card/webapi &&
+      mkdir -p bak &&
+      [ -f continew-admin.jar ] && cp continew-admin.jar bak/continew-admin.jar.$(date +%Y%m%d%H%M%S) &&
+      sh api-service.sh stop && sleep 3 && sh api-service.sh start
+      "
+
   when: manual
   only:
-    - feat-no-stock-version
+    - dev
+
+# 打包客户端
+build_and_deploy_customer:
+  stage: build_and_deploy
+  script:
+    # 1. 打包
+    - mvn clean package -DskipTests -P fat-jar
+
+    # 2. 查看 jar（你能看到）
+    - find . -name "*.jar" | grep -v test
+
+    # 3. 准备私钥
+    - echo "$SSH_PRIVATE_KEY" > private_key
+    - chmod 600 private_key
+
+    # ==================== 部署 customer ====================
+    - rsync -avz -e "ssh -p 22022 -i private_key -o StrictHostKeyChecking=no" continew-customer/target/continew-customer.jar opsuser@85.137.55.229:/opt/card/clientapi/
+    - ssh -p 22022 -i private_key opsuser@85.137.55.229 "
+      cd /opt/card/clientapi &&
+      mkdir -p bak &&
+      [ -f continew-customer.jar ] && cp continew-customer.jar bak/continew-customer.jar.$(date +%Y%m%d%H%M%S) &&
+      sh api-service.sh stop && sleep 3 && sh api-service.sh start
+      "
+
+  when: manual
+  only:
+    - dev
