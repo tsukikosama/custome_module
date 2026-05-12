@@ -3,6 +3,7 @@
 <mapper namespace="top.continew.admin.hrcommon.mapper.OvertimeWorkMapper">
     <select id="customPage" resultType="top.continew.admin.hrcommon.model.resp.OvertimeWorkResp">
         select
+            bow.id,
             bow.user_id as userId,
             su.nickname as nickname,
             bow.duration,
