@@ -75,3 +75,9 @@ INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `descripti
 INSERT INTO `sys_dict` (`id`, `name`, `code`, `description`, `is_system`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842474238664253476, '布尔类型', 'boolean_type', NULL, b'0', 1, '2026-05-06 18:51:51', NULL, NULL, 0);
 INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842474273523114025, '是', 'true', 'success', 999, NULL, 1, 842474238664253476, 1, '2026-05-06 18:51:59', 1, '2026-05-06 18:52:54', 0);
 INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (842474328183283756, '否', 'false', 'error', 999, NULL, 1, 842474238664253476, 1, '2026-05-06 18:52:12', 1, '2026-05-06 18:52:59', 0);
+
+-- changeset weilai:10009
+-- comment 更新字典
+INSERT INTO `sys_dict` (`id`, `name`, `code`, `description`, `is_system`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (804028255483994366, '商品上架状态', 'product_shelf_status', NULL, b'0', 1, '2026-01-20 16:41:14', NULL, NULL, 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (804028302405673219, '上架中', 'true', 'success', 999, NULL, 1, 804028255483994366, 1, '2026-01-20 16:41:25', NULL, NULL, 0);
+INSERT INTO `sys_dict_item` (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (804028368742785286, '已下架', 'false', 'warning', 999, NULL, 1, 804028255483994366, 1, '2026-01-20 16:41:41', NULL, NULL, 0);
