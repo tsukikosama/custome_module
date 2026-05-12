@@ -76,7 +76,7 @@ public class OrderServiceImpl extends BaseServiceImpl<OrderMapper, OrderDO, Orde
     private final DingTalkApiService dingTalkApiService;
     private final NoticeService noticeService;
     private static final String HR_DEPT_ID = "1068728006";
-
+    private static final Long ONE_EXCHANGE_ID = 806566015201706412L;
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long create(OrderReq req) {

@@ -64,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
     private final PointsLogMapper pointsLogMapper;
     private final UserMapper userMapper;
     private final top.continew.admin.hrcommon.mapper.ProductOrderLogMapper productOrderLogMapper;
-
+    private static final Long ONE_EXCHANGE_ID = 806566015201706412L;
     @Override
     @Transactional(rollbackFor = Exception.class)
     public OrderCreateResp create(OrderCreateReq req) {
@@ -102,6 +102,20 @@ public class OrderServiceImpl implements OrderService {
             // 校验是否超过月限
             CheckUtils.throwIf(monthlyCount + req.getProductNum() > monthlyLimit, String
                 .format("超出月限数量，本月已兑换：%d，月限：%d", monthlyCount, monthlyLimit));
+        }
+
+        // 6. 特殊商品年度限购校验
+        if (ONE_EXCHANGE_ID.equals(req.getProductId())) {
+            // 统计用户今年该商品的有效订单数量（排除已取消的订单）
+            QueryWrapper<OrderDO> yearlyWrapper = new QueryWrapper<>();
+            yearlyWrapper.eq("create_user", userId)
+                .eq("product_id", req.getProductId())
+                .ne("status", OrderStatusEnum.CANCELLED)
+                .apply("DATE_FORMAT(create_time, '%Y') = DATE_FORMAT(NOW(), '%Y')");
+            Long yearlyCount = orderMapper.selectCount(yearlyWrapper);
+
+            // 校验今年是否已下过单
+            CheckUtils.throwIf(yearlyCount > 0, "该商品每年只能兑换一次");
         }
 
         // 6. 生成订单号（使用雪花算法）

@@ -752,6 +752,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
             this.saveBatch(insertList, 500);
         }
         if (CollUtil.isNotEmpty(updateList)) {
+            // 清空密码字段，避免批量更新时密码被重新加密
+            updateList.forEach(user -> user.setPassword(null));
             this.updateBatchById(updateList, 500);
             userRoleService.deleteByUserIds(CollUtils.mapToList(updateList, UserDO::getId));
         }
