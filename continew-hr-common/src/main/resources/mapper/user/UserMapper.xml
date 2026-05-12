@@ -40,4 +40,12 @@
         <include refid="selectUser" />
         ${ew.customSqlSegment}
     </select>
+
+    <!-- 更新用户积分 -->
+    <update id="updatePoints">
+        UPDATE sys_user
+        SET points = #{points}
+        WHERE id = #{userId}
+          AND deleted = 0
+    </update>
 </mapper>

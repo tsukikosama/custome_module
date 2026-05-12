@@ -101,4 +101,13 @@ public interface UserMapper extends DataPermissionMapper<UserDO> {
 
     @Select("SELECT * FROM sys_user")
     List<UserDO> selectCustomUserList();
+
+    /**
+     * 更新用户积分
+     *
+     * @param userId 用户ID
+     * @param points 更新后的积分值
+     * @return 影响行数
+     */
+    int updatePoints(@Param("userId") Long userId, @Param("points") Integer points);
 }

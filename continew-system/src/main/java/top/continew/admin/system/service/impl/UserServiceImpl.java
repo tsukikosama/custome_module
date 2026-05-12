@@ -539,9 +539,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
         Integer beforePoints = user.getPoints();
         Integer afterPoints = beforePoints + req.getPoints();
         // 更新用户积分
-        this.baseMapper.update(Wrappers.<UserDO>lambdaUpdate()
-            .set(UserDO::getPoints, afterPoints)
-            .eq(UserDO::getId, req.getUserId()));
+        this.baseMapper.updatePoints(req.getUserId(), afterPoints);
 
         // 保存用户积分变化的日志
         PointsLogDO pointsLogReq = new PointsLogDO();
