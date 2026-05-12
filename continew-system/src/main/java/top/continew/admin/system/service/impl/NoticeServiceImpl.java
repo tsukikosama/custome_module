@@ -145,7 +145,7 @@ public class NoticeServiceImpl extends BaseServiceImpl<NoticeMapper, NoticeDO, N
 
     @Override
     public void publish(NoticeDO notice) {
-        List<NoticeMethodEnum> noticeMethods = notice.getNoticeMethods();
+        List<Integer> noticeMethods = notice.getNoticeMethods();
         if (CollUtil.isNotEmpty(noticeMethods) && noticeMethods.contains(NoticeMethodEnum.SYSTEM_MESSAGE.getValue())) {
             MessageTemplateEnum template = MessageTemplateEnum.NOTICE_PUBLISH;
             MessageReq req = new MessageReq(MessageTypeEnum.SYSTEM);

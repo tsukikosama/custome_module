@@ -23,7 +23,6 @@ import lombok.Data;
 import top.continew.admin.common.base.model.resp.BaseDetailResp;
 import top.continew.admin.common.config.excel.DictExcelProperty;
 import top.continew.admin.common.config.excel.ExcelDictConverter;
-import top.continew.admin.hrcommon.model.enums.NoticeMethodEnum;
 import top.continew.admin.hrcommon.model.enums.NoticeScopeEnum;
 import top.continew.admin.hrcommon.model.enums.NoticeStatusEnum;
 import top.continew.starter.excel.converter.ExcelBaseEnumConverter;
@@ -84,7 +83,7 @@ public class NoticeDetailResp extends BaseDetailResp {
      * 通知方式
      */
     @Schema(description = "通知方式", example = "[1,2]")
-    private List<NoticeMethodEnum> noticeMethods;
+    private List<Integer> noticeMethods;
 
     /**
      * 是否定时

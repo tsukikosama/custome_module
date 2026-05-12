@@ -22,7 +22,6 @@ import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import top.continew.admin.common.base.model.entity.BaseDO;
-import top.continew.admin.hrcommon.model.enums.NoticeMethodEnum;
 import top.continew.admin.hrcommon.model.enums.NoticeScopeEnum;
 import top.continew.admin.hrcommon.model.enums.NoticeStatusEnum;
 
@@ -74,7 +73,7 @@ public class NoticeDO extends BaseDO {
      * 通知方式
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
-    private List<NoticeMethodEnum> noticeMethods;
+    private List<Integer> noticeMethods;
 
     /**
      * 是否定时

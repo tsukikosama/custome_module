@@ -16,6 +16,7 @@
 
 package top.continew.admin.hrcommon.model.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import top.continew.starter.core.enums.BaseEnum;
@@ -40,6 +41,8 @@ public enum NoticeMethodEnum implements BaseEnum<Integer> {
      */
     POPUP(2, "登录弹窗"),;
 
+    @JsonValue
     private final Integer value;
     private final String description;
+
 }
