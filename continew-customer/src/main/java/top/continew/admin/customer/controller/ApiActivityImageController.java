@@ -16,6 +16,7 @@
 
 package top.continew.admin.customer.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -45,6 +46,7 @@ public class ApiActivityImageController {
 
     private final ActivityImageService activityImageService;
 
+    @SaIgnore
     @Operation(summary = "分页查询活动图片", description = "根据活动ID分页查询该活动的图片列表")
     @GetMapping("/{activityId}")
     public PageResp<ApiActivityImageResp> pageImages(@Parameter(description = "活动ID", required = true) @PathVariable Long activityId,

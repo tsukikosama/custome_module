@@ -16,6 +16,7 @@
 
 package top.continew.admin.customer.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,12 +49,14 @@ public class ApiActivityController {
 
     private final ActivityService activityService;
 
+    @SaIgnore
     @Operation(summary = "分页查询活动", description = "分页查询已审核通过的活动")
     @GetMapping
     public PageResp<ApiActivityResp> page(@Valid ActivityPageReq req) {
         return activityService.page(req);
     }
 
+    @SaIgnore
     @Operation(summary = "查询活动详情", description = "查询单个活动的详细信息")
     @GetMapping("/{id}")
     public R<ApiActivityDetailResp> getDetail(@Parameter(description = "活动ID", required = true) @PathVariable Long id) {
@@ -83,6 +86,7 @@ public class ApiActivityController {
 
     @Operation(summary = "获取置顶活动", description = "获取全部已审核通过的置顶活动")
     @GetMapping("/pinned")
+    @SaIgnore
     public R<java.util.List<ApiActivityResp>> listPinnedActivities() {
         return R.ok(activityService.listPinnedActivities());
     }

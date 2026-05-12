@@ -16,6 +16,7 @@
 
 package top.continew.admin.customer.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -45,12 +46,14 @@ public class ApiSuggestionController {
 
     private final ApiSuggestionService apiSuggestionService;
 
+
     @Operation(summary = "提交建议", description = "用户提交建议或反馈")
     @PostMapping
     public void create(@RequestBody @Valid SuggestionCreateReq req) {
         apiSuggestionService.create(req);
     }
 
+    @SaIgnore
     @Operation(summary = "建议列表分页查询", description = "分页查询当前登录用户的建议列表")
     @GetMapping
     public PageResp<ApiSuggestionResp> apiPage(@Valid SuggestionPageReq req) {
