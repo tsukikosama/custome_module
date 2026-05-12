@@ -63,12 +63,6 @@ public class OvertimePageReq {
     private Integer result;
 
     /**
-     * 创建时间范围数组，第一个是开始时间，第二个是结束时间（格式：yyyy-MM-dd HH:mm:ss）
-     */
-    @Schema(description = "时间范围数组", example = "[\"2026-04-01 00:00:00\", \"2026-04-30 23:59:59\"]")
-    private LocalDateTime[] times;
-
-    /**
      * 开始时间（格式：yyyy-MM-dd HH:mm:ss）
      */
     @Schema(description = "开始时间", example = "2026-04-01 00:00:00")

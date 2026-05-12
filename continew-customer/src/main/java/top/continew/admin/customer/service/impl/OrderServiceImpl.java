@@ -65,6 +65,7 @@ public class OrderServiceImpl implements OrderService {
     private final UserMapper userMapper;
     private final top.continew.admin.hrcommon.mapper.ProductOrderLogMapper productOrderLogMapper;
     private static final Long ONE_EXCHANGE_ID = 806566015201706412L;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public OrderCreateResp create(OrderCreateReq req) {
@@ -252,16 +253,9 @@ public class OrderServiceImpl implements OrderService {
             wrapper.eq("bo.status", req.getStatus());
         }
 
-        // 按时间范围筛选（支持两种方式：times数组 或 startTime+endTime）
-        LocalDateTime[] timeRange = req.getTimes();
-        if (timeRange == null || timeRange.length != 2) {
-            // 如果没有times数组，尝试使用startTime和endTime
-            if (req.getStartTime() != null && req.getEndTime() != null) {
-                timeRange = new LocalDateTime[] {req.getStartTime(), req.getEndTime()};
-            }
-        }
-        if (timeRange != null && timeRange.length == 2) {
-            wrapper.ge("bo.create_time", timeRange[0]).le("bo.create_time", timeRange[1]);
+        // 按时间范围筛选
+        if (req.getStartTime() != null && req.getEndTime() != null) {
+            wrapper.ge("bo.create_time", req.getStartTime()).le("bo.create_time", req.getEndTime());
         }
 
         // 2. 排序

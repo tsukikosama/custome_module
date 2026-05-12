@@ -46,7 +46,6 @@ public class ApiSuggestionController {
 
     private final ApiSuggestionService apiSuggestionService;
 
-
     @Operation(summary = "提交建议", description = "用户提交建议或反馈")
     @PostMapping
     public void create(@RequestBody @Valid SuggestionCreateReq req) {

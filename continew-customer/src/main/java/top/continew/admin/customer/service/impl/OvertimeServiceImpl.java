@@ -30,7 +30,6 @@ import top.continew.admin.hrcommon.mapper.OvertimeWorkMapper;
 import top.continew.admin.hrcommon.model.entity.OvertimeWorkDO;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -73,16 +72,9 @@ public class OvertimeServiceImpl implements OvertimeService {
             wrapper.eq("result", req.getResult());
         }
 
-        // 按时间范围筛选（支持两种方式：times数组 或 startTime+endTime）
-        LocalDateTime[] timeRange = req.getTimes();
-        if (timeRange == null || timeRange.length != 2) {
-            // 如果没有times数组，尝试使用startTime和endTime
-            if (req.getStartTime() != null && req.getEndTime() != null) {
-                timeRange = new LocalDateTime[] {req.getStartTime(), req.getEndTime()};
-            }
-        }
-        if (timeRange != null && timeRange.length == 2) {
-            wrapper.ge("create_time", timeRange[0]).le("create_time", timeRange[1]);
+        // 按时间范围筛选
+        if (req.getStartTime() != null && req.getEndTime() != null) {
+            wrapper.ge("create_time", req.getStartTime()).le("create_time", req.getEndTime());
         }
 
         // 处理排序
