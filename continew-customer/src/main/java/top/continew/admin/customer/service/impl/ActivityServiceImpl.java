@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import top.continew.admin.common.api.dingDingApi.DingTalkApiService;
 import top.continew.admin.common.api.dingDingApi.request.SendMessageReq;
-import top.continew.admin.common.context.UserContextHolder;
 import top.continew.admin.controller.biz.model.entity.ActivityMemberDO;
 import top.continew.admin.hrcommon.mapper.ActivityMapper;
 import top.continew.admin.hrcommon.mapper.ActivityMemberMapper;
@@ -193,7 +192,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Transactional(rollbackFor = Exception.class)
     public void participate(Long activityId) {
 
-        Long userId = UserContextHolder.getUserId();
+        Long userId = StpUtil.getLoginIdAsLong();
 
         // 查询活动是否存在
         ActivityDO activity = activityMapper.selectById(activityId);
@@ -257,7 +256,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void cancelParticipate(Long activityId) {
-        Long userId = UserContextHolder.getUserId();
+        Long userId = StpUtil.getLoginIdAsLong();
 
         // 查询活动是否存在
         ActivityDO activity = activityMapper.selectById(activityId);
