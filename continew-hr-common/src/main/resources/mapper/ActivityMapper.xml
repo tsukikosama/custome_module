@@ -10,7 +10,15 @@
             ba.*,
             GROUP_CONCAT(DISTINCT CASE WHEN speaker.type = 1 THEN speaker.user_id END) AS speakerUserId,
             GROUP_CONCAT(DISTINCT CASE WHEN requireUser.type = 2 THEN requireUser.user_id END) AS requireUserId,
-            GROUP_CONCAT(DISTINCT CASE WHEN normal.type = 3 THEN normal.user_id END) AS normalUserId
+            GROUP_CONCAT(DISTINCT CASE WHEN normal.type = 3 THEN normal.user_id END) AS normalUserId,
+            (
+                SELECT COUNT(*)
+                FROM biz_activity_member bam
+                WHERE bam.activity_id = ba.id
+                  AND bam.type IN (1, 2)
+                  AND bam.status = 1
+                  AND bam.deleted = 0
+            ) AS participantCount
         FROM biz_activity ba
         LEFT JOIN biz_activity_member speaker ON ba.id = speaker.activity_id AND speaker.type = 1 AND speaker.deleted = 0
         LEFT JOIN biz_activity_member requireUser ON ba.id = requireUser.activity_id AND requireUser.type = 2 AND requireUser.deleted = 0

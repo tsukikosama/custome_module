@@ -67,6 +67,7 @@ public class WishResp extends BaseResp {
      * 许愿状态 1-心愿中 2-许愿成功 3-许愿失败 4-许愿取消
      */
     @Schema(description = "许愿状态")
+
     private WishStatusEnum status;
 
     /**
@@ -80,4 +81,7 @@ public class WishResp extends BaseResp {
      */
     @Schema(description = "子心愿数量")
     private Integer childrenCount;
+
+    @Schema(description = "许愿用户")
+    private String wishUserNames;
 }

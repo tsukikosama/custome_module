@@ -48,6 +48,7 @@ import top.continew.starter.extension.crud.model.resp.PageResp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 订单服务实现
@@ -98,11 +99,11 @@ public class OrderServiceImpl implements OrderService {
                 .eq("product_id", req.getProductId())
                 .ne("status", OrderStatusEnum.CANCELLED)
                 .apply("DATE_FORMAT(create_time, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')");
-            Long monthlyCount = orderMapper.selectCount(monthlyWrapper);
+            List<OrderDO> orderList = orderMapper.selectList(monthlyWrapper);
 
             // 校验是否超过月限
-            CheckUtils.throwIf(monthlyCount + req.getProductNum() > monthlyLimit, String
-                .format("超出月限数量，本月已兑换：%d，月限：%d", monthlyCount, monthlyLimit));
+            CheckUtils.throwIf(orderList.stream().mapToInt(OrderDO::getProductNum).sum() + req.getProductNum() > monthlyLimit, String
+                .format("超出月限数量，本月已兑换：%d，月限：%d", orderList.stream().mapToInt(OrderDO::getProductNum).sum(), monthlyLimit));
         }
 
         // 6. 特殊商品年度限购校验

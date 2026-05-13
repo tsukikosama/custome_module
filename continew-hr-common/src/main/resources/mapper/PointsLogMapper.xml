@@ -19,7 +19,6 @@
             left join sys_user su on bpl.user_id = su.id
             left join sys_dept sd on su.dept_id = sd.id
         ${ew.customSqlSegment}
-        order by bpl.create_time desc
     </select>
 
     <select id="customList" resultType="top.continew.admin.hrcommon.model.resp.PointsLogResp">
@@ -40,6 +39,5 @@
             left join sys_user su on bpl.user_id = su.id
             left join sys_dept sd on su.dept_id = sd.id
         ${ew.customSqlSegment}
-        order by bpl.create_time desc
     </select>
 </mapper>

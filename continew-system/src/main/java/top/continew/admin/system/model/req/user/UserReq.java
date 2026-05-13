@@ -134,4 +134,10 @@ public class UserReq implements Serializable {
      */
     @Schema(description = "生日", example = "1995-06-15")
     private java.time.LocalDate birthday;
+
+    /**
+     * 是否推送钉钉消息
+     */
+    @Schema(description = "是否推送钉钉消息", example = "true")
+    private Boolean isPushMessage;
 }

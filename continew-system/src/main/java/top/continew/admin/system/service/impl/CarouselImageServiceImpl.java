@@ -16,6 +16,7 @@
 
 package top.continew.admin.system.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.continew.admin.common.base.service.BaseServiceImpl;
@@ -26,6 +27,7 @@ import top.continew.admin.hrcommon.model.entity.CarouselImageDO;
 import top.continew.admin.system.model.query.CarouselImageQuery;
 import top.continew.admin.system.model.req.CarouselImageReq;
 import top.continew.admin.system.service.CarouselImageService;
+import top.continew.starter.core.util.validation.CheckUtils;
 
 /**
  * 轮播图业务实现
@@ -35,4 +37,13 @@ import top.continew.admin.system.service.CarouselImageService;
  */
 @Service
 @RequiredArgsConstructor
-public class CarouselImageServiceImpl extends BaseServiceImpl<CarouselImageMapper, CarouselImageDO, CarouselImageResp, CarouselImageDetailResp, CarouselImageQuery, CarouselImageReq> implements CarouselImageService {}
+public class CarouselImageServiceImpl extends BaseServiceImpl<CarouselImageMapper, CarouselImageDO, CarouselImageResp, CarouselImageDetailResp, CarouselImageQuery, CarouselImageReq> implements CarouselImageService {
+    @Override
+    protected void beforeCreate(CarouselImageReq req) {
+        //校验当前标题是否已存在
+        Long l = this.baseMapper.selectCount(Wrappers.<CarouselImageDO>lambdaQuery()
+            .eq(CarouselImageDO::getTitle, req.getTitle()));
+        CheckUtils.throwIf(l > 0, "标题已存在");
+        super.beforeCreate(req);
+    }
+}

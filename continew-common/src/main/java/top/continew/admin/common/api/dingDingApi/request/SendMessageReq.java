@@ -58,6 +58,13 @@ public class SendMessageReq implements Serializable {
     private String deptIdList;
 
     /**
+     * 是否发送给全体用户
+     */
+    @Schema(description = "是否发送给全体用户", example = "true")
+    @JsonProperty("to_all_user")
+    private Boolean toAllUser = false;
+
+    /**
      * 消息内容
      */
     @Schema(description = "消息内容")

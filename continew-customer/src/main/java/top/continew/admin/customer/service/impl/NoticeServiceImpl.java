@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import top.continew.admin.customer.model.req.NoticePageReq;
 import top.continew.admin.customer.service.NoticeService;
 import top.continew.admin.hrcommon.mapper.NoticeLogMapper;
 import top.continew.admin.hrcommon.mapper.NoticeMapper;
@@ -47,7 +48,7 @@ public class NoticeServiceImpl implements NoticeService {
     private final NoticeLogMapper noticeLogMapper;
 
     @Override
-    public PageResp<NoticeResp> page() {
+    public PageResp<NoticeResp> page(NoticePageReq req) {
         // 获取当前登录用户ID
         Long userId = StpUtil.getLoginIdAsLong();
 
@@ -55,8 +56,8 @@ public class NoticeServiceImpl implements NoticeService {
         NoticeQuery query = new NoticeQuery();
         query.setUserId(userId);
 
-        // 创建分页对象并执行查询（默认显示所有，不分页）
-        Page<NoticeDO> page = new Page<>(1, 100);
+        // 创建分页对象并执行查询
+        Page<NoticeDO> page = new Page<>(req.getPage(), req.getSize());
         IPage<NoticeResp> result = noticeMapper.selectNoticePage(page, query);
 
         return PageResp.build(result);

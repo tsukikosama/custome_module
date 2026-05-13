@@ -41,6 +41,7 @@ import top.continew.admin.system.model.req.user.UserPasswordResetReq;
 import top.continew.admin.system.model.req.user.UserPointChangeReq;
 import top.continew.admin.system.model.req.user.UserReq;
 import top.continew.admin.system.model.req.user.UserPointImportReq;
+import top.continew.admin.system.model.req.user.UserPushMessageUpdateReq;
 import top.continew.admin.system.model.req.user.UserRoleUpdateReq;
 import top.continew.admin.system.model.resp.user.UserImportParseResp;
 import top.continew.admin.system.model.resp.user.UserImportResp;
@@ -126,6 +127,13 @@ public class UserController extends BaseController<UserService, UserResp, UserDe
     @PatchMapping("/points")
     public void changePoints(@RequestBody @Valid UserPointChangeReq req) {
         baseService.changePoints(req);
+    }
+
+    @Operation(summary = "修改推送消息设置", description = "修改用户是否推送钉钉消息设置")
+    @Parameter(name = "id", description = "用户ID", example = "1", in = ParameterIn.PATH)
+    @PatchMapping("/{id}/push-message")
+    public void updatePushMessage(@RequestBody @Valid UserPushMessageUpdateReq req, @PathVariable Long id) {
+        baseService.updatePushMessage(req, id);
     }
 
     @Operation(summary = "下载积分导入模板", description = "下载积分导入模板")

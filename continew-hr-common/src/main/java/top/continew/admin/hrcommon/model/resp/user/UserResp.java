@@ -31,6 +31,7 @@ import top.continew.starter.security.mask.annotation.JsonMask;
 import top.continew.starter.security.mask.enums.MaskType;
 
 import java.io.Serial;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -154,7 +155,9 @@ public class UserResp extends BaseDetailResp {
      * 生日
      */
     @Schema(description = "生日", example = "1995-06-15")
-    private java.time.LocalDate birthday;
+    private LocalDate birthday;
+
+    private Boolean isPushMessage;
 
     @Override
     public Boolean getDisabled() {

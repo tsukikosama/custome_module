@@ -187,6 +187,13 @@ public class UserDetailResp extends BaseDetailResp {
     @ExcelProperty(value = "生日", order = 17)
     private java.time.LocalDate birthday;
 
+    /**
+     * 是否推送钉钉消息
+     */
+    @Schema(description = "是否推送钉钉消息", example = "true")
+    @ExcelProperty(value = "是否推送钉钉消息", order = 18)
+    private Boolean isPushMessage;
+
     @Override
     public Boolean getDisabled() {
         return this.getIsSystem() || Objects.equals(this.getId(), UserContextHolder.getUserId());

@@ -39,4 +39,6 @@ public interface ProductService extends BaseService<ProductResp, ProductDetailRe
      * @param isShelf   是否下架（1：下架；0：上架）
      */
     void disableProduct(Long productId, Boolean isShelf);
+
+    void checkIsSameProductName(String productName);
 }

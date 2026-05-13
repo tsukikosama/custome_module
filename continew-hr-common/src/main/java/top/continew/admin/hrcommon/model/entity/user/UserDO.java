@@ -138,4 +138,9 @@ public class UserDO extends BaseDO {
      * 生日
      */
     private java.time.LocalDate birthday;
+
+    /**
+     * 是否推送钉钉消息
+     */
+    private Boolean isPushMessage;
 }

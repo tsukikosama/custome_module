@@ -73,25 +73,25 @@ public class PointsLogServiceImpl implements PointsLogService {
         QueryWrapper<PointsLogDO> wrapper = new QueryWrapper<>();
 
         // 只查询当前用户的积分日志
-        wrapper.eq("user_id", userId);
+        wrapper.eq("bpl.user_id", userId);
 
         // 部门权限过滤：如果不是运营部门，则过滤掉type=1（加班转换）的记录
         if (deptId != null) {
             DeptDO dept = deptMapper.selectById(deptId);
             if (dept != null && dept.getAncestors() != null && !dept.getAncestors().contains(OPERATIONS_DEPT_ID)) {
                 // 不是运营部门，过滤掉加班转换（type=1）的记录
-                wrapper.ne("type", PointsTypeEnum.INCREASE);
+                wrapper.ne("bpl.type", PointsTypeEnum.INCREASE);
             }
         }
 
         // 按时间范围筛选
         if (req.getStartTime() != null && req.getEndTime() != null) {
-            wrapper.ge("create_time", req.getStartTime()).le("create_time", req.getEndTime());
+            wrapper.ge("bpl.create_time", req.getStartTime()).le("bpl.create_time", req.getEndTime());
         }
 
         // 按积分类型筛选
         if (req.getType() != null) {
-            wrapper.eq("type", PointsTypeEnum.values()[req.getType() - 1]);
+            wrapper.eq("bpl.type", req.getType());
         }
 
         // 处理排序
@@ -99,15 +99,15 @@ public class PointsLogServiceImpl implements PointsLogService {
             boolean isAsc = "asc".equalsIgnoreCase(req.getSortOrder());
 
             if ("createTime".equals(req.getSortField())) {
-                wrapper.orderBy(true, isAsc, "create_time");
+                wrapper.orderBy(true, isAsc, "bpl.create_time");
             } else if ("amount".equals(req.getSortField())) {
-                wrapper.orderBy(true, isAsc, "points");
+                wrapper.orderBy(true, isAsc, "bpl.points");
             } else {
-                wrapper.orderByDesc("create_time");
+                wrapper.orderByDesc("bpl.create_time");
             }
         } else {
             // 默认按创建时间倒序
-            wrapper.orderByDesc("create_time");
+            wrapper.orderByDesc("bpl.create_time");
         }
 
         // 执行分页查询

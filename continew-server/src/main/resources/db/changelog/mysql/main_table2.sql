@@ -406,3 +406,8 @@ ALTER TABLE `biz_points_log`
 -- comment 轮播图新增内容
 ALTER TABLE `biz_carousel_image`
     ADD COLUMN `content` text  NULL COMMENT '文章内容' AFTER `create_user`;
+
+-- changeset weilai:10031
+-- comment 新增配置是否推送钉钉消息的开关
+ALTER TABLE `sys_user`
+    ADD COLUMN `is_push_message` bit(1) NULL DEFAULT b'0' COMMENT '是否推送数据' AFTER `hired_date`;

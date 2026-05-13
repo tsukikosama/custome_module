@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -37,8 +38,12 @@ import top.continew.admin.system.service.ProductService;
 import top.continew.admin.system.service.WishService;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.admin.hrcommon.mapper.WishMapper;
+import top.continew.starter.excel.util.ExcelUtils;
 import top.continew.starter.extension.crud.model.query.PageQuery;
+import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
+
+import java.util.List;
 
 /**
  * 心愿表业务实现
@@ -75,6 +80,7 @@ public class WishServiceImpl extends BaseServiceImpl<WishMapper, WishDO, WishRes
         CheckUtils.throwIfNull(request.getPoints(), "商品积分不能为空");
         CheckUtils.throwIfNull(request.getTypeId(), "商品类型ID不能为空");
 
+        productService.checkIsSameProductName(request.getName());
         // 创建商品
         ProductReq productReq = new ProductReq();
         productReq.setName(request.getName());
@@ -115,5 +121,13 @@ public class WishServiceImpl extends BaseServiceImpl<WishMapper, WishDO, WishRes
 
         // 创建心愿记录
         return super.create(req);
+    }
+
+    @Override
+    public void export(WishQuery query, SortQuery sortQuery, HttpServletResponse response) {
+        QueryWrapper<WishDO> wrapper = this.buildQueryWrapper(query);
+        List<WishDetailResp> list = this.baseMapper.customList(wrapper);
+        list.forEach(this::fill);
+        ExcelUtils.export(list, "导出数据", WishDetailResp.class, response);
     }
 }

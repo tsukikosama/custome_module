@@ -25,6 +25,8 @@ import cn.idev.excel.annotation.ExcelProperty;
 
 import top.continew.admin.common.base.model.resp.BaseDetailResp;
 import top.continew.admin.hrcommon.model.enums.WishStatusEnum;
+import top.continew.starter.excel.converter.ExcelBaseEnumConverter;
+
 import java.io.Serial;
 import java.time.*;
 
@@ -74,7 +76,7 @@ public class WishDetailResp extends BaseDetailResp {
      * 许愿状态 1-心愿中 2-许愿成功 3-许愿失败 4-许愿取消
      */
     @Schema(description = "许愿状态")
-    @ExcelProperty(value = "许愿状态")
+    @ExcelProperty(value = "许愿状态", converter = ExcelBaseEnumConverter.class)
     private WishStatusEnum status;
 
     /**
@@ -83,4 +85,8 @@ public class WishDetailResp extends BaseDetailResp {
     @Schema(description = "失败原因")
     @ExcelProperty(value = "失败原因")
     private String failReason;
+
+    @ExcelProperty(value = "许愿用户")
+    @Schema(description = "许愿用户")
+    private String wishUserNames;
 }

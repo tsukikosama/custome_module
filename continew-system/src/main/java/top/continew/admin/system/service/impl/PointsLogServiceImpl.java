@@ -73,7 +73,7 @@ public class PointsLogServiceImpl extends BaseServiceImpl<PointsLogMapper, Point
     @Override
     public PageResp<PointsLogResp> page(PointsLogQuery query, PageQuery pageQuery) {
         QueryWrapper<PointsLogDO> wrapper = this.buildQueryWrapper(query);
-        wrapper.lambda().orderByDesc(PointsLogDO::getCreateTime);
+        wrapper.orderByDesc("bpl.create_time");
         IPage<PointsLogResp> page = this.baseMapper.customPage(new Page((long)pageQuery.getPage(), (long)pageQuery
             .getSize()), wrapper);
         return PageResp.build(page);
@@ -82,6 +82,7 @@ public class PointsLogServiceImpl extends BaseServiceImpl<PointsLogMapper, Point
     @Override
     public void export(PointsLogQuery query, SortQuery sortQuery, HttpServletResponse response) {
         QueryWrapper<PointsLogDO> wrapper = this.buildQueryWrapper(query);
+        wrapper.orderByDesc("bpl.create_time");
         List<PointsLogResp> list = this.baseMapper.customList(wrapper);
         ExcelUtils.export(list, "积分日志数据", PointsLogResp.class, response);
     }

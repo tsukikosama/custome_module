@@ -186,4 +186,19 @@ public interface UserService extends BaseService<UserResp, UserDetailResp, UserQ
 
     void updateUserByDingding();
 
+    /**
+     * 修改推送消息设置
+     *
+     * @param req 修改信息
+     * @param id  ID
+     */
+    void updatePushMessage(UserPushMessageUpdateReq req, Long id);
+
+    /**
+     * 获取需要推送消息的用户列表
+     *
+     * @return 需要推送消息的用户列表
+     */
+    List<UserDO> getUserListForPushMessage();
+
 }

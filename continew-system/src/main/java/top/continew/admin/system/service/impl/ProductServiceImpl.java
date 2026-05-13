@@ -58,6 +58,20 @@ public class ProductServiceImpl extends BaseServiceImpl<ProductMapper, ProductDO
     }
 
     @Override
+    protected void beforeCreate(ProductReq req) {
+        // 校验商品名称是否已存在（忽略大小写和前后空格）
+        checkIsSameProductName(req.getName());
+        super.beforeCreate(req);
+    }
+
+    @Override
+    public void checkIsSameProductName(String productName) {
+        Long count = this.baseMapper.selectCount(Wrappers.<ProductDO>lambdaQuery()
+            .apply("LOWER(TRIM(name)) = LOWER({0})", productName));
+        CheckUtils.throwIf(count > 0, "商品名称已存在");
+    }
+
+    @Override
     public PageResp<ProductResp> page(ProductQuery query, PageQuery pageQuery) {
         QueryWrapper<ProductDO> wrapper = this.buildQueryWrapper(query);
         wrapper.lambda().orderByDesc(ProductDO::getCreateTime);

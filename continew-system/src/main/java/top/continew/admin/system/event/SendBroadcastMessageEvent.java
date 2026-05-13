@@ -14,28 +14,30 @@
  * limitations under the License.
  */
 
-package top.continew.admin.system.config;
+package top.continew.admin.system.event;
 
-import org.springdoc.core.models.GroupedOpenApi;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
+import lombok.Getter;
+import org.springframework.context.ApplicationEvent;
 
 /**
- * 系统管理配置
+ * 发送广播消息通知事件
  *
- * @author Charles7c
- * @since 2025/6/14 21:22
+ * @author weilai
+ * @since 2026/05/13
  */
-@Configuration
-@EnableAsync
-public class SystemConfiguration {
+@Getter
+public class SendBroadcastMessageEvent extends ApplicationEvent {
 
     /**
-     * API 文档分组配置
+     * 消息内容
      */
-    @Bean
-    public GroupedOpenApi systemApi() {
-        return GroupedOpenApi.builder().group("system").displayName("系统管理").pathsToMatch("/system/**").build();
+    private final String content;
+
+    private final boolean flag;
+
+    public SendBroadcastMessageEvent(Object source, String content, boolean flag) {
+        super(source);
+        this.content = content;
+        this.flag = flag;
     }
 }

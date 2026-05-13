@@ -37,6 +37,7 @@ import com.aliyun.teautil.models.RuntimeOptions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +60,9 @@ public class DingTalkApiService {
     private final DingTalkProperties dingTalkProperties;
     private final RedisTemplate<String, String> redisTemplate;
     private final static String DINGDING_ACCESS_TOKEN_KEY = "dingding:accessToken";
+
+    @Value("${application.portal-url}")
+    private String portalUrl;
 
     /**
      * 获取accessToken
@@ -525,8 +529,18 @@ public class DingTalkApiService {
      * @param sendMessageReq 发送消息请求
      * @return 响应结果
      */
-    public JSONObject sendConversationMessage(SendMessageReq sendMessageReq) {
+    public JSONObject sendConversationMessage(SendMessageReq sendMessageReq, Boolean flag) {
         String url = "https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2";
+        if (flag) {
+            SendMessageReq.Msg msg = sendMessageReq.getMsg();
+            // 在消息末尾追加门户地址
+            String originalContent = msg.getText().getContent();
+            String messageWithUrl = originalContent;
+            if (StrUtil.isNotBlank(portalUrl)) {
+                messageWithUrl = originalContent + "\n\n详情请访问：" + portalUrl;
+            }
+            msg.getText().setContent(messageWithUrl);
+        }
         return doPostV2(url, sendMessageReq);
     }
 }

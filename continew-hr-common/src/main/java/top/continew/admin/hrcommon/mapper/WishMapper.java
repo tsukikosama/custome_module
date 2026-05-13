@@ -23,8 +23,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import top.continew.admin.hrcommon.model.entity.WishDO;
+import top.continew.admin.hrcommon.model.resp.WishDetailResp;
 import top.continew.admin.hrcommon.model.resp.WishResp;
 import top.continew.starter.data.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * 心愿表 Mapper
@@ -43,4 +46,13 @@ public interface WishMapper extends BaseMapper<WishDO> {
      * @return 分页结果
      */
     IPage<WishResp> customParentPage(Page<WishResp> page, @Param(Constants.WRAPPER) QueryWrapper<WishDO> wrapper);
+
+    /**
+     * Method to retrieve a custom list of wish responses based on a query wrapper
+     *
+     * @param wrapper The QueryWrapper object containing query conditions for filtering WishDO entities
+     * @return List of WishResp objects that match the query conditions specified in the wrapper
+     */
+
+    List<WishDetailResp> customList(@Param(Constants.WRAPPER) QueryWrapper<WishDO> wrapper);
 }

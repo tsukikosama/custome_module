@@ -17,26 +17,27 @@
 package top.continew.admin.customer.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import top.continew.admin.common.api.dingDingApi.DingTalkApiService;
-import top.continew.admin.common.api.dingDingApi.request.SendMessageReq;
 import top.continew.admin.controller.biz.model.entity.ActivityMemberDO;
+import top.continew.admin.customer.event.SendMessageEvent;
 import top.continew.admin.hrcommon.mapper.ActivityMapper;
 import top.continew.admin.hrcommon.mapper.ActivityMemberMapper;
+import top.continew.admin.hrcommon.mapper.NoticeMapper;
 import top.continew.admin.hrcommon.mapper.user.UserMapper;
 import top.continew.admin.hrcommon.model.entity.ActivityDO;
+import top.continew.admin.hrcommon.model.entity.NoticeDO;
 import top.continew.admin.hrcommon.model.entity.user.UserDO;
-import top.continew.admin.hrcommon.model.enums.ActivityMemberType;
-import top.continew.admin.hrcommon.model.enums.ActivityStatusEnum;
-import top.continew.admin.hrcommon.model.enums.ActivityTypeEnum;
+import top.continew.admin.hrcommon.model.enums.*;
 import top.continew.admin.hrcommon.model.resp.ApiActivityResp;
 import top.continew.admin.customer.model.req.ActivityCreateReq;
 import top.continew.admin.customer.model.req.ActivityPageReq;
@@ -48,6 +49,7 @@ import top.continew.starter.extension.crud.model.resp.PageResp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -64,7 +66,8 @@ public class ActivityServiceImpl implements ActivityService {
     private final ActivityMapper activityMapper;
     private final ActivityMemberMapper activityMemberMapper;
     private final UserMapper userMapper;
-    private final DingTalkApiService dingTalkApiService;
+    private final ApplicationEventPublisher eventPublisher;
+    private final NoticeMapper noticeMapper;
 
     @Override
     public PageResp<ApiActivityResp> page(ActivityPageReq req) {
@@ -233,8 +236,10 @@ public class ActivityServiceImpl implements ActivityService {
                     .set(ActivityMemberDO::getStatus, 1));
                 log.info("用户重新报名活动成功，用户ID：{}，活动ID：{}", userId, activityId);
 
-                // 重新报名成功后发送钉钉消息
-                sendActivityParticipateMessage(activity, userId);
+                // 重新报名成功后发布事件，发送钉钉消息
+                sendActivityParticipateNotice(activity, userId);
+                // 发送系统通知
+                sendActivitySystemNotice(activity, userId);
                 return;
             }
         }
@@ -249,8 +254,10 @@ public class ActivityServiceImpl implements ActivityService {
 
         log.info("用户报名活动成功，用户ID：{}，活动ID：{}", userId, activityId);
 
-        // 报名成功后发送钉钉消息
-        sendActivityParticipateMessage(activity, userId);
+        // 报名成功后发布事件，发送钉钉消息
+        sendActivityParticipateNotice(activity, userId);
+        // 发送系统通知
+        sendActivitySystemNotice(activity, userId);
     }
 
     @Override
@@ -325,14 +332,14 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
-     * 发送活动报名成功的钉钉消息
+     * 发送活动报名成功的通知
      *
      * @param activity 活动信息
      * @param userId   用户ID
      */
-    private void sendActivityParticipateMessage(ActivityDO activity, Long userId) {
+    private void sendActivityParticipateNotice(ActivityDO activity, Long userId) {
         try {
-            // 获取当前用户信息
+            // 获取用户信息
             UserDO user = userMapper.selectById(userId);
             if (user == null) {
                 log.warn("用户不存在，无法发送钉钉消息，用户ID：{}", userId);
@@ -347,36 +354,57 @@ public class ActivityServiceImpl implements ActivityService {
                 .eq(ActivityMemberDO::getType, ActivityMemberType.VOLUNTARY.getValue()));
 
             // 构建消息内容
-            String messageContent = String
-                .format("【活动报名成功通知】\n" + "用户：%s\n" + "活动：%s\n" + "当前已报名人数：%d人\n" + "恭喜您成功报名参加该活动！" + "当前时间 %s", user
-                    .getNickname(), activity.getTitle(), currentCount, LocalDateTime.now()
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            String content = String.format("【活动报名成功通知】\n用户：%s\n活动：%s\n当前已报名人数：%d人\n恭喜您成功报名参加该活动！当前时间 %s", user
+                .getNickname(), activity.getTitle(), currentCount, LocalDateTime.now()
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
-            log.info("准备发送活动报名钉钉消息，用户ID：{}，钉钉ID：{}，消息内容：{}", userId, user.getDingdingId(), messageContent);
-
-            // 构建钉钉消息请求
-            SendMessageReq sendMessageReq = new SendMessageReq();
-            sendMessageReq.setAgentId(4145772061L);
-            // 发送给当前用户
-            sendMessageReq.setEnableIdTrans(false);
-            sendMessageReq.setDeptIdList("1068728006");
-            // 构建消息体
-            SendMessageReq.Msg msg = new SendMessageReq.Msg();
-            msg.setMsgType("text");
-
-            SendMessageReq.Text text = new SendMessageReq.Text();
-            text.setContent(messageContent);
-            msg.setText(text);
-
-            sendMessageReq.setMsg(msg);
-
-            // 发送钉钉消息
-            dingTalkApiService.sendConversationMessage(sendMessageReq);
-            log.info("活动报名钉钉消息发送成功，用户ID：{}，活动ID：{}", userId, activity.getId());
+            // 发布消息事件，使用现有的 SendMessageEventListener 处理发送
+            eventPublisher.publishEvent(new SendMessageEvent(this, Collections.singletonList(user), content,false));
+            log.info("活动报名通知事件发布成功，用户ID：{}，活动ID：{}", userId, activity.getId());
 
         } catch (Exception e) {
             // 发送消息失败不影响业务流程
-            log.error("发送活动报名钉钉消息失败，用户ID：{}，活动ID：{}，错误信息：{}", userId, activity.getId(), e.getMessage(), e);
+            log.error("发送活动报名通知失败，用户ID：{}，活动ID：{}，错误信息：{}", userId, activity.getId(), e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 发送活动报名成功的系统通知
+     *
+     * @param activity 活动信息
+     * @param userId   用户ID
+     */
+    private void sendActivitySystemNotice(ActivityDO activity, Long userId) {
+        try {
+            // 获取用户信息
+            UserDO user = userMapper.selectById(userId);
+            if (user == null) {
+                log.warn("用户不存在，无法发送系统通知，用户ID：{}", userId);
+                return;
+            }
+
+            // 构建消息内容
+            String content = String.format("恭喜您成功报名参加活动！\n活动名称：%s\n报名时间：%s",
+                activity.getTitle(),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+            // 创建系统消息请求
+            NoticeDO noticeDO = new NoticeDO();
+            noticeDO.setTitle("报名成功");
+            noticeDO.setContent(content);
+            noticeDO.setType("1");
+            noticeDO.setNoticeScope(NoticeScopeEnum.USER);
+            noticeDO.setNoticeUsers(List.of(userId.toString()));
+            noticeDO.setNoticeMethods(List.of(1));
+            noticeDO.setStatus(NoticeStatusEnum.PUBLISHED);
+            noticeDO.setPublishTime(LocalDateTime.now() );
+            // 发送系统消息
+            noticeMapper.insert(noticeDO);
+            log.info("活动报名系统通知发送成功，用户ID：{}，活动ID：{}", userId, activity.getId());
+
+        } catch (Exception e) {
+            // 发送系统通知失败不影响业务流程
+            log.error("发送活动报名系统通知失败，用户ID：{}，活动ID：{}，错误信息：{}", userId, activity.getId(), e.getMessage(), e);
         }
     }
 

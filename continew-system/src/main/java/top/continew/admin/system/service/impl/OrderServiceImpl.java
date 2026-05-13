@@ -26,6 +26,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,7 @@ import top.continew.admin.hrcommon.model.entity.OrderDO;
 import top.continew.admin.hrcommon.model.entity.user.UserDO;
 import top.continew.admin.system.model.query.OrderQuery;
 import top.continew.admin.hrcommon.model.req.NoticeReq;
+import top.continew.admin.system.event.SendMessageEvent;
 import top.continew.admin.system.model.req.OrderReq;
 import top.continew.admin.system.model.req.ProductOrderLogReq;
 import top.continew.admin.system.model.req.user.UserPointChangeReq;
@@ -58,6 +60,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 订单业务实现
@@ -75,8 +78,10 @@ public class OrderServiceImpl extends BaseServiceImpl<OrderMapper, OrderDO, Orde
     private final UserService userService;
     private final DingTalkApiService dingTalkApiService;
     private final NoticeService noticeService;
+    private final ApplicationEventPublisher eventPublisher;
     private static final String HR_DEPT_ID = "1068728006";
     private static final Long ONE_EXCHANGE_ID = 806566015201706412L;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long create(OrderReq req) {
@@ -183,14 +188,15 @@ public class OrderServiceImpl extends BaseServiceImpl<OrderMapper, OrderDO, Orde
     @Transactional
     @Override
     public void cancelOrder(Long orderId) {
+        //获取到订单的记录
+        OrderDO order = getById(orderId);
+        CheckUtils.throwIfNotEqual(order.getStatus(), OrderStatusEnum.PENDING, "订单状态不是待处理无法取消");
         // 创建更新请求对象
         OrderReq updateReq = new OrderReq();
         updateReq.setStatus(OrderStatusEnum.CANCELLED);
-
         // 更新订单状态
         update(updateReq, orderId);
-        //获取到订单的记录
-        OrderDO order = getById(orderId);
+
         //进行积分退还
         UserPointChangeReq req = new UserPointChangeReq();
         req.setType(PointsTypeEnum.REFUND);
@@ -207,9 +213,10 @@ public class OrderServiceImpl extends BaseServiceImpl<OrderMapper, OrderDO, Orde
         CheckUtils.throwIfNull(existingOrder, "订单不存在");
         CheckUtils.throwIf(existingOrder.getStatus().equals(OrderStatusEnum.CANCELLED), "订单已取消无法修改");
         UserDO userDO = userService.getById(existingOrder.getCreateUser());
+
         // 判断订单状态是否有改变
         if (req.getStatus() != null && !req.getStatus().equals(existingOrder.getStatus())) {
-
+            List<UserDO> hrList = userService.getUserListForPushMessage();
             CheckUtils.throwIf(req.getStatus().equals(OrderStatusEnum.CANCELLED) && !existingOrder.getStatus()
                 .equals(OrderStatusEnum.PENDING), "订单状态不是待处理无法取消");
             // 状态发生改变，创建订单日志记录状态变更
@@ -227,11 +234,23 @@ public class OrderServiceImpl extends BaseServiceImpl<OrderMapper, OrderDO, Orde
             noticeReq.setStatus(NoticeStatusEnum.PUBLISHED);
             noticeReq.setType("1");
             noticeReq.setNoticeScope(NoticeScopeEnum.USER);
-
             noticeReq.setNoticeMethods(List.of(1));
-            noticeReq.setNoticeUsers(List.of(userDO.getId().toString()));
+            List<String> userIds = Stream.concat(
+                Stream.of(userDO.getId().toString()),
+                hrList.stream().map(UserDO::getId).map(String::valueOf)
+            ).collect(Collectors.toList());
+            noticeReq.setNoticeUsers(userIds);
             noticeReq.setIsTiming(false);
             noticeService.create(noticeReq);
+
+            // 发布消息事件，触发钉钉推送（异步执行）
+            ProductDO product = productService.getById(existingOrder.getProductId());
+            String content = String.format("订单状态更新通知\n订单号：%s\n状态变更：%s → %s\n商品：%s\n数量：%d", existingOrder
+                .getOrderNo(), existingOrder.getStatus().getDescription(), req.getStatus()
+                    .getDescription(), product != null ? product.getName() : "未知商品", existingOrder.getProductNum());
+            SendMessageEvent event = new SendMessageEvent(this, hrList, content,true);
+            eventPublisher.publishEvent(event);
+
         }
 
         super.update(req, id);

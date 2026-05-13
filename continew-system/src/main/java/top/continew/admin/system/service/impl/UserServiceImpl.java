@@ -457,6 +457,22 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     }
 
     @Override
+    @CacheInvalidate(key = "#id", name = CacheConstants.USER_KEY_PREFIX)
+    public void updatePushMessage(UserPushMessageUpdateReq req, Long id) {
+        super.getById(id);
+        // 更新是否推送钉钉消息设置
+        baseMapper.lambdaUpdate().set(UserDO::getIsPushMessage, req.getIsPushMessage()).eq(UserDO::getId, id).update();
+    }
+
+    @Override
+    public List<UserDO> getUserListForPushMessage() {
+        return baseMapper.selectList(Wrappers.<UserDO>lambdaQuery()
+            .eq(UserDO::getIsPushMessage, true)
+            .isNotNull(UserDO::getDingdingId)
+            .eq(UserDO::getStatus, DisEnableStatusEnum.ENABLE));
+    }
+
+    @Override
     public UserDO getByUsername(String username) {
         return baseMapper.selectByUsername(username);
     }

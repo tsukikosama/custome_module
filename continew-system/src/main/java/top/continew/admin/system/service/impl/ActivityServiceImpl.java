@@ -23,6 +23,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.common.base.service.BaseServiceImpl;
@@ -39,6 +40,7 @@ import top.continew.admin.hrcommon.model.enums.NoticeStatusEnum;
 import top.continew.admin.hrcommon.model.resp.ActivityDetailResp;
 import top.continew.admin.hrcommon.model.resp.ActivityResp;
 import top.continew.admin.hrcommon.model.req.NoticeReq;
+import top.continew.admin.system.event.SendBroadcastMessageEvent;
 import top.continew.admin.system.model.query.ActivityQuery;
 import top.continew.admin.system.model.req.ActivityReq;
 import top.continew.admin.system.model.req.ActivityReviewReq;
@@ -68,6 +70,7 @@ public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, Activit
     private final ActivityMemberMapper activityMemberMapper;
     private final NoticeService noticeService;
     private final UserService userService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public PageResp<ActivityResp> page(ActivityQuery query, PageQuery pageQuery) {
@@ -209,11 +212,14 @@ public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, Activit
      */
     private void sendAuditSuccessNotice(ActivityDO activity) {
         try {
-            // 创建通知
+            // 构建通知内容
+            String content = String.format("新活动「%s」已发布，活动时间：%s 至 %s，欢迎参加！", activity.getTitle(), activity
+                .getStartTime(), activity.getEndTime());
+
+            // 创建系统通知
             NoticeReq noticeReq = new NoticeReq();
             noticeReq.setTitle("新活动通知");
-            noticeReq.setContent(String.format("新活动「%s」已发布，活动时间：%s 至 %s，欢迎参加！", activity.getTitle(), activity
-                .getStartTime(), activity.getEndTime()));
+            noticeReq.setContent(content);
             noticeReq.setStatus(NoticeStatusEnum.PUBLISHED);
             noticeReq.setType("1");
             // 发送给所有用户
@@ -222,7 +228,11 @@ public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, Activit
             noticeReq.setIsTiming(false);
 
             noticeService.create(noticeReq);
-            log.info("活动审核通过通知发送成功，活动ID：{}", activity.getId());
+            log.info("活动审核通过系统通知创建成功，活动ID：{}", activity.getId());
+
+            // 发送钉钉广播消息给全体用户
+            eventPublisher.publishEvent(new SendBroadcastMessageEvent(this, content,false));
+            log.info("活动审核通过钉钉广播消息发送成功，活动ID：{}", activity.getId());
         } catch (Exception e) {
             // 记录错误日志，但不影响审核流程
             log.error("发送活动审核通过通知失败，活动ID：{}", activity.getId(), e);

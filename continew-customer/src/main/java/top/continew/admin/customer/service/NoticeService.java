@@ -16,6 +16,7 @@
 
 package top.continew.admin.customer.service;
 
+import top.continew.admin.customer.model.req.NoticePageReq;
 import top.continew.admin.hrcommon.model.resp.notice.NoticeDetailResp;
 import top.continew.admin.hrcommon.model.resp.notice.NoticeResp;
 import top.continew.starter.extension.crud.model.resp.PageResp;
@@ -31,9 +32,10 @@ public interface NoticeService {
     /**
      * 分页查询当前用户的公告列表
      *
+     * @param req 分页查询请求
      * @return 公告分页结果
      */
-    PageResp<NoticeResp> page();
+    PageResp<NoticeResp> page(NoticePageReq req);
 
     /**
      * 查询公告详情

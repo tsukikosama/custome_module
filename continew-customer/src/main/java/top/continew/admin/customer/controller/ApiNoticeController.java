@@ -19,8 +19,11 @@ package top.continew.admin.customer.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import top.continew.admin.customer.model.req.NoticePageReq;
 import top.continew.admin.customer.service.NoticeService;
 import top.continew.admin.hrcommon.model.resp.notice.NoticeDetailResp;
 import top.continew.admin.hrcommon.model.resp.notice.NoticeResp;
@@ -35,6 +38,7 @@ import top.continew.starter.log.annotation.Log;
  */
 @Tag(name = "公告 API")
 @Log(module = "公告管理")
+@Validated
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/notice")
@@ -44,8 +48,8 @@ public class ApiNoticeController {
 
     @Operation(summary = "分页查询公告列表", description = "分页查询当前登录用户的公告列表")
     @GetMapping
-    public PageResp<NoticeResp> page() {
-        return noticeService.page();
+    public PageResp<NoticeResp> page(@Valid NoticePageReq req) {
+        return noticeService.page(req);
     }
 
     @Operation(summary = "查询公告详情", description = "查询单个公告的详细信息")

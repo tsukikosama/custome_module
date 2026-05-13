@@ -26,7 +26,8 @@
             t1.union_id,
             t1.job_title,
             t1.hired_date,
-            t1.birthday
+            t1.birthday,
+            t1.is_push_message
         FROM sys_user AS t1
         LEFT JOIN sys_dept AS t2 ON t2.id = t1.dept_id
     </sql>

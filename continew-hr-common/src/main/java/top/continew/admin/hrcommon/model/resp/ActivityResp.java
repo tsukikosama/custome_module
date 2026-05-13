@@ -151,4 +151,11 @@ public class ActivityResp extends BaseResp {
      */
     @Schema(description = "是否已删除（0：否；id：是）")
     private Long deleted;
+
+    /**
+     * 参与人数（演讲人 + 必须参与的人）
+     */
+    @Schema(description = "参与人数（演讲人 + 必须参与的人）")
+    private Integer participantCount;
+
 }
