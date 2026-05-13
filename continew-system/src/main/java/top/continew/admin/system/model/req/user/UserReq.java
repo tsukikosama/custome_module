@@ -140,4 +140,6 @@ public class UserReq implements Serializable {
      */
     @Schema(description = "是否推送钉钉消息", example = "true")
     private Boolean isPushMessage;
+
+    private String avatar;
 }

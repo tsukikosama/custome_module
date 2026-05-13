@@ -45,7 +45,7 @@ public class OrderQuery implements Serializable {
      * 订单号
      */
     @Schema(description = "订单号")
-    @Query(type = QueryType.EQ)
+    @Query(type = QueryType.LIKE)
     private String orderNo;
 
     /**
@@ -73,7 +73,7 @@ public class OrderQuery implements Serializable {
      * 创建人
      */
     @Schema(description = "创建人")
-    @Query(type = QueryType.EQ)
+    @Query(type = QueryType.EQ, columns = "bo.create_user")
     private Long createUser;
 
     /**
