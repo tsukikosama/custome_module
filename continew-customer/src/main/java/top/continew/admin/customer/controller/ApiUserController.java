@@ -16,6 +16,7 @@
 
 package top.continew.admin.customer.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -71,6 +72,7 @@ public class ApiUserController {
         return userService.getAllActiveUsers();
     }
 
+    @SaIgnore
     @Operation(summary = "查询积分排行榜", description = "查询积分最多的前10名用户")
     @GetMapping("/points/rank")
     public List<PointsRankResp> getPointsRank() {

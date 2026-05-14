@@ -24,8 +24,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.continew.admin.customer.event.SendMessageEvent;
 import top.continew.admin.customer.model.req.OrderCreateReq;
 import top.continew.admin.customer.model.req.OrderPageReq;
 import top.continew.admin.customer.model.resp.OrderCreateResp;
@@ -48,6 +51,7 @@ import top.continew.starter.extension.crud.model.resp.PageResp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -56,6 +60,7 @@ import java.util.List;
  * @author weilai
  * @since 2026/01/15 16:05
  */
+@Slf4j
 @Service("customerOrderService")
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -65,6 +70,7 @@ public class OrderServiceImpl implements OrderService {
     private final PointsLogMapper pointsLogMapper;
     private final UserMapper userMapper;
     private final top.continew.admin.hrcommon.mapper.ProductOrderLogMapper productOrderLogMapper;
+    private final ApplicationEventPublisher eventPublisher;
     private static final Long ONE_EXCHANGE_ID = 806566015201706412L;
 
     @Override
@@ -161,6 +167,23 @@ public class OrderServiceImpl implements OrderService {
         pointsLog.setStatus(PointsStatusEnum.VALID);
         pointsLog.setCreateUser(userId);
         pointsLogMapper.insert(pointsLog);
+
+        // 9. 发送下单通知给采购人员
+        try {
+            List<UserDO> pushUsers = userMapper.selectRequirePushMessageUserList();
+            if (!pushUsers.isEmpty()) {
+                String content = String.format("【新订单通知】用户 %s 下单了\n订单号：%s\n商品：%s\n数量：%d\n消耗积分：%d\n下单时间：%s",
+                    user.getNickname(),
+                    orderNo,
+                    product.getName(),
+                    req.getProductNum(),
+                    costPoints.intValue(),
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                eventPublisher.publishEvent(new SendMessageEvent(this, pushUsers, content, true));
+            }
+        } catch (Exception e) {
+            log.error("发送下单通知失败，订单号：{}", orderNo, e);
+        }
 
         return OrderCreateResp.builder().orderId(order.getId()).orderNo(orderNo).build();
     }

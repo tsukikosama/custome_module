@@ -64,6 +64,9 @@ public class DingTalkApiService {
     @Value("${application.portal-url}")
     private String portalUrl;
 
+    @Value("${application.client-url}")
+    private String clientUrl;
+
     /**
      * 获取accessToken
      *
@@ -531,9 +534,17 @@ public class DingTalkApiService {
      */
     public JSONObject sendConversationMessage(SendMessageReq sendMessageReq, Boolean flag) {
         String url = "https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2";
+
+        // 所有消息都追加客户端访问地址
+        SendMessageReq.Msg msg = sendMessageReq.getMsg();
+        String content = msg.getText().getContent();
+        if (StrUtil.isNotBlank(clientUrl)) {
+            content = content + "\n\n客户端访问：" + clientUrl;
+            msg.getText().setContent(content);
+        }
+
+        // 需要时追加门户地址
         if (flag) {
-            SendMessageReq.Msg msg = sendMessageReq.getMsg();
-            // 在消息末尾追加门户地址
             String originalContent = msg.getText().getContent();
             String messageWithUrl = originalContent;
             if (StrUtil.isNotBlank(portalUrl)) {
@@ -541,6 +552,7 @@ public class DingTalkApiService {
             }
             msg.getText().setContent(messageWithUrl);
         }
+
         return doPostV2(url, sendMessageReq);
     }
 }
