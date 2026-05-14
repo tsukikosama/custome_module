@@ -71,15 +71,14 @@ public class ApiSuggestionServiceImpl implements ApiSuggestionService {
 
     @Override
     public PageResp<ApiSuggestionResp> apiPage(SuggestionPageReq req) {
-        // 获取当前登录用户ID
-        Long userId = StpUtil.getLoginIdAsLong();
 
         // 创建分页对象
         Page<ApiSuggestionResp> page = new Page<>(req.getPage(), req.getSize());
 
         // 构建 WHERE 条件
-        QueryWrapper wrapper = new QueryWrapper();
+        QueryWrapper<SuggestionDO> wrapper = new QueryWrapper<SuggestionDO>();
 
+        wrapper.orderByDesc("create_time");
         // 执行分页查询
         IPage<ApiSuggestionResp> result = suggestionMapper.customerPage(page, wrapper);
 

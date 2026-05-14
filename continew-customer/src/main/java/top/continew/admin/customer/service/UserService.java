@@ -20,6 +20,7 @@ import top.continew.admin.customer.model.req.PasswordUpdateReq;
 import top.continew.admin.customer.model.resp.UserInfoResp;
 import top.continew.admin.customer.model.resp.UserRecord;
 import top.continew.admin.customer.model.resp.UserStatResp;
+import top.continew.admin.hrcommon.model.resp.PointsRankResp;
 
 import java.util.List;
 
@@ -58,4 +59,11 @@ public interface UserService {
      * @return 在职用户列表
      */
     List<UserRecord> getAllActiveUsers();
+
+    /**
+     * 查询积分排行榜（前10名）
+     *
+     * @return 积分排行列表
+     */
+    List<PointsRankResp> getPointsRank();
 }

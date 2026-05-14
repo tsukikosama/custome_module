@@ -340,12 +340,10 @@ public class ActivityServiceImpl implements ActivityService {
     private void sendActivityParticipateNotice(ActivityDO activity, Long userId) {
         try {
             // 获取用户信息
-            UserDO user = userMapper.selectById(userId);
-            if (user == null) {
-                log.warn("用户不存在，无法发送钉钉消息，用户ID：{}", userId);
-                return;
-            }
+            //获取全部需要接收消息的人
+            List<UserDO> list = userMapper.selectRequirePushMessageUserList();
 
+            UserDO user = userMapper.selectById(userId);
             // 统计当前活动的已参加人数（只统计主动参加人type=3）
             long currentCount = activityMemberMapper.selectCount(Wrappers.<ActivityMemberDO>lambdaQuery()
                 .eq(ActivityMemberDO::getActivityId, activity.getId())
@@ -359,7 +357,7 @@ public class ActivityServiceImpl implements ActivityService {
                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
             // 发布消息事件，使用现有的 SendMessageEventListener 处理发送
-            eventPublisher.publishEvent(new SendMessageEvent(this, Collections.singletonList(user), content,false));
+            eventPublisher.publishEvent(new SendMessageEvent(this, list, content,true));
             log.info("活动报名通知事件发布成功，用户ID：{}，活动ID：{}", userId, activity.getId());
 
         } catch (Exception e) {

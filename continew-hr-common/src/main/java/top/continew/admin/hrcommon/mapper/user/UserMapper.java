@@ -24,6 +24,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import top.continew.admin.common.base.mapper.DataPermissionMapper;
 import top.continew.admin.hrcommon.model.entity.user.UserDO;
+import top.continew.admin.hrcommon.model.resp.PointsRankResp;
 import top.continew.admin.hrcommon.model.resp.user.UserDetailResp;
 import top.continew.starter.encrypt.field.annotation.FieldEncrypt;
 import top.continew.starter.extension.datapermission.annotation.DataPermission;
@@ -110,4 +111,13 @@ public interface UserMapper extends DataPermissionMapper<UserDO> {
      * @return 影响行数
      */
     int updatePoints(@Param("userId") Long userId, @Param("points") Integer points);
+
+    /**
+     * 查询积分排行榜（前10名）
+     *
+     * @return 积分排行列表
+     */
+    List<PointsRankResp> selectPointsRank();
+
+    List<UserDO> selectRequirePushMessageUserList();
 }

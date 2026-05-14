@@ -41,6 +41,7 @@ import top.continew.admin.hrcommon.model.resp.ActivityDetailResp;
 import top.continew.admin.hrcommon.model.resp.ActivityResp;
 import top.continew.admin.hrcommon.model.req.NoticeReq;
 import top.continew.admin.system.event.SendBroadcastMessageEvent;
+import top.continew.admin.system.event.SendMessageEvent;
 import top.continew.admin.system.model.query.ActivityQuery;
 import top.continew.admin.system.model.req.ActivityReq;
 import top.continew.admin.system.model.req.ActivityReviewReq;
@@ -53,6 +54,7 @@ import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -199,6 +201,33 @@ public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, Activit
         // 如果审核通过，给所有用户发送通知
         if (ActivityStatusEnum.APPROVED.equals(req.getStatus())) {
             sendAuditSuccessNotice(activity);
+
+            // 给必参加人员发送报名成功通知
+            try {
+                List<ActivityMemberDO> mandatoryMembers = activityMemberMapper.selectList(Wrappers
+                    .<ActivityMemberDO>lambdaQuery()
+                    .eq(ActivityMemberDO::getActivityId, activity.getId())
+                    .eq(ActivityMemberDO::getType, ActivityMemberType.MANDATORY)
+                    .eq(ActivityMemberDO::getStatus, 1)
+                    .eq(ActivityMemberDO::getDeleted, 0));
+                if (!mandatoryMembers.isEmpty()) {
+                    List<Long> userIds = mandatoryMembers.stream().map(ActivityMemberDO::getUserId).toList();
+                    List<UserDO> users = userService.listByIds(userIds);
+                    if (!users.isEmpty()) {
+                        String content = String.format(
+                            "【活动报名成功通知】活动「%s」已审核通过，您已被添加为必参加人员\n活动时间：%s ~ %s",
+                            activity.getTitle(),
+                            activity.getStartTime() != null ? activity.getStartTime().format(DateTimeFormatter
+                                .ofPattern("yyyy-MM-dd HH:mm:ss")) : "待定",
+                            activity.getEndTime() != null ? activity.getEndTime().format(DateTimeFormatter
+                                .ofPattern("yyyy-MM-dd HH:mm:ss")) : "待定");
+                        eventPublisher.publishEvent(new SendMessageEvent(this, users, content, false));
+                        log.info("审核通过必参加人员通知发送成功，活动ID：{}，通知人数：{}", activity.getId(), users.size());
+                    }
+                }
+            } catch (Exception e) {
+                log.error("发送审核通过必参加人员通知失败，活动ID：{}", activity.getId(), e);
+            }
         } else if (ActivityStatusEnum.FAILED.equals(req.getStatus())) {
             // 如果审核失败，给活动创建者发送通知
             sendAuditFailureNotice(activity, req.getAuditRemark());

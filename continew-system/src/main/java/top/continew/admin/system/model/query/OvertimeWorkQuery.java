@@ -45,24 +45,24 @@ public class OvertimeWorkQuery implements Serializable {
      * 用户ID
      */
     @Schema(description = "用户ID")
-    @Query(type = QueryType.EQ)
+    @Query(type = QueryType.EQ,columns = "bow.user_id")
     private Long userId;
 
     /**
      * 状态
      */
     @Schema(description = "状态")
-    @Query(type = QueryType.EQ)
+    @Query(type = QueryType.EQ, columns = "bow.status")
     private DingDingEventStatusEnum status;
 
     @Schema(description = "结果")
-    @Query(type = QueryType.EQ)
+    @Query(type = QueryType.EQ,columns = "bow.result")
     private DingDingEventResultEnum result;
     /**
      * 创建时间
      */
     @Schema(description = "创建时间")
-    @Query(type = QueryType.BETWEEN, columns = "create_time")
+    @Query(type = QueryType.BETWEEN, columns = "bow.create_time")
     private LocalDateTime[] createTime;
 
     /**

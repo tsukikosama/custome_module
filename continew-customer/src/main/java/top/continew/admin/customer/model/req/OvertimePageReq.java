@@ -54,7 +54,7 @@ public class OvertimePageReq {
      * 状态筛选（1待审核/2已通过/3已拒绝）
      */
     @Schema(description = "状态筛选（1待审核/2已通过/3已拒绝）", example = "2")
-    private Integer status;
+    private String status;
 
     /**
      * 结果筛选（1有效/2无效）

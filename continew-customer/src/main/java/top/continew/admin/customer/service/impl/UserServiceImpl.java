@@ -33,6 +33,7 @@ import top.continew.admin.customer.service.UserService;
 import top.continew.admin.hrcommon.mapper.user.UserMapper;
 import top.continew.admin.hrcommon.model.entity.user.UserDO;
 import top.continew.admin.hrcommon.mapper.ActivityMemberMapper;
+import top.continew.admin.hrcommon.model.resp.PointsRankResp;
 import top.continew.admin.hrcommon.model.resp.UserActivityStatResp;
 import top.continew.starter.core.util.validation.CheckUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -140,5 +141,11 @@ public class UserServiceImpl implements UserService {
             resp.setNickname(userDO.getNickname());
             return resp;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    @Cached(name = CacheConstants.USER_LIST_KEY_PREFIX, key = "'POINTS_RANK'", cacheType = CacheType.BOTH, syncLocal = true, expire = 30, timeUnit = TimeUnit.MINUTES)
+    public List<PointsRankResp> getPointsRank() {
+        return userMapper.selectPointsRank();
     }
 }

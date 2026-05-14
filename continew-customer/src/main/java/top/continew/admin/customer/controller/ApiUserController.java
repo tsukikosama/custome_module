@@ -26,6 +26,7 @@ import top.continew.admin.customer.model.resp.UserInfoResp;
 import top.continew.admin.customer.model.resp.UserRecord;
 import top.continew.admin.customer.model.resp.UserStatResp;
 import top.continew.admin.customer.service.UserService;
+import top.continew.admin.hrcommon.model.resp.PointsRankResp;
 import top.continew.starter.log.annotation.Log;
 
 import java.util.List;
@@ -68,5 +69,11 @@ public class ApiUserController {
     @GetMapping("/users/all")
     public List<UserRecord> getAllActiveUsers() {
         return userService.getAllActiveUsers();
+    }
+
+    @Operation(summary = "查询积分排行榜", description = "查询积分最多的前10名用户")
+    @GetMapping("/points/rank")
+    public List<PointsRankResp> getPointsRank() {
+        return userService.getPointsRank();
     }
 }
