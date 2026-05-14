@@ -48,4 +48,6 @@ public class NoticePageReq {
     @Schema(description = "每页数量", example = "10")
     @Min(value = 1, message = "每页数量必须大于0")
     private Integer size = 10;
+
+    private String type;
 }

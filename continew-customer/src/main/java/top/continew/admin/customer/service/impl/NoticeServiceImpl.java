@@ -55,7 +55,7 @@ public class NoticeServiceImpl implements NoticeService {
         // 构建查询条件
         NoticeQuery query = new NoticeQuery();
         query.setUserId(userId);
-
+        query.setType(req.getType());
         // 创建分页对象并执行查询
         Page<NoticeDO> page = new Page<>(req.getPage(), req.getSize());
         IPage<NoticeResp> result = noticeMapper.selectNoticePage(page, query);
