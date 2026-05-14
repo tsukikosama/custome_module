@@ -153,6 +153,7 @@ public class OrderServiceImpl implements OrderService {
 
         // 更新用户积分
         user.setPoints(afterPoints);
+        user.setPassword(null);
         userMapper.updateById(user);
 
         // 记录积分日志
@@ -226,6 +227,7 @@ public class OrderServiceImpl implements OrderService {
 
         // 更新用户积分
         userDO.setPoints(afterPoints);
+        userDO.setPassword(null);
         userMapper.updateById(userDO);
 
         // 记录积分日志
