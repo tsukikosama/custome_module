@@ -31,10 +31,6 @@ import lombok.Data;
 @Schema(description = "修改密码请求")
 public class PasswordUpdateReq {
 
-    @Schema(description = "旧密码", example = "OldPassword123", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "旧密码不能为空")
-    private String oldPassword;
-
     @Schema(description = "新密码", example = "NewPassword123", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "新密码不能为空")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$", message = "密码必须大于8位，且包含大小写字母和数字")

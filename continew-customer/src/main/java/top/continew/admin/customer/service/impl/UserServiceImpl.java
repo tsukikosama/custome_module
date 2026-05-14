@@ -118,14 +118,7 @@ public class UserServiceImpl implements UserService {
         UserDO userDO = userMapper.selectById(userId);
         CheckUtils.throwIfNull(userDO, "用户不存在");
 
-        // 2. 验证旧密码是否正确
-        CheckUtils.throwIf(!passwordEncoder.matches(passwordUpdateReq.getOldPassword(), userDO
-            .getPassword()), "旧密码不正确");
-
-        // 3. 验证新密码不能与旧密码相同
-        CheckUtils.throwIfEqual(passwordUpdateReq.getOldPassword(), passwordUpdateReq.getNewPassword(), "新密码不能与旧密码相同");
-
-        // 4. 更新用户密码（使用 PasswordEncoder 加密）
+        // 2. 更新用户密码（使用 PasswordEncoder 加密）
         userDO.setPassword(passwordUpdateReq.getNewPassword());
         userMapper.updateById(userDO);
 
