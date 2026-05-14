@@ -65,7 +65,7 @@ public class SendBroadcastMessageEventListener {
             msg.setText(text);
 
             sendMessageReq.setMsg(msg);
-
+            sendMessageReq.setToAllUser(true);
             // 发送钉钉会话消息（全体用户）
             dingTalkApiService.sendConversationMessage(sendMessageReq,event.isFlag());
             log.info("发送广播消息钉钉推送成功：内容={}", content);
