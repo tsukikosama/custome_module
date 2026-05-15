@@ -17,7 +17,6 @@
 package top.continew.admin.customer.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -49,7 +48,6 @@ import top.continew.starter.extension.crud.model.resp.PageResp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -357,7 +355,7 @@ public class ActivityServiceImpl implements ActivityService {
                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
             // 发布消息事件，使用现有的 SendMessageEventListener 处理发送
-            eventPublisher.publishEvent(new SendMessageEvent(this, list, content,true));
+            eventPublisher.publishEvent(new SendMessageEvent(this, list, content, false));
             log.info("活动报名通知事件发布成功，用户ID：{}，活动ID：{}", userId, activity.getId());
 
         } catch (Exception e) {
@@ -382,9 +380,8 @@ public class ActivityServiceImpl implements ActivityService {
             }
 
             // 构建消息内容
-            String content = String.format("恭喜您成功报名参加活动！\n活动名称：%s\n报名时间：%s",
-                activity.getTitle(),
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            String content = String.format("恭喜您成功报名参加活动！\n活动名称：%s\n报名时间：%s", activity.getTitle(), LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
             // 创建系统消息请求
             NoticeDO noticeDO = new NoticeDO();
@@ -395,7 +392,7 @@ public class ActivityServiceImpl implements ActivityService {
             noticeDO.setNoticeUsers(List.of(userId.toString()));
             noticeDO.setNoticeMethods(List.of(1));
             noticeDO.setStatus(NoticeStatusEnum.PUBLISHED);
-            noticeDO.setPublishTime(LocalDateTime.now() );
+            noticeDO.setPublishTime(LocalDateTime.now());
             // 发送系统消息
             noticeMapper.insert(noticeDO);
             log.info("活动报名系统通知发送成功，用户ID：{}，活动ID：{}", userId, activity.getId());
