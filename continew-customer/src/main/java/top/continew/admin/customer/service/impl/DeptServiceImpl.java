@@ -29,6 +29,7 @@ import top.continew.admin.customer.service.DeptService;
 import top.continew.admin.hrcommon.model.entity.dept.DeptDO;
 import top.continew.admin.hrcommon.model.entity.user.UserDO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,19 +61,38 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public List<ApiDeptDetailResp> getDetail(Long deptId) {
-        // 查询所有 parentId=deptId 的启用子部门，按排序字段升序排列
+        List<ApiDeptDetailResp> result = new ArrayList<>();
+
+        // 查询该部门的直接成员
+        List<UserDO> directMembers = userMapper.selectList(Wrappers.<UserDO>lambdaQuery()
+            .eq(UserDO::getDeptId, deptId)
+            .eq(UserDO::getStatus, DisEnableStatusEnum.ENABLE));
+
+        // 如果该部门有直接成员，添加到结果列表
+        if (!directMembers.isEmpty()) {
+            DeptDO dept = deptMapper.selectById(deptId);
+            ApiDeptDetailResp directResp = new ApiDeptDetailResp();
+            directResp.setId(dept.getId());
+            directResp.setName(dept.getName());
+            directResp.setDescription(dept.getDescription());
+            directResp.setMembers(directMembers.stream()
+                .map(this::convertToMemberResp)
+                .collect(Collectors.toList()));
+            result.add(directResp);
+        }
+
+        // 查询所有子部门，按排序字段升序排列
         List<DeptDO> childDeptList = deptMapper.selectList(Wrappers.<DeptDO>lambdaQuery()
             .eq(DeptDO::getParentId, deptId)
             .eq(DeptDO::getStatus, DisEnableStatusEnum.ENABLE)
             .orderByAsc(DeptDO::getSort));
 
-        // 如果没有子部门，返回空列表
-        if (childDeptList.isEmpty()) {
-            return List.of();
+        // 为每个子部门查询其成员并添加到结果列表
+        for (DeptDO childDept : childDeptList) {
+            result.add(convertToDetailResp(childDept));
         }
 
-        // 为每个子部门查询其成员并转换为详情响应对象
-        return childDeptList.stream().map(this::convertToDetailResp).collect(Collectors.toList());
+        return result;
     }
 
     /**
