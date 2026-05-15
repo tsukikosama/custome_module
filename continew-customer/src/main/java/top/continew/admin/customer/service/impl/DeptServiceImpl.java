@@ -105,8 +105,6 @@ public class DeptServiceImpl implements DeptService {
         ApiDeptDetailResp detailResp = new ApiDeptDetailResp();
         detailResp.setId(dept.getId());
         detailResp.setName(dept.getName());
-        detailResp.setDescription(dept.getDescription());
-
         // 转换成员列表
         List<ApiDeptDetailResp.DeptMemberResp> memberResps = members.stream()
             .map(this::convertToMemberResp)
@@ -130,6 +128,7 @@ public class DeptServiceImpl implements DeptService {
         memberResp.setAvatar(user.getAvatar());
         memberResp.setPhone(user.getPhone());
         memberResp.setDescription(user.getDescription());
+        memberResp.setJobTitle(user.getJobTitle());
         return memberResp;
     }
 }

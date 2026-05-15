@@ -64,5 +64,8 @@ public class ApiDeptDetailResp {
 
         @Schema(description = "描述")
         private String description;
+
+        @Schema(description = "职位")
+        private String jobTitle;
     }
 }

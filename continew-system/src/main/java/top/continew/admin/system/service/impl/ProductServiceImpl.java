@@ -75,6 +75,7 @@ public class ProductServiceImpl extends BaseServiceImpl<ProductMapper, ProductDO
     public PageResp<ProductResp> page(ProductQuery query, PageQuery pageQuery) {
         QueryWrapper<ProductDO> wrapper = this.buildQueryWrapper(query);
         wrapper.lambda().orderByDesc(ProductDO::getCreateTime);
+        wrapper.eq("bp.deleted", false);
         IPage<ProductResp> page = this.baseMapper.customPage(new Page((long)pageQuery.getPage(), (long)pageQuery
             .getSize()), wrapper);
         return PageResp.build(page);
