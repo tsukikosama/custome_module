@@ -17,7 +17,7 @@ build_and_deploy_all:
     - chmod 600 private_key
 
     # ==================== 部署 admin ====================
-    - rsync -avz -e "ssh -p 22022 -i private_key -o StrictHostKeyChecking=no" continew-server/target/continew-admin.jar root@52.195.156.13:/opt/employee/webapi/
+    - rsync -avz -e "ssh -p 22022 -i private_key -o StrictHostKeyChecking=no" continew-server/target/continew-admin.jar opsuser@85.137.55.229:/opt/employee/webapi/
     - ssh -p 22022 -i private_key opsuser@85.137.55.229 "
       cd /opt/employee/webapi &&
       mkdir -p bak &&
@@ -26,7 +26,7 @@ build_and_deploy_all:
       "
 
     # ==================== 部署 customer ====================
-    - rsync -avz -e "ssh -p 22022 -i private_key -o StrictHostKeyChecking=no" continew-customer/target/continew-customer.jar root@52.195.156.13:/opt/employee/clientapi/
+    - rsync -avz -e "ssh -p 22022 -i private_key -o StrictHostKeyChecking=no" continew-customer/target/continew-customer.jar opsuser@85.137.55.229:/opt/employee/clientapi/
     - ssh -p 22022 -i private_key opsuser@85.137.55.229 "
       cd /opt/employee/clientapi &&
       mkdir -p bak &&
@@ -36,7 +36,7 @@ build_and_deploy_all:
 
   when: manual
   only:
-    - main
+    - dev
 
 
 # 打包后端
@@ -54,7 +54,7 @@ build_and_deploy_admin:
     - chmod 600 private_key
 
     # ==================== 部署 admin ====================
-    - rsync -avz -e "ssh -p 22022 -i private_key -o StrictHostKeyChecking=no" continew-server/target/continew-admin.jar root@52.195.156.13:/opt/employee/webapi/
+    - rsync -avz -e "ssh -p 22022 -i private_key -o StrictHostKeyChecking=no" continew-server/target/continew-admin.jar opsuser@85.137.55.229:/opt/employee/webapi/
     - ssh -p 22022 -i private_key opsuser@85.137.55.229 "
       cd /opt/employee/webapi &&
       mkdir -p bak &&
@@ -64,7 +64,7 @@ build_and_deploy_admin:
 
   when: manual
   only:
-    - main
+    - dev
 
 # 打包客户端
 build_and_deploy_customer:
@@ -81,7 +81,7 @@ build_and_deploy_customer:
     - chmod 600 private_key
 
     # ==================== 部署 customer ====================
-    - rsync -avz -e "ssh -p 22022 -i private_key -o StrictHostKeyChecking=no" continew-customer/target/continew-customer.jar root@52.195.156.13:/opt/employee/clientapi/
+    - rsync -avz -e "ssh -p 22022 -i private_key -o StrictHostKeyChecking=no" continew-customer/target/continew-customer.jar opsuser@85.137.55.229:/opt/employee/clientapi/
     - ssh -p 22022 -i private_key opsuser@85.137.55.229 "
       cd /opt/employee/clientapi &&
       mkdir -p bak &&
@@ -91,4 +91,4 @@ build_and_deploy_customer:
 
   when: manual
   only:
-    - main
+    - dev
