@@ -55,6 +55,7 @@ import top.continew.starter.extension.crud.model.resp.PageResp;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -73,6 +74,27 @@ public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, Activit
     private final NoticeService noticeService;
     private final UserService userService;
     private final ApplicationEventPublisher eventPublisher;
+
+
+    @Override
+    protected void afterUpdate(ActivityReq req, ActivityDO entity) {
+        super.afterUpdate(req, entity);
+
+        if (!req.getRequireUserId().isEmpty()){
+            activityMemberMapper.delete(Wrappers.<ActivityMemberDO>lambdaQuery().eq(ActivityMemberDO::getActivityId, entity.getId()).eq(ActivityMemberDO::getType, ActivityMemberType.MANDATORY));
+            List<ActivityMemberDO> list = new ArrayList<>();
+
+            for (String userId : req.getRequireUserId().split(",")) {
+                ActivityMemberDO activityMemberDO = new ActivityMemberDO();
+                activityMemberDO.setActivityId(entity.getId());
+                activityMemberDO.setUserId(Long.valueOf(userId));
+                activityMemberDO.setType(ActivityMemberType.MANDATORY);
+                activityMemberDO.setStatus(1);
+                list.add(activityMemberDO);
+            }
+            activityMemberMapper.insertBatch(list);
+        }
+    }
 
     @Override
     public PageResp<ActivityResp> page(ActivityQuery query, PageQuery pageQuery) {
