@@ -5,8 +5,8 @@ application:
   # 是否为生产环境
   production: true
   # 门户地址（用于钉钉消息末尾追加）
-  portal-url: ${APP_PORTAL_URL:http://52.195.156.13:7001}
-  client-url: ${APP_PORTAL_URL:happyfamily.honglingyun.org}
+  portal-url: ${APP_PORTAL_URL:https://happyfamily.honglingyun.org/}
+  client-url: ${APP_PORTAL_URL:https://family.honglingyun.org/}
 --- ### 服务器配置
 server:
   # HTTP 端口（默认 8080）
