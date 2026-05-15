@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import top.continew.admin.common.base.service.BaseServiceImpl;
 import top.continew.admin.hrcommon.model.entity.WishDO;
+import top.continew.admin.hrcommon.model.enums.WishStatusEnum;
 import top.continew.admin.hrcommon.model.resp.WishResp;
 import top.continew.admin.system.model.query.WishQuery;
 import top.continew.admin.system.model.req.ProductReq;
@@ -98,6 +99,7 @@ public class WishServiceImpl extends BaseServiceImpl<WishMapper, WishDO, WishRes
         wish.setProductId(productId);
         wish.setIsProduct(true);
         wish.setId(request.getId());
+        wish.setStatus(WishStatusEnum.SUCCESS);
         baseMapper.updateById(wish);
     }
 
