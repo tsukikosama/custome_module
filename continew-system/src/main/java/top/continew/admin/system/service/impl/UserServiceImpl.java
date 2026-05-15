@@ -526,8 +526,12 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
                 }
                 userDO.setUnionId(user.getUnionid());
                 userDO.setGender(GenderEnum.UNKNOWN);
-                userDO.setEmail(user.getEmail());
-                userDO.setPhone(user.getMobile());
+                if (StrUtil.isNotBlank(user.getEmail())) {
+                    userDO.setEmail(user.getEmail());
+                }
+                if (StrUtil.isNotBlank(user.getMobile())) {
+                    userDO.setPhone(user.getMobile());
+                }
                 userDO.setStatus(DisEnableStatusEnum.ENABLE);
                 userDO.setIsSystem(false);
                 userDO.setDeptId(item);
@@ -689,8 +693,12 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
                 if (userDO == null) {
                     continue;
                 }
-                userDO.setEmail(user.getEmail());
-                userDO.setPhone(user.getMobile());
+                if (StrUtil.isNotBlank(user.getEmail())) {
+                    userDO.setEmail(user.getEmail());
+                }
+                if (StrUtil.isNotBlank(user.getMobile())) {
+                    userDO.setPhone(user.getMobile());
+                }
                 userDO.setDeptId(item);
                 userDO.setJobTitle(user.getTitle());
                 if (user.getHiredDate() != null) {
