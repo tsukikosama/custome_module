@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.continew.admin.hrcommon.mapper.WishMapper">
+
+    <sql id="baseSql">
+        SELECT
+            t1.id,
+            t1.name,
+            t1.product_id as productId,
+            t1.is_product as isProduct,
+            t1.parents_id as parentsId,
+            t1.status,
+            t1.fail_reason as failReason,
+            t1.create_time as createTime,
+            t1.create_user as createUser,
+            COALESCE(children.count, 0) + 1 as childrenCount,
+            (
+                SELECT GROUP_CONCAT(COALESCE(u.nickname, u.username) SEPARATOR ',')
+                FROM biz_wish sub_wish
+                         LEFT JOIN sys_user u ON u.id = sub_wish.create_user AND u.deleted = 0
+                WHERE (sub_wish.id = t1.id OR sub_wish.parents_id = t1.id)
+                  AND sub_wish.deleted = 0
+            ) as wishUserNames
+
+        FROM biz_wish t1
+                 LEFT JOIN (
+            SELECT parent_wish.id as parents_id, COUNT(child_wish.id) as count
+            FROM biz_wish parent_wish
+                     LEFT JOIN biz_wish child_wish ON child_wish.parents_id = parent_wish.id AND child_wish.deleted = 0
+            WHERE parent_wish.parents_id = 0
+              AND parent_wish.deleted = 0
+            GROUP BY parent_wish.id
+        ) children ON t1.id = children.parents_id
+
+    </sql>
+    <!-- 自定义分页查询：只查询父心愿（parents_id = 0），并统计每个父心愿的总数量（父心愿本身+子心愿） -->
+    <select id="customParentPage" resultType="top.continew.admin.hrcommon.model.resp.WishResp">
+        <include refid="baseSql"/>
+        ${ew.customSqlSegment}
+
+    </select>
+    <select id="customList" resultType="top.continew.admin.hrcommon.model.resp.WishDetailResp">
+        <include refid="baseSql"/>
+        ${ew.customSqlSegment}
+    </select>
+
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.continew.admin.hrcommon.mapper.ActivityMemberMapper">
+
+    <!-- 自定义分页查询活动参与用户 -->
+    <select id="customPage" resultType="top.continew.admin.hrcommon.model.resp.ActivityMemberCustomResp">
+        SELECT
+            a.id as activityId,
+            a.title as activityTitle,
+            (
+                SELECT GROUP_CONCAT(am.user_id)
+                FROM biz_activity_member am
+                WHERE am.activity_id = a.id
+                  AND am.type = 1
+                  AND am.status = 1
+                  AND am.deleted = 0
+            ) as speakerUserId,
+            (
+                SELECT GROUP_CONCAT(am.user_id)
+                FROM biz_activity_member am
+                WHERE am.activity_id = a.id
+                  AND am.type = 2
+                  AND am.status = 1
+                  AND am.deleted = 0
+            ) as requireUserId,
+            (
+                SELECT GROUP_CONCAT(am.user_id)
+                FROM biz_activity_member am
+                WHERE am.activity_id = a.id
+                  AND am.type = 3
+                  AND am.status = 1
+                  AND am.deleted = 0
+            ) as normalUserId
+        FROM biz_activity a
+        WHERE a.deleted = 0
+        ${ew.customSqlSegment}
+        ORDER BY a.create_time DESC
+    </select>
+
+    <!-- 批量插入活动参与用户 -->
+
+
+    <!-- 统计用户参与的活动 -->
+    <select id="statUserActivities" resultType="top.continew.admin.hrcommon.model.resp.UserActivityStatResp">
+        SELECT
+            COUNT(am.activity_id) as activityCount,
+            GROUP_CONCAT(am.activity_id SEPARATOR ',') as activityIds
+        FROM biz_activity_member am
+        WHERE am.user_id = #{userId}
+          AND am.status = 1
+          AND am.deleted = 0
+    </select>
+
+</mapper>

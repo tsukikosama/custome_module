@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn clean *)",
+      "Bash(mvn compile *)",
+      "Bash(mvn dependency:tree -Dverbose -pl continew-customer)",
+      "Bash(xargs grep *)",
+      "Bash(mvn dependency:tree -pl continew-hr-common)",
+      "Bash(mvn dependency:tree -pl continew-customer)",
+      "Bash(javac *)",
+      "Bash(mvn spring-boot:run)",
+      "Bash(mvn spring-boot:run -Dspotless.check.skip=true -Dspotless.apply.skip=true)",
+      "Bash(jps -l)",
+      "Bash(mvn compiler:compile -DskipTests)",
+      "Bash(hired\")"
+    ]
+  }
+}

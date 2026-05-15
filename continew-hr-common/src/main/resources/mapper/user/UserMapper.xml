@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.continew.admin.hrcommon.mapper.user.UserMapper">
+    <sql id="selectUser">
+        SELECT
+            t1.id,
+            t1.create_user,
+            t1.create_time,
+            t1.update_user,
+            t1.update_time,
+            t1.username,
+            t1.nickname,
+            t1.password,
+            t1.gender,
+            t1.email,
+            t1.phone,
+            t1.avatar,
+            t1.description,
+            t1.status,
+            t1.is_system,
+            t1.pwd_reset_time,
+            t1.dept_id,
+            t2.name AS deptName,
+            t1.points,
+            t1.dingding_id,
+            t1.union_id,
+            t1.job_title,
+            t1.hired_date,
+            t1.birthday,
+            t1.is_push_message
+        FROM sys_user AS t1
+        LEFT JOIN sys_dept AS t2 ON t2.id = t1.dept_id
+    </sql>
+
+    <select id="selectUserPage" resultType="top.continew.admin.hrcommon.model.resp.user.UserDetailResp">
+        <include refid="selectUser" />
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectUserList" resultType="top.continew.admin.hrcommon.model.resp.user.UserDetailResp">
+        <include refid="selectUser" />
+        ${ew.customSqlSegment}
+    </select>
+
+    <!-- 更新用户积分 -->
+    <update id="updatePoints">
+        UPDATE sys_user
+        SET points = #{points}
+        WHERE id = #{userId}
+          AND deleted = 0
+    </update>
+
+    <!-- 查询积分排行榜（前10名） -->
+    <select id="selectPointsRank" resultType="top.continew.admin.hrcommon.model.resp.PointsRankResp">
+        SELECT su.avatar, su.nickname, sd.name AS deptName, su.points
+        FROM sys_user su
+        LEFT JOIN sys_dept sd ON sd.id = su.dept_id
+        WHERE su.status = 1 AND su.deleted = 0 AND su.points > 0
+        ORDER BY su.points DESC
+        LIMIT 10
+    </select>
+    <select id="selectRequirePushMessageUserList"
+            resultType="top.continew.admin.hrcommon.model.entity.user.UserDO">
+        select * from sys_user where is_push_message = 1 and deleted = 0
+    </select>
+</mapper>

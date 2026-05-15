@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.continew.admin.hrcommon.mapper.ActivityMapper">
+
+
+
+    <!-- 自定义分页查询 -->
+    <select id="customPage" resultType="top.continew.admin.hrcommon.model.resp.ActivityResp">
+        SELECT
+            ba.*,
+            GROUP_CONCAT(DISTINCT CASE WHEN speaker.type = 1 THEN speaker.user_id END) AS speakerUserId,
+            GROUP_CONCAT(DISTINCT CASE WHEN requireUser.type = 2 THEN requireUser.user_id END) AS requireUserId,
+            GROUP_CONCAT(DISTINCT CASE WHEN normal.type = 3 THEN normal.user_id END) AS normalUserId,
+            (
+                SELECT COUNT(*)
+                FROM biz_activity_member bam
+                WHERE bam.activity_id = ba.id
+                  AND bam.type IN (1, 2)
+                  AND bam.status = 1
+                  AND bam.deleted = 0
+            ) AS participantCount
+        FROM biz_activity ba
+        LEFT JOIN biz_activity_member speaker ON ba.id = speaker.activity_id AND speaker.type = 1 AND speaker.deleted = 0
+        LEFT JOIN biz_activity_member requireUser ON ba.id = requireUser.activity_id AND requireUser.type = 2 AND requireUser.deleted = 0
+        LEFT JOIN biz_activity_member normal ON ba.id = normal.activity_id AND normal.type = 3 AND normal.deleted = 0
+        ${ew.customSqlSegment}
+    </select>
+
+
+
+    <!-- 根据ID查询活动详情 -->
+    <select id="getDetailById" resultType="top.continew.admin.hrcommon.model.resp.ActivityDetailResp">
+        SELECT
+            ba.*,
+            GROUP_CONCAT(DISTINCT CASE WHEN speaker.type = 1 THEN speaker.user_id END) AS speakerUserId,
+            GROUP_CONCAT(DISTINCT CASE WHEN requireUser.type = 2 THEN requireUser.user_id END) AS requireUserId,
+            GROUP_CONCAT(DISTINCT CASE WHEN normal.type = 3 THEN normal.user_id END) AS normalUserId
+        FROM biz_activity ba
+        LEFT JOIN biz_activity_member speaker ON ba.id = speaker.activity_id AND speaker.type = 1 AND speaker.status = 1 AND speaker.deleted = 0
+        LEFT JOIN biz_activity_member requireUser ON ba.id = requireUser.activity_id AND requireUser.type = 2 AND requireUser.status = 1 AND requireUser.deleted = 0
+        LEFT JOIN biz_activity_member normal ON ba.id = normal.activity_id AND normal.type = 3 AND normal.status = 1 AND normal.deleted = 0
+        WHERE ba.id = #{id} AND ba.deleted = 0
+        GROUP BY ba.id
+    </select>
+
+    <!-- 客户端分页查询活动（只查询已审核通过的活动） -->
+    <select id="apiPage" resultType="top.continew.admin.hrcommon.model.resp.ApiActivityResp">
+        SELECT
+            ba.id,
+            ba.title,
+            ba.image,
+            ba.start_time AS startTime,
+            ba.end_time AS endTime,
+            ba.create_time AS createTime,
+            su.nickname AS createUser,
+            ba.type
+        FROM biz_activity ba
+        LEFT JOIN sys_user su ON ba.create_user = su.id
+        ${ew.customSqlSegment}
+    </select>
+
+    <!-- 查询活动成员信息（用于客户端详情） - 连表查询活动详情和成员信息，只查询已审核通过的活动 -->
+    <select id="getActivityMemberInfo" resultType="top.continew.admin.hrcommon.model.resp.ApiActivityDetailResp">
+        SELECT
+            ba.id,
+            ba.title,
+            ba.image,
+            ba.content,
+            ba.start_time AS startTime,
+            ba.end_time AS endTime,
+            ba.create_time AS createTime,
+            ba.type,
+            ba.activity_people_nums AS eventPeopleNums,
+            ba.attachment,
+            member_data.speakerName,
+            member_data.speakerId,
+            member_data.requireUser,
+            member_data.requireUserIds,
+            member_data.normalUser,
+            member_data.normalUserIds,
+            COALESCE(member_data.enrolledCount, 0) AS enrolledCount
+        FROM biz_activity ba
+        LEFT JOIN (
+            SELECT
+                am.activity_id,
+                <!-- 举办人信息 -->
+                MAX(CASE WHEN am.type = 1 THEN su.nickname END) AS speakerName,
+                MAX(CASE WHEN am.type = 1 THEN su.id END) AS speakerId,
+                <!-- 必须参加人信息 -->
+                GROUP_CONCAT(DISTINCT CASE WHEN am.type = 2 AND am.status = 1 THEN su.nickname END
+                    SEPARATOR ',') AS requireUser,
+                GROUP_CONCAT(DISTINCT CASE WHEN am.type = 2 AND am.status = 1 THEN am.user_id END
+                    SEPARATOR ',') AS requireUserIds,
+                <!-- 主动参加人信息 -->
+                GROUP_CONCAT(DISTINCT CASE WHEN am.type = 3 AND am.status = 1 THEN su.nickname END
+                    SEPARATOR ',') AS normalUser,
+                GROUP_CONCAT(DISTINCT CASE WHEN am.type = 3 AND am.status = 1 THEN am.user_id END
+                    SEPARATOR ',') AS normalUserIds,
+                <!-- 已报名人数统计（只统计主动参加人type=3） -->
+                SUM(CASE WHEN am.type = 3 AND am.status = 1 THEN 1 ELSE 0 END) AS enrolledCount
+            FROM biz_activity_member am
+            INNER JOIN sys_user su ON am.user_id = su.id
+            WHERE am.deleted = 0
+            GROUP BY am.activity_id
+        ) member_data ON ba.id = member_data.activity_id
+        WHERE ba.id = #{activityId}
+          AND ba.deleted = 0
+          AND ba.status = 2
+    </select>
+
+    <!-- 查询用户最近参与的活动列表（最多5条） -->
+    <select id="listRecentParticipatedActivities" resultType="top.continew.admin.hrcommon.model.resp.ApiActivityResp">
+        SELECT
+            ba.id,
+            ba.title,
+            ba.image,
+            ba.start_time AS startTime,
+            ba.end_time AS endTime,
+            ba.create_time AS createTime,
+            su.nickname AS createUser,
+            ba.type
+        FROM biz_activity ba
+        INNER JOIN biz_activity_member bam ON ba.id = bam.activity_id
+        LEFT JOIN sys_user su ON ba.create_user = su.id
+        WHERE bam.user_id = #{userId}
+          AND bam.status = 1
+          AND bam.deleted = 0
+          AND ba.deleted = 0
+          AND ba.status = 2
+        ORDER BY ba.create_time DESC
+        LIMIT 5
+    </select>
+
+
+</mapper>
