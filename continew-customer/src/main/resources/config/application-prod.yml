@@ -4,7 +4,7 @@ application:
   url: https://happyfamily.honglingyun.org
   # 是否为生产环境
   production: true
-  portal-url: ${APP_PORTAL_URL:http://85.137.55.229:7000}
+  portal-url: ${APP_PORTAL_URL:http://52.195.156.13:7000}
   client-url: ${APP_PORTAL_URL:https://happyfamily.honglingyun.org}
 --- ### 服务器配置
 server:

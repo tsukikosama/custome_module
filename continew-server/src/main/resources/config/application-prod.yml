@@ -5,12 +5,12 @@ application:
   # 是否为生产环境
   production: true
   # 门户地址（用于钉钉消息末尾追加）
-  portal-url: ${APP_PORTAL_URL:http://85.137.55.229:7000}
+  portal-url: ${APP_PORTAL_URL:http://52.195.156.13:7001}
   client-url: ${APP_PORTAL_URL:happyfamily.honglingyun.org}
 --- ### 服务器配置
 server:
   # HTTP 端口（默认 8080）
-  port: 18000
+  port: 18001
 
 --- ### 数据源配置
 spring.datasource:
