@@ -4,7 +4,8 @@ application:
   url: http://85.137.55.229:7000
   # 是否为生产环境
   production: true
-
+  portal-url: ${APP_PORTAL_URL:http://85.137.55.229:7000}
+  client-url: ${APP_PORTAL_URL:http://85.137.55.229:8000}
 --- ### 服务器配置
 server:
   # HTTP 端口（默认 8080）

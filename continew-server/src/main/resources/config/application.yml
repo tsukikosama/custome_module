@@ -9,9 +9,7 @@ application:
   version: 4.2.0-SNAPSHOT
   # 基本包
   base-package: top.continew.admin
-  # 门户地址（用于钉钉消息末尾追加）
-  portal-url: ${APP_PORTAL_URL:http://85.137.55.229:7000}
-  client-url: ${APP_PORTAL_URL:http://85.137.55.229:8000}
+
   ## 作者信息配置
   contact:
     name: Charles7c
