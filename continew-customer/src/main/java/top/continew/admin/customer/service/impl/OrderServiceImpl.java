@@ -108,8 +108,10 @@ public class OrderServiceImpl implements OrderService {
             List<OrderDO> orderList = orderMapper.selectList(monthlyWrapper);
 
             // 校验是否超过月限
-            CheckUtils.throwIf(orderList.stream().mapToInt(OrderDO::getProductNum).sum() + req.getProductNum() > monthlyLimit, String
-                .format("超出月限数量，本月已兑换：%d，月限：%d", orderList.stream().mapToInt(OrderDO::getProductNum).sum(), monthlyLimit));
+            CheckUtils.throwIf(orderList.stream().mapToInt(OrderDO::getProductNum).sum() + req
+                .getProductNum() > monthlyLimit, String.format("超出月限数量，本月已兑换：%d，月限：%d", orderList.stream()
+                    .mapToInt(OrderDO::getProductNum)
+                    .sum(), monthlyLimit));
         }
 
         // 6. 特殊商品年度限购校验
@@ -173,13 +175,9 @@ public class OrderServiceImpl implements OrderService {
         try {
             List<UserDO> pushUsers = userMapper.selectRequirePushMessageUserList();
             if (!pushUsers.isEmpty()) {
-                String content = String.format("【新订单通知】用户 %s 下单了\n订单号：%s\n商品：%s\n数量：%d\n消耗积分：%d\n下单时间：%s",
-                    user.getNickname(),
-                    orderNo,
-                    product.getName(),
-                    req.getProductNum(),
-                    costPoints.intValue(),
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                String content = String.format("【新订单通知】用户 %s 下单了\n订单号：%s\n商品：%s\n数量：%d\n消耗积分：%d\n下单时间：%s", user
+                    .getNickname(), orderNo, product.getName(), req.getProductNum(), costPoints
+                        .intValue(), LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 eventPublisher.publishEvent(new SendMessageEvent(this, pushUsers, content, true));
             }
         } catch (Exception e) {

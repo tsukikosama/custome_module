@@ -56,7 +56,11 @@ public class SendMessageEvent extends ApplicationEvent {
         this.flag = flag;
     }
 
-    public SendMessageEvent(Object source, List<UserDO> senders, String content, List<UserDO> additionalUsers, Boolean flag) {
+    public SendMessageEvent(Object source,
+                            List<UserDO> senders,
+                            String content,
+                            List<UserDO> additionalUsers,
+                            Boolean flag) {
         super(source);
         this.senders = senders;
         this.content = content;

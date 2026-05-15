@@ -45,7 +45,7 @@ public class OvertimeWorkQuery implements Serializable {
      * 用户ID
      */
     @Schema(description = "用户ID")
-    @Query(type = QueryType.EQ,columns = "bow.user_id")
+    @Query(type = QueryType.EQ, columns = "bow.user_id")
     private Long userId;
 
     /**
@@ -56,7 +56,7 @@ public class OvertimeWorkQuery implements Serializable {
     private DingDingEventStatusEnum status;
 
     @Schema(description = "结果")
-    @Query(type = QueryType.EQ,columns = "bow.result")
+    @Query(type = QueryType.EQ, columns = "bow.result")
     private DingDingEventResultEnum result;
     /**
      * 创建时间

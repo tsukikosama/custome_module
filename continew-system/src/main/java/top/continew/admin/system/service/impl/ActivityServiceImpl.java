@@ -75,13 +75,14 @@ public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, Activit
     private final UserService userService;
     private final ApplicationEventPublisher eventPublisher;
 
-
     @Override
     protected void afterUpdate(ActivityReq req, ActivityDO entity) {
         super.afterUpdate(req, entity);
 
-        if (!req.getRequireUserId().isEmpty()){
-            activityMemberMapper.delete(Wrappers.<ActivityMemberDO>lambdaQuery().eq(ActivityMemberDO::getActivityId, entity.getId()).eq(ActivityMemberDO::getType, ActivityMemberType.MANDATORY));
+        if (!req.getRequireUserId().isEmpty()) {
+            activityMemberMapper.delete(Wrappers.<ActivityMemberDO>lambdaQuery()
+                .eq(ActivityMemberDO::getActivityId, entity.getId())
+                .eq(ActivityMemberDO::getType, ActivityMemberType.MANDATORY));
             List<ActivityMemberDO> list = new ArrayList<>();
 
             for (String userId : req.getRequireUserId().split(",")) {
@@ -236,13 +237,12 @@ public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, Activit
                     List<Long> userIds = mandatoryMembers.stream().map(ActivityMemberDO::getUserId).toList();
                     List<UserDO> users = userService.listByIds(userIds);
                     if (!users.isEmpty()) {
-                        String content = String.format(
-                            "【活动报名成功通知】活动「%s」已审核通过，您已被添加为必参加人员\n活动时间：%s ~ %s",
-                            activity.getTitle(),
-                            activity.getStartTime() != null ? activity.getStartTime().format(DateTimeFormatter
-                                .ofPattern("yyyy-MM-dd HH:mm:ss")) : "待定",
-                            activity.getEndTime() != null ? activity.getEndTime().format(DateTimeFormatter
-                                .ofPattern("yyyy-MM-dd HH:mm:ss")) : "待定");
+                        String content = String.format("【活动报名成功通知】活动「%s」已审核通过，您已被添加为必参加人员\n活动时间：%s ~ %s", activity
+                            .getTitle(), activity.getStartTime() != null
+                                ? activity.getStartTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                                : "待定", activity.getEndTime() != null
+                                    ? activity.getEndTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                                    : "待定");
                         eventPublisher.publishEvent(new SendMessageEvent(this, users, content, false));
                         log.info("审核通过必参加人员通知发送成功，活动ID：{}，通知人数：{}", activity.getId(), users.size());
                     }
@@ -282,7 +282,7 @@ public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, Activit
             log.info("活动审核通过系统通知创建成功，活动ID：{}", activity.getId());
 
             // 发送钉钉广播消息给全体用户
-            eventPublisher.publishEvent(new SendBroadcastMessageEvent(this, content,false));
+            eventPublisher.publishEvent(new SendBroadcastMessageEvent(this, content, false));
             log.info("活动审核通过钉钉广播消息发送成功，活动ID：{}", activity.getId());
         } catch (Exception e) {
             // 记录错误日志，但不影响审核流程

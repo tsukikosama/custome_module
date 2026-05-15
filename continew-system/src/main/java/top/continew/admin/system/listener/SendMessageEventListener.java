@@ -90,7 +90,7 @@ public class SendMessageEventListener {
             sendMessageReq.setMsg(msg);
 
             // 发送钉钉会话消息
-            dingTalkApiService.sendConversationMessage(sendMessageReq,event.isFlag());
+            dingTalkApiService.sendConversationMessage(sendMessageReq, event.isFlag());
             log.info("发送消息钉钉推送成功：通知用户数={}, 用户列表={}", senders.size(), senders.stream()
                 .map(UserDO::getNickname)
                 .collect(Collectors.joining(", ")));

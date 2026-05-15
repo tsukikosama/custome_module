@@ -235,10 +235,9 @@ public class OrderServiceImpl extends BaseServiceImpl<OrderMapper, OrderDO, Orde
             noticeReq.setType("1");
             noticeReq.setNoticeScope(NoticeScopeEnum.USER);
             noticeReq.setNoticeMethods(List.of(1));
-            List<String> userIds = Stream.concat(
-                Stream.of(userDO.getId().toString()),
-                hrList.stream().map(UserDO::getId).map(String::valueOf)
-            ).collect(Collectors.toList());
+            List<String> userIds = Stream.concat(Stream.of(userDO.getId().toString()), hrList.stream()
+                .map(UserDO::getId)
+                .map(String::valueOf)).collect(Collectors.toList());
             noticeReq.setNoticeUsers(userIds);
             noticeReq.setIsTiming(false);
             noticeService.create(noticeReq);
@@ -248,7 +247,7 @@ public class OrderServiceImpl extends BaseServiceImpl<OrderMapper, OrderDO, Orde
             String content = String.format("订单状态更新通知\n订单号：%s\n状态变更：%s → %s\n商品：%s\n数量：%d", existingOrder
                 .getOrderNo(), existingOrder.getStatus().getDescription(), req.getStatus()
                     .getDescription(), product != null ? product.getName() : "未知商品", existingOrder.getProductNum());
-            SendMessageEvent event = new SendMessageEvent(this, hrList, content,true);
+            SendMessageEvent event = new SendMessageEvent(this, hrList, content, true);
             eventPublisher.publishEvent(event);
 
         }
