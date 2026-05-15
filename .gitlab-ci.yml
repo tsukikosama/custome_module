@@ -27,7 +27,7 @@ build_and_deploy_all:
 
     # ==================== 部署 customer ====================
     - rsync -avz -e "ssh -p 22 -i private_key -o StrictHostKeyChecking=no" continew-customer/target/continew-customer.jar root@52.195.156.13:/opt/employee/clientapi/
-    - ssh -p 22022 -i private_key root@52.195.156.13"
+    - ssh -p 22 -i private_key root@52.195.156.13"
       cd /opt/employee/clientapi &&
       mkdir -p bak &&
       [ -f continew-customer.jar ] && cp continew-customer.jar bak/continew-customer.jar.$(date +%Y%m%d%H%M%S) &&
@@ -55,7 +55,7 @@ build_and_deploy_admin:
 
     # ==================== 部署 admin ====================
     - rsync -avz -e "ssh -p 22 -i private_key -o StrictHostKeyChecking=no" continew-server/target/continew-admin.jar root@52.195.156.13:/opt/employee/webapi/
-    - ssh -p 22022 -i private_key root@52.195.156.13 "
+    - ssh -p 22 -i private_key root@52.195.156.13 "
       cd /opt/employee/webapi &&
       mkdir -p bak &&
       [ -f continew-admin.jar ] && cp continew-admin.jar bak/continew-admin.jar.$(date +%Y%m%d%H%M%S) &&
@@ -82,7 +82,7 @@ build_and_deploy_customer:
 
     # ==================== 部署 customer ====================
     - rsync -avz -e "ssh -p 22 -i private_key -o StrictHostKeyChecking=no" continew-customer/target/continew-customer.jar root@52.195.156.13:/opt/employee/clientapi/
-    - ssh -p 22022 -i private_key root@52.195.156.13 "
+    - ssh -p 22 -i private_key root@52.195.156.13 "
       cd /opt/employee/clientapi &&
       mkdir -p bak &&
       [ -f continew-customer.jar ] && cp continew-customer.jar bak/continew-customer.jar.$(date +%Y%m%d%H%M%S) &&
