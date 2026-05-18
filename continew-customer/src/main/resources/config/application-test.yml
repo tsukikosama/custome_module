@@ -221,7 +221,7 @@ continew-starter.messaging.websocket:
   # 配置允许跨域的域名
   allowed-origins:
     - ${application.url}
-    - http://198.18.0.1:3000
+    - *
 
 --- ### Just Auth 配置
 continew-starter.justauth:
