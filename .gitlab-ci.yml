@@ -31,7 +31,7 @@ build_and_deploy_all_dev:
       cd /opt/employee/clientapi &&
       mkdir -p bak &&
       [ -f continew-customer.jar ] && cp continew-customer.jar bak/continew-customer.jar.$(date +%Y%m%d%H%M%S) &&
-      sh api-client.sh stop && sleep 3 && sh api-client.sh start
+      sh api-service.sh stop && sleep 3 && sh api-service.sh start
       "
 
   when: manual
@@ -120,7 +120,7 @@ build_and_deploy_customer_dev:
       cd /opt/employee/clientapi &&
       mkdir -p bak &&
       [ -f continew-customer.jar ] && cp continew-customer.jar bak/continew-customer.jar.$(date +%Y%m%d%H%M%S) &&
-      sh api-client.sh stop && sleep 3 && sh api-client.sh start
+      sh api-service.sh stop && sleep 3 && sh api-service.sh start
       "
 
   when: manual
