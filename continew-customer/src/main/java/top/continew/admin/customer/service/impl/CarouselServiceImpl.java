@@ -41,8 +41,9 @@ public class CarouselServiceImpl implements CarouselService {
 
     @Override
     public List<ApiCarouselResp> list() {
-        // 构建查询条件
+        // 构建查询条件（列表不查询 content 字段，避免大字段导致 PacketTooBig 异常）
         QueryWrapper<CarouselImageDO> wrapper = new QueryWrapper<>();
+        wrapper.select("id", "url", "sort", "title", "jump_path");
         // 按 sort 字段升序排序（数字小的在前）
         wrapper.orderByAsc("sort");
 
