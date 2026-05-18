@@ -65,4 +65,8 @@ public class ApiProductResp extends BaseResp {
      */
     @Schema(description = "每月限兑次数，null表示不限次数", example = "2")
     private Integer monthLimit;
+
+    private String description;
+
+    private Long typeId;
 }
