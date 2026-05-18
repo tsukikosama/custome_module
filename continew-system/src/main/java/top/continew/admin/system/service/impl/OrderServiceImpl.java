@@ -57,6 +57,8 @@ import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -172,8 +174,10 @@ public class OrderServiceImpl extends BaseServiceImpl<OrderMapper, OrderDO, Orde
         NoticeReq noticeReq = new NoticeReq();
         //发送一个通知给人事
         noticeReq.setTitle("商品兑换通知");
-        noticeReq.setContent("用户" + currentUser.getNickname() + "兑换了" + req.getProductNum() + "个" + product
-            .getName() + "商品");
+        noticeReq.setContent(String.format(
+            "📦 您有新的订单待处理～\n👤 下单用户：【%s】\n📋 订单编号：【%s】\n🎁 兑换商品：【%s】\n🔢 购买数量：%d\n💰 消耗积分：%d\n⏰ 下单时间：%s",
+            currentUser.getNickname(), order.getOrderNo(), product.getName(), req.getProductNum(), requiredPoints,
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
         noticeReq.setStatus(NoticeStatusEnum.PUBLISHED);
         noticeReq.setType("1");
         noticeReq.setNoticeScope(NoticeScopeEnum.USER);
@@ -244,8 +248,9 @@ public class OrderServiceImpl extends BaseServiceImpl<OrderMapper, OrderDO, Orde
 
             // 发布消息事件，触发钉钉推送（异步执行）
             ProductDO product = productService.getById(existingOrder.getProductId());
-            String content = String.format("订单状态更新通知\n订单号：%s\n状态变更：%s → %s\n商品：%s\n数量：%d", existingOrder
-                .getOrderNo(), existingOrder.getStatus().getDescription(), req.getStatus()
+            String content = String.format(
+                "📬 订单状态已更新，请查收～\n📋 订单编号：【%s】\n📊 状态变更：【%s】 → 【%s】\n🎁 对应商品：【%s】\n🔢 商品数量：%d",
+                existingOrder.getOrderNo(), existingOrder.getStatus().getDescription(), req.getStatus()
                     .getDescription(), product != null ? product.getName() : "未知商品", existingOrder.getProductNum());
             SendMessageEvent event = new SendMessageEvent(this, hrList, content, true);
             eventPublisher.publishEvent(event);

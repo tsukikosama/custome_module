@@ -379,9 +379,17 @@ public class ActivityServiceImpl implements ActivityService {
                 return;
             }
 
+            // 统计当前活动的已参加人数（只统计主动参加人type=3）
+            long currentCount = activityMemberMapper.selectCount(Wrappers.<ActivityMemberDO>lambdaQuery()
+                .eq(ActivityMemberDO::getActivityId, activity.getId())
+                .eq(ActivityMemberDO::getStatus, 1)
+                .eq(ActivityMemberDO::getDeleted, 0)
+                .eq(ActivityMemberDO::getType, ActivityMemberType.VOLUNTARY.getValue()));
+
             // 构建消息内容
-            String content = String.format("恭喜您成功报名参加活动！\n活动名称：%s\n报名时间：%s", activity.getTitle(), LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            String content = String.format("🎊 恭喜你，报名成功啦！\n👤 报名用户：【%s】\n🎯 参与活动：【%s】\n👥 当前报名人数：%d人\n太棒了！你已经成功加入本次活动，期待你的精彩表现～\n🕒 通知时间：%s", user
+                .getNickname(), activity.getTitle(), currentCount, LocalDateTime.now()
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
             // 创建系统消息请求
             NoticeDO noticeDO = new NoticeDO();

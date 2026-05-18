@@ -264,8 +264,12 @@ public class ActivityServiceImpl extends BaseServiceImpl<ActivityMapper, Activit
     private void sendAuditSuccessNotice(ActivityDO activity) {
         try {
             // 构建通知内容
-            String content = String.format("新活动「%s」已发布，活动时间：%s 至 %s，欢迎参加！", activity.getTitle(), activity
-                .getStartTime(), activity.getEndTime());
+            String content = String.format("✨ 新活动上线啦！快来一起玩吧～\n📌 活动名称：【%s】\n⏰ 活动时间：%s 至 %s\n活动已正式上线，欢迎小伙伴们踊跃报名参与，别错过哦！", activity
+                .getTitle(), activity.getStartTime() != null
+                    ? activity.getStartTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                    : "待定", activity.getEndTime() != null
+                        ? activity.getEndTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                        : "待定");
 
             // 创建系统通知
             NoticeReq noticeReq = new NoticeReq();
