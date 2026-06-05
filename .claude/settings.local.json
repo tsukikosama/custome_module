@@ -17,7 +17,9 @@
       "Bash(python *‘)",
       "Bash(python *)",
       "Bash(where mvn *)",
-      "Bash(powershell *)"
+      "Bash(powershell *)",
+      "Bash(git commit *)",
+      "Bash(git add *)"
     ]
   }
 }
