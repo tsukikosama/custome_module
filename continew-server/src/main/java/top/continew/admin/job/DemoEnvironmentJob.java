@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.common.constant.CacheConstants;
-import top.continew.admin.hrcommon.mapper.StorageMapper;
+import top.continew.admin.common.mapper.StorageMapper;
 import top.continew.admin.common.mapper.dept.DeptMapper;
 import top.continew.admin.common.mapper.dept.RoleDeptMapper;
 import top.continew.admin.common.mapper.notice.NoticeLogMapper;
@@ -35,7 +35,7 @@ import top.continew.admin.common.mapper.user.UserRoleMapper;
 import top.continew.admin.common.mapper.user.UserSocialMapper;
 import top.continew.admin.common.model.entity.notice.NoticeDO;
 import top.continew.admin.common.model.entity.notice.NoticeLogDO;
-import top.continew.admin.hrcommon.model.entity.StorageDO;
+import top.continew.admin.common.model.entity.StorageDO;
 import top.continew.admin.common.model.entity.user.UserDO;
 import top.continew.admin.open.mapper.AppMapper;
 import top.continew.admin.open.model.entity.AppDO;
@@ -114,8 +114,8 @@ public class DemoEnvironmentJob {
             this.log(dictCount, "字典");
             Long storageCount = storageMapper.lambdaQuery().gt(StorageDO::getId, DELETE_FLAG).count();
             this.log(storageCount, "存储");
-            Long noticeCount = noticeMapper.lambdaQuery().gt(NoticeDO::getId, DELETE_FLAG).count();
-            this.log(noticeCount, "公告");
+//            Long noticeCount = noticeMapper.lambdaQuery().gt(NoticeDO::getId, DELETE_FLAG).count();
+//            this.log(noticeCount, "公告");
             //            Long messageCount = messageMapper.lambdaQuery().count();
             //            this.log(messageCount, "通知");
             Long userCount = userMapper.lambdaQuery().notIn(UserDO::getId, USER_FLAG).count();
@@ -137,7 +137,7 @@ public class DemoEnvironmentJob {
             InterceptorIgnoreHelper.handle(IgnoreStrategy.builder().blockAttack(true).build());
             SnailJobLog.REMOTE.info("演示环境待清理数据项检测完成，开始执行清理。");
             // 清理关联数据
-            noticeLogMapper.lambdaUpdate().gt(NoticeLogDO::getNoticeId, DELETE_FLAG).remove();
+//            noticeLogMapper.lambdaUpdate().gt(NoticeLogDO::getNoticeId, DELETE_FLAG).remove();
             //            messageLogMapper.lambdaUpdate().gt(MessageLogDO::getMessageId, MESSAGE_FLAG).remove();
             //            //            roleDeptMapper.lambdaUpdate().notIn(RoleDeptDO::getRoleId, ROLE_FLAG).remove();
             roleMenuMapper.lambdaUpdate().notIn(RoleMenuDO::getRoleId, ROLE_FLAG).remove();
@@ -155,9 +155,9 @@ public class DemoEnvironmentJob {
             this.clean(storageCount, "存储", null, () -> storageMapper.lambdaUpdate()
                 .gt(StorageDO::getId, DELETE_FLAG)
                 .remove());
-            this.clean(noticeCount, "公告", null, () -> noticeMapper.lambdaUpdate()
-                .gt(NoticeDO::getId, DELETE_FLAG)
-                .remove());
+//            this.clean(noticeCount, "公告", null, () -> noticeMapper.lambdaUpdate()
+//                .gt(NoticeDO::getId, DELETE_FLAG)
+//                .remove());
             //            this.clean(messageCount, "通知", null, () -> messageMapper.lambdaUpdate()
             //                .gt(MessageDO::getId, MESSAGE_FLAG)
             //                .remove());

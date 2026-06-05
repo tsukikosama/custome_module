@@ -16,7 +16,7 @@
 
 package top.continew.admin.system.service;
 
-import top.continew.admin.hrcommon.model.resp.dashboard.DashboardNoticeResp;
+import top.continew.admin.common.model.resp.dashboard.DashboardNoticeResp;
 import top.continew.admin.system.model.resp.dashboard.DashboardAccessTrendResp;
 import top.continew.admin.system.model.resp.dashboard.DashboardChartCommonResp;
 import top.continew.admin.system.model.resp.dashboard.DashboardOverviewCommonResp;

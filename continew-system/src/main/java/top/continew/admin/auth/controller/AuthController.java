@@ -38,7 +38,7 @@ import top.continew.admin.auth.model.resp.UserInfoResp;
 import top.continew.admin.auth.service.AuthService;
 import top.continew.admin.common.context.UserContext;
 import top.continew.admin.common.context.UserContextHolder;
-import top.continew.admin.hrcommon.model.resp.user.UserDetailResp;
+import top.continew.admin.common.model.resp.user.UserDetailResp;
 import top.continew.admin.system.enums.SocialSourceEnum;
 import top.continew.admin.system.service.UserService;
 import top.continew.starter.auth.justauth.AuthRequestFactory;

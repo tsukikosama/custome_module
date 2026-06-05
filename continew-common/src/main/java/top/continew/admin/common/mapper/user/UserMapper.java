@@ -24,6 +24,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import top.continew.admin.common.base.mapper.DataPermissionMapper;
 import top.continew.admin.common.model.entity.user.UserDO;
+import top.continew.admin.common.model.resp.user.UserDetailResp;
 import top.continew.starter.encrypt.field.annotation.FieldEncrypt;
 import top.continew.starter.extension.datapermission.annotation.DataPermission;
 
@@ -47,7 +48,7 @@ public interface UserMapper extends DataPermissionMapper<UserDO> {
      * @return 分页列表信息
      */
     @DataPermission(tableAlias = "t1")
-    IPage<Object> selectUserPage(@Param("page") IPage<UserDO> page,
+    IPage<UserDetailResp> selectUserPage(@Param("page") IPage<UserDO> page,
                                          @Param(Constants.WRAPPER) QueryWrapper<UserDO> queryWrapper);
 
     /**
@@ -57,7 +58,7 @@ public interface UserMapper extends DataPermissionMapper<UserDO> {
      * @return 列表信息
      */
     @DataPermission(tableAlias = "t1")
-    List<Object> selectUserList(@Param(Constants.WRAPPER) QueryWrapper<UserDO> queryWrapper);
+    List<UserDetailResp> selectUserList(@Param(Constants.WRAPPER) QueryWrapper<UserDO> queryWrapper);
 
     /**
      * 根据用户名查询
@@ -86,20 +87,6 @@ public interface UserMapper extends DataPermissionMapper<UserDO> {
     @Select("SELECT * FROM sys_user WHERE email = #{email} AND deleted = 0")
     UserDO selectByEmail(@FieldEncrypt @Param("email") String email);
 
-    /**
-     * 根据 ID 查询昵称
-     *
-     * @param id ID
-     * @return 昵称
-     */
-    @Select("SELECT nickname FROM sys_user WHERE id = #{id} AND deleted = 0")
-    String selectNicknameById(@Param("id") Long id);
 
-    @Select("SELECT * FROM sys_user WHERE dingding_id = #{dingdingId} AND deleted = 0")
-    UserDO selectByDingDingId(@Param("dingdingId") String dingdingId);
-
-    @Select("SELECT * FROM sys_user")
     List<UserDO> selectCustomUserList();
-
-    List<UserDO> selectRequirePushMessageUserList();
 }

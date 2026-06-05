@@ -25,8 +25,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.continew.admin.customer.model.req.NoticePageReq;
 import top.continew.admin.customer.service.NoticeService;
-import top.continew.admin.hrcommon.model.resp.notice.NoticeDetailResp;
-import top.continew.admin.hrcommon.model.resp.notice.NoticeResp;
+import top.continew.admin.common.model.resp.notice.NoticeDetailResp;
+import top.continew.admin.common.model.resp.notice.NoticeResp;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 import top.continew.starter.log.annotation.Log;
 

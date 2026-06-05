@@ -25,7 +25,7 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.utils.SdkAutoCloseable;
-import top.continew.admin.hrcommon.model.entity.StorageDO;
+import top.continew.admin.common.model.entity.StorageDO;
 
 import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;

@@ -22,6 +22,7 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import top.continew.admin.common.model.entity.user.UserRoleDO;
+import top.continew.admin.common.model.resp.role.RoleUserResp;
 import top.continew.starter.data.mapper.BaseMapper;
 
 /**
@@ -40,7 +41,7 @@ public interface UserRoleMapper extends BaseMapper<UserRoleDO> {
      * @param queryWrapper 查询条件
      * @return 分页列表信息
      */
-    IPage<Object> selectUserPage(@Param("page") IPage<UserRoleDO> page,
+    IPage<RoleUserResp> selectUserPage(@Param("page") IPage<UserRoleDO> page,
                                        @Param(Constants.WRAPPER) QueryWrapper<UserRoleDO> queryWrapper);
 
 }

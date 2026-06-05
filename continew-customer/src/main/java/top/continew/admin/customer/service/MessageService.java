@@ -20,7 +20,7 @@ import top.continew.admin.customer.model.req.MessagePageReq;
 import top.continew.admin.customer.model.req.ReadMessageReq;
 import top.continew.admin.customer.model.resp.ApiMessageResp;
 import top.continew.admin.customer.model.resp.UnreadCountResp;
-import top.continew.admin.hrcommon.model.resp.message.MessageDetailResp;
+import top.continew.admin.common.model.resp.message.MessageDetailResp;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 
 /**

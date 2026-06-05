@@ -34,7 +34,7 @@ import top.continew.admin.common.mapper.user.UserRoleMapper;
 import top.continew.admin.common.model.entity.user.UserRoleDO;
 import top.continew.admin.common.model.entity.user.UserDO;
 import top.continew.admin.system.model.query.RoleUserQuery;
-import top.continew.admin.hrcommon.model.resp.role.RoleUserResp;
+import top.continew.admin.common.model.resp.role.RoleUserResp;
 import top.continew.admin.system.service.RoleService;
 import top.continew.admin.system.service.UserRoleService;
 import top.continew.admin.system.service.UserService;
@@ -77,7 +77,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                 .or()
                 .like("t2.description", description));
         QueryWrapperHelper.sort(queryWrapper, pageQuery.getSort());
-        IPage<top.continew.admin.hrcommon.model.resp.role.RoleUserResp> page = baseMapper
+        IPage<RoleUserResp> page = baseMapper
             .selectUserPage(new Page<>(pageQuery.getPage(), pageQuery.getSize()), queryWrapper);
         return PageResp.build(page);
     }

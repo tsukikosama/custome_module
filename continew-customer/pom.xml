@@ -21,12 +21,7 @@
             <artifactId>continew-common</artifactId>
         </dependency>
 
-        <!-- HR 通用模块（用于访问用户等共享数据） -->
-        <dependency>
-            <groupId>top.continew.admin</groupId>
-            <artifactId>continew-hr-common</artifactId>
-        </dependency>
-
+        
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

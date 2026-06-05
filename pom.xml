@@ -32,8 +32,7 @@
         <module>continew-common</module>
         <module>continew-extension</module>
         <module>continew-customer</module>
-        <module>continew-hr-common</module>
-    </modules>
+            </modules>
 
     <properties>
         <!-- 项目版本号 -->
@@ -99,13 +98,7 @@
                 <version>${revision}</version>
             </dependency>
 
-            <!-- HR 通用模块（存放 HR 相关的公共实体、Mapper、枚举等） -->
-            <dependency>
-                <groupId>top.continew.admin</groupId>
-                <artifactId>continew-hr-common</artifactId>
-                <version>${revision}</version>
-            </dependency>
-        </dependencies>
+                    </dependencies>
     </dependencyManagement>
 
     <dependencies>

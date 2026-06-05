@@ -365,18 +365,6 @@ auth:
       - /system/user/password
       - /api/password/update
 
---- ### 钉钉API配置
-dingtalk:
-  # 应用ID（AppKey）
-  app-id: ${DINGTALK_APP_ID:your_app_id}
-  # 应用密钥（AppSecret）
-  app-secret: ${DINGTALK_APP_SECRET:your_app_secret}
-  # 钉钉服务器API网关地址
-  gateway-url: https://oapi.dingtalk.com
-  # 获取token的API路径
-  token-url: /gettoken
-  # 发送工作通知消息的API路径
-  message-url: /topapi/message/corpconversation/asyncsend_v2
   # 获取用户信息的API路径
   user-info-url: /topapi/v2/user/get
   # 获取部门列表的API路径

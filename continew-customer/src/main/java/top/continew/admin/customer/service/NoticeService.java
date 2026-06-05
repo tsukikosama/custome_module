@@ -17,8 +17,8 @@
 package top.continew.admin.customer.service;
 
 import top.continew.admin.customer.model.req.NoticePageReq;
-import top.continew.admin.hrcommon.model.resp.notice.NoticeDetailResp;
-import top.continew.admin.hrcommon.model.resp.notice.NoticeResp;
+import top.continew.admin.common.model.resp.notice.NoticeDetailResp;
+import top.continew.admin.common.model.resp.notice.NoticeResp;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 
 /**

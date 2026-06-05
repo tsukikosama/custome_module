@@ -27,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.continew.admin.common.api.dingDingApi.DingTalkApiService;
 import top.continew.admin.common.base.service.BaseServiceImpl;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.api.system.DeptApi;
@@ -61,8 +60,7 @@ public class DeptServiceImpl extends BaseServiceImpl<DeptMapper, DeptDO, DeptRes
     private final RoleDeptService roleDeptService;
     private final DataSource dataSource;
 
-    private final DingTalkApiService dingTalkApiService;
-    @Lazy
+        @Lazy
     @Resource
     private UserService userService;
 
@@ -142,54 +140,7 @@ public class DeptServiceImpl extends BaseServiceImpl<DeptMapper, DeptDO, DeptRes
         return (int)this.count(Wrappers.<DeptDO>lambdaQuery().in(DeptDO::getName, deptNames));
     }
 
-    @Transactional
-    @Override
-    public void importDept() {
-        JSONArray departmentJson = dingTalkApiService.getDepartmentJson();
-        List<DeptDO> deptS = new ArrayList<>();
-        for (int i = 0; i < departmentJson.size(); i++) {
-            JSONObject dept = departmentJson.getJSONObject(i);
-            Long deptId = dept.getLong("dept_id");
-            List<Long> result = dingTalkApiService.getSubDept(deptId);
-            String name = dept.getString("name");
-            DeptDO deptDO = new DeptDO();
-            deptDO.setName(name);
-            deptDO.setId(deptId);
-            deptDO.setParentId(1L);
-            deptDO.setAncestors("1," + deptId);
-            deptDO.setStatus(DisEnableStatusEnum.ENABLE);
-            deptDO.setSort(1);
-
-            if (!checkDeptIsExist(deptId)) {
-                deptS.add(deptDO);
-            }
-            if (result != null && !result.isEmpty()) {
-                for (Long item : result) {
-                    DeptDO subDeptDo = new DeptDO();
-                    JSONObject subDept = dingTalkApiService.getSubDeptInfo(item);
-                    String subName = subDept.getString("name");
-                    Long subDeptId = subDept.getLong("dept_id");
-                    //校验是否存在这个部门 如果存在就跳过
-                    if (checkDeptIsExist(subDeptId)) {
-                        continue;
-                    }
-                    subDeptDo.setName(subName);
-                    subDeptDo.setId(subDeptId);
-                    subDeptDo.setParentId(deptId);
-                    subDeptDo.setAncestors("1," + deptId + "," + subDeptId);
-                    deptDO.setStatus(DisEnableStatusEnum.ENABLE);
-                    deptDO.setSort(1);
-                    deptS.add(subDeptDo);
-                }
-            }
-        }
-        if (!deptS.isEmpty()) {
-            this.saveBatch(deptS, deptS.size());
-        }
-
-        log.info("获取钉钉部门数据：{}", departmentJson);
-    }
-
+    
     /**
      * 检查名称是否重复
      *
@@ -286,11 +237,11 @@ public class DeptServiceImpl extends BaseServiceImpl<DeptMapper, DeptDO, DeptRes
      * @return hr-common 模块的 DeptResp
      */
     @Override
-    public top.continew.admin.hrcommon.model.resp.DeptResp getDeptInfo(Long id) {
+    public top.continew.admin.common.model.resp.DeptResp getDeptInfo(Long id) {
         DeptDO deptDO = baseMapper.selectById(id);
         if (deptDO == null) {
             return null;
         }
-        return BeanUtil.copyProperties(deptDO, top.continew.admin.hrcommon.model.resp.DeptResp.class);
+        return BeanUtil.copyProperties(deptDO, top.continew.admin.common.model.resp.DeptResp.class);
     }
 }

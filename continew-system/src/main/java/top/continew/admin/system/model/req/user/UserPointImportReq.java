@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
-import top.continew.admin.hrcommon.model.enums.PointsTypeEnum;
+import top.continew.admin.common.model.enums.PointsTypeEnum;
 
 import java.io.Serial;
 import java.io.Serializable;

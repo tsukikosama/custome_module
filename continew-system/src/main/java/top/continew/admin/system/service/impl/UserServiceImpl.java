@@ -54,8 +54,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import top.continew.admin.auth.service.OnlineUserService;
-import top.continew.admin.common.api.dingDingApi.DingTalkApiService;
-import top.continew.admin.common.api.dingDingApi.response.UserInfoResp;
 import top.continew.admin.common.base.service.BaseServiceImpl;
 import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.common.context.UserContext;
@@ -64,19 +62,16 @@ import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.enums.GenderEnum;
 import top.continew.admin.common.util.SecureUtils;
 import top.continew.admin.common.mapper.user.UserMapper;
-import top.continew.admin.hrcommon.model.entity.PointsLogDO;
 import top.continew.admin.common.model.entity.dept.DeptDO;
 import top.continew.admin.common.model.entity.user.UserDO;
 import top.continew.admin.common.model.entity.user.UserRoleDO;
-import top.continew.admin.hrcommon.model.enums.PointsStatusEnum;
-import top.continew.admin.hrcommon.model.resp.user.UserDetailResp;
+import top.continew.admin.common.model.resp.user.UserDetailResp;
 import top.continew.admin.system.enums.OptionCategoryEnum;
 import top.continew.admin.system.model.entity.RoleDO;
 import top.continew.admin.system.model.query.UserQuery;
 import top.continew.admin.system.model.req.user.*;
 import top.continew.admin.system.model.resp.user.UserImportParseResp;
 import top.continew.admin.system.model.resp.user.UserImportResp;
-import top.continew.admin.system.model.resp.user.UserPointImportResp;
 import top.continew.admin.system.model.resp.user.UserResp;
 import top.continew.admin.system.service.*;
 import top.continew.starter.cache.redisson.util.RedisUtils;
@@ -120,8 +115,6 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     private final OnlineUserService onlineUserService;
     private final FileService fileService;
     private final FileStorageService fileStorageService;
-    private final DingTalkApiService dingTalkApiService;
-    private final PointsLogService pointsLogService;
     @Resource
     private DeptService deptService;
     @Value("${avatar.support-suffix}")
@@ -456,22 +449,8 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
         baseMapper.lambdaUpdate().set(UserDO::getEmail, newEmail).eq(UserDO::getId, id).update();
     }
 
-    @Override
-    @CacheInvalidate(key = "#id", name = CacheConstants.USER_KEY_PREFIX)
-    public void updatePushMessage(UserPushMessageUpdateReq req, Long id) {
-        super.getById(id);
-        // 更新是否推送钉钉消息设置
-        baseMapper.lambdaUpdate().set(UserDO::getIsPushMessage, req.getIsPushMessage()).eq(UserDO::getId, id).update();
-    }
-
-    @Override
-    public List<UserDO> getUserListForPushMessage() {
-        return baseMapper.selectList(Wrappers.<UserDO>lambdaQuery()
-            .eq(UserDO::getIsPushMessage, true)
-            .isNotNull(UserDO::getDingdingId)
-            .eq(UserDO::getStatus, DisEnableStatusEnum.ENABLE));
-    }
-
+    
+    
     @Override
     public UserDO getByUsername(String username) {
         return baseMapper.selectByUsername(username);
@@ -495,232 +474,12 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
         return baseMapper.lambdaQuery().in(UserDO::getDeptId, deptIds).count();
     }
 
-    @Override
-    public void addUserByDingding() {
-        List<Long> deptIds = deptService.list().stream().map(DeptDO::getId).toList();
-        List<UserDO> users = new ArrayList<>();
-        List<UserDO> userList = this.baseMapper.selectList(null);
-        List<String> collect = Optional.of(userList.stream().map(UserDO::getPhone).collect(Collectors.toList()))
-            .orElse(new ArrayList<>());
-        List<String> savePhone = new ArrayList<>();
-        //获取全部部门的人员信息
-        for (Long item : deptIds) {
-            List<UserInfoResp> allUserInfo = dingTalkApiService.getAllUserInfo(item);
-            log.info("当前获取到的用户数据{}", allUserInfo);
-            if (allUserInfo == null || allUserInfo.isEmpty()) {
-                continue;
-            }
-            //保存全部的用户信息
-            for (UserInfoResp user : allUserInfo) {
-                if (collect.contains(user.getMobile()) || savePhone.contains(user.getMobile())) {
-                    continue;
-                }
-                UserDO userDO = new UserDO();
-                userDO.setDescription(user.getRemark());
-                userDO.setUsername("lf" + user.getMobile());
-                userDO.setNickname(user.getName());
-                userDO.setPassword("123456");
-                userDO.setJobTitle(user.getTitle());
-                if (user.getHiredDate() != null) {
-                    userDO.setHiredDate(LocalDateTimeUtil.of(user.getHiredDate()));
-                }
-                userDO.setUnionId(user.getUnionid());
-                userDO.setGender(GenderEnum.UNKNOWN);
-                if (StrUtil.isNotBlank(user.getEmail())) {
-                    userDO.setEmail(user.getEmail());
-                }
-                if (StrUtil.isNotBlank(user.getMobile())) {
-                    userDO.setPhone(user.getMobile());
-                }
-                userDO.setStatus(DisEnableStatusEnum.ENABLE);
-                userDO.setIsSystem(false);
-                userDO.setDeptId(item);
-                userDO.setDingdingId(user.getUserid());
-                users.add(userDO);
-                savePhone.add(user.getMobile());
-            }
-        }
-        this.saveBatch(users, 500);
-        log.info("本次一共保存{}个用户", users.size());
-    }
+    
+    
 
-    @Override
-    public void changePoints(UserPointChangeReq req) {
-        // 通过用户ID判断用户是否存在
-        UserDO user = this.baseMapper.selectById(req.getUserId());
-        CheckUtils.throwIfNull(user, "用户不存在");
 
-        // 如果是扣除操作，需要判断用户的积分是否足够被扣除
-        if (req.getPoints() < 0) {
-            CheckUtils.throwIfNull(user.getPoints(), "用户积分信息不存在");
-            CheckUtils.throwIf(user.getPoints() < Math.abs(req.getPoints()), "积分不足");
-        }
 
-        Integer beforePoints = user.getPoints();
-        Integer afterPoints = beforePoints + req.getPoints();
-        // 更新用户积分
-        this.baseMapper.updatePoints(req.getUserId(), afterPoints);
-
-        // 保存用户积分变化的日志
-        PointsLogDO pointsLogReq = new PointsLogDO();
-        pointsLogReq.setUserId(req.getUserId());
-        pointsLogReq.setPoints(req.getPoints());
-        pointsLogReq.setType(req.getType());
-        pointsLogReq.setRefId(req.getRefId());
-        pointsLogReq.setAfterPoints(afterPoints);
-        pointsLogReq.setBeforePoints(beforePoints);
-        pointsLogReq.setStatus(PointsStatusEnum.VALID);
-        if (req.getRemark() == null) {
-            pointsLogReq.setRemark(StrUtil.format("对用户{}进行{}积分{} ，积分由{}更新为{}", user.getNickname(), req.getType()
-                .getDescription(), req.getPoints(), beforePoints, afterPoints));
-        } else {
-            pointsLogReq.setRemark(req.getRemark());
-        }
-
-        if (UserContextHolder.getUserId() == null) {
-            pointsLogReq.setCreateUser(1L);
-        }
-        pointsLogService.save(pointsLogReq);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public UserPointImportResp importPoints(UserPointImportReq req) {
-        List<UserPointImportRowReq> importRowList;
-        try {
-            importRowList = EasyExcel.read(req.getFile().getInputStream())
-                .head(UserPointImportRowReq.class)
-                .sheet()
-                .doReadSync();
-        } catch (Exception e) {
-            log.error("读取积分导入文件失败:", e);
-            throw new BusinessException("读取导入文件失败");
-        }
-
-        CheckUtils.throwIf(CollUtil.isEmpty(importRowList), "导入文件为空");
-
-        UserPointImportResp resp = new UserPointImportResp();
-        resp.setTotalRows(importRowList.size());
-        List<UserPointImportResp.FailDetail> failDetails = new ArrayList<>();
-        int successCount = 0;
-
-        for (int i = 0; i < importRowList.size(); i++) {
-            UserPointImportRowReq row = importRowList.get(i);
-            int rowNum = i + 1;
-
-            try {
-                CheckUtils.throwIf(StrUtil.isBlank(row.getName()), "姓名不能为空");
-                CheckUtils.throwIf(row.getPoints() == null, "积分不能为空");
-
-                QueryWrapper<UserDO> queryWrapper = Wrappers.query();
-                queryWrapper.eq("nickname", row.getName().trim());
-                UserDO user = this.baseMapper.selectOne(queryWrapper);
-
-                CheckUtils.throwIfNull(user, StrUtil.format("用户[{}]不存在", row.getName()));
-
-                UserPointChangeReq changeReq = new UserPointChangeReq();
-                changeReq.setUserId(user.getId());
-                changeReq.setPoints(row.getPoints());
-                // 根据积分正负值自动判断类型：正值为增加，负值为扣除
-                changeReq.setType(req.getType());
-                changeReq.setRefId(req.getRefId());
-                changeReq.setRemark(req.getRemark());
-                this.changePoints(changeReq);
-                successCount++;
-            } catch (Exception e) {
-                log.warn("积分导入第{}行失败: {}", rowNum, e.getMessage());
-                UserPointImportResp.FailDetail failDetail = new UserPointImportResp.FailDetail();
-                failDetail.setRowNumber(rowNum);
-                failDetail.setName(row.getName());
-                failDetail.setReason(e.getMessage());
-                failDetails.add(failDetail);
-            }
-        }
-
-        resp.setSuccessRows(successCount);
-        resp.setFailRows(importRowList.size() - successCount);
-        resp.setFailDetails(failDetails);
-
-        return resp;
-    }
-
-    @Override
-    public void downloadPointsImportTemplate(HttpServletResponse response) throws IOException {
-        try {
-            FileUploadUtils.download(response, ResourceUtil
-                .getStream("templates/import/importPoints.xlsx"), "积分导入模板.xlsx");
-        } catch (Exception e) {
-            log.error("下载积分导入模板失败：{}", e.getMessage(), e);
-            response.setCharacterEncoding(CharsetUtil.UTF_8);
-            response.setContentType(ContentType.JSON.toString());
-            response.getWriter().write(JSONUtil.toJsonStr(R.fail("下载积分导入模板失败")));
-        }
-    }
-
-    @Override
-    public UserDO getByDingDingId(String userId) {
-
-        return this.baseMapper.selectByDingDingId(userId);
-    }
-
-    @Override
-    public List<UserDO> getUserByDept(String deptId) {
-        return this.baseMapper.selectList(Wrappers.<UserDO>lambdaQuery()
-            .eq(UserDO::getDeptId, deptId)
-            .eq(UserDO::getStatus, DisEnableStatusEnum.ENABLE));
-    }
-
-    @Override
-    public List<UserDO> getUserList() {
-        return this.baseMapper.selectCustomUserList();
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updateUserByDingding() {
-        List<Long> deptIds = deptService.list().stream().map(DeptDO::getId).toList();
-        Map<Long, UserDO> userMap = new HashMap<>(); // 使用 Map 去重，key 为用户 ID
-        //获取全部部门的人员信息
-        for (Long item : deptIds) {
-            List<UserInfoResp> allUserInfo = dingTalkApiService.getAllUserInfo(item);
-            if (allUserInfo == null) {
-                continue;
-            }
-            //保存全部的用户信息
-            for (UserInfoResp user : allUserInfo) {
-                UserDO userDO = this.baseMapper.selectOne(Wrappers.<UserDO>lambdaQuery()
-                    .eq(UserDO::getDingdingId, user.getUserid()));
-                if (userDO == null) {
-                    continue;
-                }
-                if (StrUtil.isNotBlank(user.getEmail())) {
-                    userDO.setEmail(user.getEmail());
-                }
-                if (StrUtil.isNotBlank(user.getMobile())) {
-                    userDO.setPhone(user.getMobile());
-                }
-                userDO.setDeptId(item);
-                userDO.setJobTitle(user.getTitle());
-                if (user.getHiredDate() != null) {
-                    userDO.setHiredDate(LocalDateTimeUtil.of(user.getHiredDate()));
-                }
-                userMap.put(userDO.getId(), userDO); // 去重
-            }
-        }
-        List<UserDO> users = new ArrayList<>(userMap.values());
-        this.updateBatchById(users, 500);
-        // 为没有角色3的用户追加角色3（确保每个用户至少有角色3，保留原有角色）
-        for (UserDO user : users) {
-            List<Long> currentRoleIds = userRoleService.listRoleIdByUserId(user.getId());
-            if (!currentRoleIds.contains(3L)) {
-                List<Long> newRoleIds = new ArrayList<>(currentRoleIds);
-                newRoleIds.add(3L);
-                userRoleService.assignRolesToUser(newRoleIds, user.getId());
-            }
-        }
-        log.info("本次一共更新{}个用户", users.size());
-    }
-
+    
     @Override
     protected <E> List<E> list(UserQuery query, SortQuery sortQuery, Class<E> targetClass) {
         QueryWrapper<UserDO> queryWrapper = this.buildQueryWrapper(query);

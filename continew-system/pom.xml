@@ -22,12 +22,7 @@
             <artifactId>continew-common</artifactId>
         </dependency>
 
-        <!-- HR 通用模块 -->
-        <dependency>
-            <groupId>top.continew.admin</groupId>
-            <artifactId>continew-hr-common</artifactId>
-        </dependency>
-
+        
         <!-- SMS4J（短信聚合框架，轻松集成多家短信服务，解决接入多个短信 SDK 的繁琐流程） -->
         <dependency>
             <groupId>org.dromara.sms4j</groupId>

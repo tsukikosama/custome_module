@@ -27,9 +27,9 @@ import top.continew.admin.common.mapper.notice.NoticeLogMapper;
 import top.continew.admin.common.mapper.notice.NoticeMapper;
 import top.continew.admin.common.model.entity.notice.NoticeDO;
 import top.continew.admin.common.model.entity.notice.NoticeLogDO;
-import top.continew.admin.hrcommon.model.query.NoticeQuery;
-import top.continew.admin.hrcommon.model.resp.notice.NoticeDetailResp;
-import top.continew.admin.hrcommon.model.resp.notice.NoticeResp;
+import top.continew.admin.common.model.query.NoticeQuery;
+import top.continew.admin.common.model.resp.notice.NoticeDetailResp;
+import top.continew.admin.common.model.resp.notice.NoticeResp;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 
 import java.time.LocalDateTime;

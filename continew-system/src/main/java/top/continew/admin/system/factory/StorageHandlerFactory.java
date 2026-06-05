@@ -33,7 +33,7 @@ package top.continew.admin.system.factory;/*
 import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import top.continew.admin.hrcommon.model.enums.StorageTypeEnum;
+import top.continew.admin.common.model.enums.StorageTypeEnum;
 import top.continew.admin.system.handler.StorageHandler;
 import top.continew.starter.core.exception.BaseException;
 

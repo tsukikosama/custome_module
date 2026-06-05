@@ -91,19 +91,6 @@ VALUES
     (2013141899856773125, '删除', 803638904879058970, 3, 'biz:overtimeWork:delete', 5, 1, 1, NOW()),
     (2013141899856773126, '导出', 803638904879058970, 3, 'biz:overtimeWork:export', 6, 1, 1, NOW());
 
--- changeset weilai:8
--- comment 新增钉钉事件日志表菜单
--- 钉钉事件日志表管理按钮
-INSERT INTO `sys_menu` (`id`, `title`, `parent_id`, `type`, `path`, `name`, `component`, `redirect`, `icon`, `is_external`, `is_cache`, `is_hidden`, `permission`, `sort`, `status`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (803591946898509853, '钉钉事件日志', 2000, 2, '/stream/event', 'StreamEvent', 'biz/dingdingStreamEvent/index', NULL, NULL, b'0', b'0', b'0', NULL, 999, 1, 1, '2026-01-19 11:47:30', NULL, NULL, 0);
-INSERT INTO `sys_menu`
-(`id`, `title`, `parent_id`, `type`, `permission`, `sort`, `status`, `create_user`, `create_time`)
-VALUES
-    (2013094717019578369, '列表', 803591946898509853, 3, 'biz:dingdingStreamEvent:list', 1, 1, 1, NOW()),
-    (2013094717019578370, '详情', 803591946898509853, 3, 'biz:dingdingStreamEvent:get', 2, 1, 1, NOW()),
-    (2013094717019578371, '新增', 803591946898509853, 3, 'biz:dingdingStreamEvent:create', 3, 1, 1, NOW()),
-    (2013094717019578372, '修改', 803591946898509853, 3, 'biz:dingdingStreamEvent:update', 4, 1, 1, NOW()),
-    (2013094717019578373, '删除', 803591946898509853, 3, 'biz:dingdingStreamEvent:delete', 5, 1, 1, NOW()),
-    (2013094717019578374, '导出', 803591946898509853, 3, 'biz:dingdingStreamEvent:export', 6, 1, 1, NOW());
 
 -- changeset weilai:9
 -- comment 新增心愿表管理菜单
@@ -126,7 +113,6 @@ VALUES
 INSERT INTO `sys_menu` (`id`, `title`, `parent_id`, `type`, `path`, `name`, `component`, `redirect`, `icon`, `is_external`, `is_cache`, `is_hidden`, `permission`, `sort`, `status`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (804667780841357377, '积分变更', 802544320199532573, 3, NULL, NULL, NULL, NULL, NULL, b'0', b'0', b'0', 'biz:points:add', 999, 1, 1, '2026-01-22 11:02:29', 1, '2026-01-22 11:02:56', 804667780841357377);
 INSERT INTO `sys_menu` (`id`, `title`, `parent_id`, `type`, `path`, `name`, `component`, `redirect`, `icon`, `is_external`, `is_cache`, `is_hidden`, `permission`, `sort`, `status`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (804681491995967545, '上/下架', 801878269493252245, 3, NULL, NULL, NULL, NULL, NULL, b'0', b'0', b'0', 'biz:product:disable', 999, 1, 1, '2026-01-22 11:56:58', 1, '2026-01-22 11:57:37', 0);
 INSERT INTO `sys_menu` (`id`, `title`, `parent_id`, `type`, `path`, `name`, `component`, `redirect`, `icon`, `is_external`, `is_cache`, `is_hidden`, `permission`, `sort`, `status`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (804683162654359676, '转换成商品', 804040060381962269, 3, NULL, NULL, NULL, NULL, NULL, b'0', b'0', b'0', 'biz:wish:toProduct', 999, 1, 1, '2026-01-22 12:03:36', 1, '2026-01-22 13:38:26', 0);
-INSERT INTO `sys_menu` (`id`, `title`, `parent_id`, `type`, `path`, `name`, `component`, `redirect`, `icon`, `is_external`, `is_cache`, `is_hidden`, `permission`, `sort`, `status`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (804707595095916688, '钉钉日志', 803591946898509853, 3, NULL, NULL, NULL, NULL, NULL, b'0', b'0', b'0', 'biz:dingdingStreamEvent:page', 999, 1, 1, '2026-01-22 13:40:41', NULL, NULL, 0);
 INSERT INTO `sys_menu` (`id`, `title`, `parent_id`, `type`, `path`, `name`, `component`, `redirect`, `icon`, `is_external`, `is_cache`, `is_hidden`, `permission`, `sort`, `status`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (804721223660486695, '下单', 802249699250671688, 3, NULL, NULL, NULL, NULL, NULL, b'0', b'0', b'0', 'biz:order:create', 999, 1, 1, '2026-01-22 14:34:51', NULL, NULL, 0);
 INSERT INTO `sys_menu` (`id`, `title`, `parent_id`, `type`, `path`, `name`, `component`, `redirect`, `icon`, `is_external`, `is_cache`, `is_hidden`, `permission`, `sort`, `status`, `create_user`, `create_time`, `update_user`, `update_time`, `deleted`) VALUES (804789162652746004, '取消下单', 802249699250671688, 3, NULL, NULL, NULL, NULL, NULL, b'0', b'0', b'0', 'biz:order:refund', 999, 1, 1, '2026-01-22 19:04:49', NULL, NULL, 0);
 

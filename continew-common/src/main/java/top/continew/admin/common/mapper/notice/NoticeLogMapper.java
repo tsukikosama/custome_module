@@ -17,7 +17,7 @@
 package top.continew.admin.common.mapper.notice;
 
 import org.apache.ibatis.annotations.Mapper;
-import top.continew.admin.common.model.entity.NoticeLogDO;
+import top.continew.admin.common.model.entity.notice.NoticeLogDO;
 import top.continew.starter.data.mapper.BaseMapper;
 
 /**

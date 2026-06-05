@@ -110,21 +110,6 @@ public class UserDO extends BaseDO {
     private Long deptId;
 
     /**
-     * 积分
-     */
-    private Integer points;
-
-    /**
-     * 钉钉 ID
-     */
-    private String dingdingId;
-
-    /**
-     * 钉钉 Union ID
-     */
-    private String unionId;
-
-    /**
      * 职位
      */
     private String jobTitle;
@@ -138,9 +123,4 @@ public class UserDO extends BaseDO {
      * 生日
      */
     private java.time.LocalDate birthday;
-
-    /**
-     * 是否推送钉钉消息
-     */
-    private Boolean isPushMessage;
 }

@@ -46,10 +46,6 @@ public enum AuthTypeEnum implements BaseEnum<String> {
      * 手机号
      */
     PHONE("PHONE", "手机号", UiConstants.COLOR_PRIMARY),
-    /**
-     * 钉钉账号
-     */
-    DINGTALK("DINGTALK", "钉钉账号", UiConstants.COLOR_WARNING),
 
     /**
      * 第三方账号

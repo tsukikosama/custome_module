@@ -39,8 +39,7 @@ import java.io.Serializable;
 @JsonSubTypes({@JsonSubTypes.Type(value = AccountLoginReq.class, name = "ACCOUNT"),
     @JsonSubTypes.Type(value = EmailLoginReq.class, name = "EMAIL"),
     @JsonSubTypes.Type(value = PhoneLoginReq.class, name = "PHONE"),
-    @JsonSubTypes.Type(value = SocialLoginReq.class, name = "SOCIAL"),
-    @JsonSubTypes.Type(value = DingTalkLoginReq.class, name = "DINGTALK"),})
+    @JsonSubTypes.Type(value = SocialLoginReq.class, name = "SOCIAL"),})
 @Schema(description = "登录请求参数基类")
 public class LoginReq implements Serializable {
 

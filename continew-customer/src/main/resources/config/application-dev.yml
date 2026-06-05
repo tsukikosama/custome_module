@@ -282,6 +282,3 @@ snail-job:
       username: ${SCHEDULE_USERNAME:admin}
       # 密码
       password: ${SCHEDULE_PASSWORD:admin}
-dingtalk:
-  clientId: dingyxc8xqu6k0vramgb
-  clientSecret: 2_mLacYd0Kv87l8jkSV5HALU7ifVvqo0yCHMgQoABxYTaMx_J1g1SLkTQz5FOnR_

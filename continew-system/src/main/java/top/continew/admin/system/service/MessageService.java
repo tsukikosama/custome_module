@@ -16,11 +16,11 @@
 
 package top.continew.admin.system.service;
 
-import top.continew.admin.hrcommon.model.query.MessageQuery;
-import top.continew.admin.hrcommon.model.req.MessageReq;
-import top.continew.admin.hrcommon.model.resp.message.MessageDetailResp;
-import top.continew.admin.hrcommon.model.resp.message.MessageResp;
-import top.continew.admin.hrcommon.model.resp.message.MessageUnreadResp;
+import top.continew.admin.common.model.query.MessageQuery;
+import top.continew.admin.common.model.req.MessageReq;
+import top.continew.admin.common.model.resp.message.MessageDetailResp;
+import top.continew.admin.common.model.resp.message.MessageResp;
+import top.continew.admin.common.model.resp.message.MessageUnreadResp;
 import top.continew.starter.extension.crud.model.query.PageQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 

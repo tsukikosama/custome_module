@@ -63,10 +63,7 @@ public class CommonController {
     private final FileService fileService;
     private final DictItemService dictItemService;
     private final OptionService optionService;
-    private final ProductTypeService productTypeService;
-    private final ProductService productService;
     private final UserService userService;
-    private final WishService wishService;
     private final DeptService deptService;
 
     @Operation(summary = "上传文件", description = "上传文件")
@@ -116,18 +113,6 @@ public class CommonController {
     }
 
     @SaIgnore
-    @GetMapping("/dict/productType")
-    public List<LabelValueResp> listCustomerDict(ProductTypeQuery query, SortQuery sortQuery) {
-        return productTypeService.dict(query, sortQuery);
-    }
-
-    @SaIgnore
-    @GetMapping("/dict/product")
-    public List<LabelValueResp> listProductDict(ProductQuery query, SortQuery sortQuery) {
-        return productService.dict(query, sortQuery);
-    }
-
-    @SaIgnore
     @GetMapping("/dict/user")
     public List<LabelValueResp> listUserDict(UserQuery query, SortQuery sortQuery) {
         List<UserDO> list = userService.getUserList();
@@ -140,20 +125,6 @@ public class CommonController {
         }
         return resp;
 
-    }
-
-    /**
-     * 获取未转成商品的心愿
-     * 
-     * @param query
-     * @param sortQuery
-     * @return
-     */
-    @SaIgnore
-    @GetMapping("/dict/wish")
-    public List<LabelValueResp> listWishDict(WishQuery query, SortQuery sortQuery) {
-        query.setIsProduct(false);
-        return wishService.dict(query, sortQuery);
     }
 
     @SaIgnore

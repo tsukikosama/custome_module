@@ -32,9 +32,9 @@ import top.continew.admin.common.mapper.message.MessageLogMapper;
 import top.continew.admin.common.mapper.message.MessageMapper;
 import top.continew.admin.common.model.entity.message.MessageDO;
 import top.continew.admin.common.model.entity.message.MessageLogDO;
-import top.continew.admin.hrcommon.model.query.MessageQuery;
-import top.continew.admin.hrcommon.model.resp.message.MessageDetailResp;
-import top.continew.admin.hrcommon.model.resp.message.MessageResp;
+import top.continew.admin.common.model.query.MessageQuery;
+import top.continew.admin.common.model.resp.message.MessageDetailResp;
+import top.continew.admin.common.model.resp.message.MessageResp;
 import top.continew.starter.core.util.CollUtils;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 
@@ -68,7 +68,7 @@ public class MessageServiceImpl implements MessageService {
         }
 
         // 创建分页对象并执行查询（使用MessageDO类型的Page对象）
-        Page<top.continew.admin.hrcommon.model.entity.MessageDO> page = new Page<>(req.getPage(), req.getSize());
+        Page<MessageDO> page = new Page<>(req.getPage(), req.getSize());
         IPage<MessageResp> result = messageMapper.selectMessagePage(page, query);
 
         // 转换为客户端API响应格式

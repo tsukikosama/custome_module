@@ -36,7 +36,7 @@ import top.continew.admin.system.model.req.RolePermissionUpdateReq;
 import top.continew.admin.system.model.resp.role.RoleDetailResp;
 import top.continew.admin.system.model.resp.role.RolePermissionResp;
 import top.continew.admin.system.model.resp.role.RoleResp;
-import top.continew.admin.hrcommon.model.resp.role.RoleUserResp;
+import top.continew.admin.common.model.resp.role.RoleUserResp;
 import top.continew.admin.system.service.MenuService;
 import top.continew.admin.system.service.RoleService;
 import top.continew.admin.system.service.UserRoleService;

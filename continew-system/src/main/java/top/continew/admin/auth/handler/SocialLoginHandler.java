@@ -45,7 +45,7 @@ import top.continew.admin.common.enums.MessageTypeEnum;
 import top.continew.admin.common.model.entity.dept.DeptDO;
 import top.continew.admin.common.model.entity.user.UserDO;
 import top.continew.admin.common.model.entity.user.UserSocialDO;
-import top.continew.admin.hrcommon.model.req.MessageReq;
+import top.continew.admin.common.model.req.MessageReq;
 import top.continew.admin.system.model.resp.ClientResp;
 import top.continew.admin.system.service.DeptService;
 import top.continew.admin.system.service.MessageService;

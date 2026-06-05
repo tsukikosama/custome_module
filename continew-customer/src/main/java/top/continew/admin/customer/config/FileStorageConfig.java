@@ -29,8 +29,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
-import top.continew.admin.hrcommon.mapper.StorageMapper;
-import top.continew.admin.hrcommon.model.entity.StorageDO;
+import top.continew.admin.common.mapper.StorageMapper;
+import top.continew.admin.common.model.entity.StorageDO;
 import top.continew.starter.core.util.SpringWebUtils;
 
 import java.util.Collections;

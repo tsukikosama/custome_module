@@ -17,8 +17,10 @@
 package top.continew.admin.common.mapper.message;
 
 import org.apache.ibatis.annotations.Mapper;
-import top.continew.admin.common.model.entity.MessageLogDO;
+import top.continew.admin.common.model.entity.message.MessageLogDO;
 import top.continew.starter.data.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * 消息日志 Mapper
@@ -29,4 +31,5 @@ import top.continew.starter.data.mapper.BaseMapper;
  */
 @Mapper
 public interface MessageLogMapper extends BaseMapper<MessageLogDO> {
+    void insert(List<MessageLogDO> list);
 }

@@ -19,11 +19,11 @@ package top.continew.admin.system.service;
 import top.continew.admin.common.base.service.BaseService;
 import top.continew.admin.common.enums.NoticeMethodEnum;
 import top.continew.admin.common.model.entity.notice.NoticeDO;
-import top.continew.admin.hrcommon.model.query.NoticeQuery;
-import top.continew.admin.hrcommon.model.req.NoticeReq;
-import top.continew.admin.hrcommon.model.resp.dashboard.DashboardNoticeResp;
-import top.continew.admin.hrcommon.model.resp.notice.NoticeDetailResp;
-import top.continew.admin.hrcommon.model.resp.notice.NoticeResp;
+import top.continew.admin.common.model.query.NoticeQuery;
+import top.continew.admin.common.model.req.NoticeReq;
+import top.continew.admin.common.model.resp.dashboard.DashboardNoticeResp;
+import top.continew.admin.common.model.resp.notice.NoticeDetailResp;
+import top.continew.admin.common.model.resp.notice.NoticeResp;
 import top.continew.starter.data.service.IService;
 
 import java.util.List;

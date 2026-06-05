@@ -12,7 +12,12 @@
       "Bash(mvn spring-boot:run -Dspotless.check.skip=true -Dspotless.apply.skip=true)",
       "Bash(jps -l)",
       "Bash(mvn compiler:compile -DskipTests)",
-      "Bash(hired\")"
+      "Bash(hired\")",
+      "Bash(tree 'E:\\\\\\\\custom_module\\\\\\\\continew-hr-common' /F)",
+      "Bash(python *‘)",
+      "Bash(python *)",
+      "Bash(where mvn *)",
+      "Bash(powershell *)"
     ]
   }
 }

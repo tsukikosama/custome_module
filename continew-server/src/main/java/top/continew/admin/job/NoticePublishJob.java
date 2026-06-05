@@ -50,12 +50,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NoticePublishJob {
 
+    private final NoticeMapper noticeMapper;
+    private final NoticeService noticeService;
+
     /**
      * 定时发布公告（未启用 Snail Job 则使用它）
      */
     @Component
     @ConditionalOnProperty(prefix = "snail-job", name = PropertiesConstants.ENABLED, havingValue = "false")
-    public static class Scheduler {
+    public class Scheduler {
 
         @TenantIgnore
         @Scheduled(cron = "0 * * * * ?")
@@ -72,7 +75,7 @@ public class NoticePublishJob {
      */
     @Component
     @ConditionalOnEnabledScheduleJob
-    public static class ScheduleJob {
+    public class ScheduleJob {
 
         @TenantIgnore
         @JobExecutor(name = "NoticePublishJob")
@@ -87,8 +90,7 @@ public class NoticePublishJob {
     /**
      * 发布公告
      */
-    private static void publishNotice() {
-        NoticeMapper noticeMapper = SpringUtil.getBean(NoticeMapper.class);
+    private void publishNotice() {
         // 查询待发布公告
         List<NoticeDO> list = noticeMapper.lambdaQuery()
             .eq(NoticeDO::getStatus, NoticeStatusEnum.PENDING)
@@ -104,7 +106,6 @@ public class NoticePublishJob {
             .toList();
         if (CollUtil.isNotEmpty(needSendMessageList)) {
             // 发送消息
-            NoticeService noticeService = SpringUtil.getBean(NoticeService.class);
             needSendMessageList.parallelStream().forEach(noticeService::publish);
         }
         // 更新状态

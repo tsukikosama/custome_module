@@ -21,12 +21,11 @@ import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
 import top.continew.admin.common.base.service.BaseService;
 import top.continew.admin.common.model.entity.user.UserDO;
-import top.continew.admin.hrcommon.model.resp.user.UserDetailResp;
+import top.continew.admin.common.model.resp.user.UserDetailResp;
 import top.continew.admin.system.model.query.UserQuery;
 import top.continew.admin.system.model.req.user.*;
 import top.continew.admin.system.model.resp.user.UserImportParseResp;
 import top.continew.admin.system.model.resp.user.UserImportResp;
-import top.continew.admin.system.model.resp.user.UserPointImportResp;
 import top.continew.admin.system.model.resp.user.UserResp;
 import top.continew.starter.data.service.IService;
 
@@ -158,47 +157,5 @@ public interface UserService extends BaseService<UserResp, UserDetailResp, UserQ
      */
     Long countByDeptIds(List<Long> deptIds);
 
-    void addUserByDingding();
-
-    void changePoints(@Valid UserPointChangeReq req);
-
-    /**
-     * 批量导入积分
-     *
-     * @param req 请求参数
-     * @return 导入结果
-     */
-    UserPointImportResp importPoints(@Valid UserPointImportReq req);
-
-    /**
-     * 下载积分导入模板
-     *
-     * @param response 响应对象
-     * @throws IOException /
-     */
-    void downloadPointsImportTemplate(HttpServletResponse response) throws IOException;
-
-    UserDO getByDingDingId(String userId);
-
-    List<UserDO> getUserByDept(String deptId);
-
-    List<UserDO> getUserList();
-
-    void updateUserByDingding();
-
-    /**
-     * 修改推送消息设置
-     *
-     * @param req 修改信息
-     * @param id  ID
-     */
-    void updatePushMessage(UserPushMessageUpdateReq req, Long id);
-
-    /**
-     * 获取需要推送消息的用户列表
-     *
-     * @return 需要推送消息的用户列表
-     */
-    List<UserDO> getUserListForPushMessage();
-
+    
 }

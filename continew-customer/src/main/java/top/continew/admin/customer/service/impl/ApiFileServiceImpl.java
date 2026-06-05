@@ -25,8 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import top.continew.admin.customer.model.resp.ApiFileUploadResp;
 import top.continew.admin.customer.service.ApiFileService;
-import top.continew.admin.hrcommon.mapper.StorageMapper;
-import top.continew.admin.hrcommon.model.entity.StorageDO;
+import top.continew.admin.common.mapper.StorageMapper;
+import top.continew.admin.common.model.entity.StorageDO;
 import top.continew.starter.core.constant.StringConstants;
 
 import java.time.LocalDate;

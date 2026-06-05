@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.common.context.UserContextHolder;
 import top.continew.admin.system.mapper.FileMapper;
 import top.continew.admin.system.model.entity.FileDO;
-import top.continew.admin.hrcommon.model.entity.StorageDO;
+import top.continew.admin.common.model.entity.StorageDO;
 import top.continew.admin.system.model.query.FileQuery;
 import top.continew.admin.system.model.resp.file.FileResp;
 import top.continew.admin.system.service.FileRecycleService;

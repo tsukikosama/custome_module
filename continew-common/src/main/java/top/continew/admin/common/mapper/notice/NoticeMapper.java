@@ -20,11 +20,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import top.continew.admin.common.model.entity.NoticeDO;
-import top.continew.admin.hrcommon.model.query.NoticeQuery;
-import top.continew.admin.hrcommon.model.resp.dashboard.DashboardNoticeResp;
-import top.continew.admin.hrcommon.model.resp.notice.NoticeDetailResp;
-import top.continew.admin.hrcommon.model.resp.notice.NoticeResp;
+import top.continew.admin.common.model.entity.notice.NoticeDO;
+import top.continew.admin.common.model.query.NoticeQuery;
+import top.continew.admin.common.model.resp.dashboard.DashboardNoticeResp;
+import top.continew.admin.common.model.resp.notice.NoticeDetailResp;
+import top.continew.admin.common.model.resp.notice.NoticeResp;
 import top.continew.starter.data.mapper.BaseMapper;
 
 import java.util.List;
