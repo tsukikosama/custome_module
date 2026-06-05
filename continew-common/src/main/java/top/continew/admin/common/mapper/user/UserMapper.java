@@ -88,5 +88,6 @@ public interface UserMapper extends DataPermissionMapper<UserDO> {
     UserDO selectByEmail(@FieldEncrypt @Param("email") String email);
 
 
-    List<UserDO> selectCustomUserList();
+
+    String selectNicknameById(@Param("userId")Long id);
 }

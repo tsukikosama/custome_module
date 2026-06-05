@@ -82,11 +82,4 @@ public interface UserApi {
      */
     UserInfo getByEmail(String email);
 
-    /**
-     * 修改用户积分
-     *
-     * @param userId 用户ID
-     * @param points 变更的积分值（正数增加，负数减少）
-     */
-    void changePoints(Long userId, Integer points);
 }

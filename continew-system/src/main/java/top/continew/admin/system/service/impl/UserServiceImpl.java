@@ -474,12 +474,12 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
         return baseMapper.lambdaQuery().in(UserDO::getDeptId, deptIds).count();
     }
 
-    
-    
+    @Override
+    public List<UserDO> getUserList() {
+        return baseMapper.selectList(null);
+    }
 
 
-
-    
     @Override
     protected <E> List<E> list(UserQuery query, SortQuery sortQuery, Class<E> targetClass) {
         QueryWrapper<UserDO> queryWrapper = this.buildQueryWrapper(query);

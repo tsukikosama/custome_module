@@ -68,9 +68,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResp login(LoginReq req, HttpServletRequest request) {
         AuthTypeEnum authType = req.getAuthType();
-        if (req.getAuthType() == null) {
-            authType = AuthTypeEnum.DINGTALK;
-        }
         // 校验客户端
         ClientResp client = clientService.getByClientId(req.getClientId());
         ValidationUtils.throwIfNull(client, "客户端不存在");

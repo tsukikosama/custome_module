@@ -48,7 +48,8 @@
     </update>
 
 
-    <select id="selectCustomUserList" resultType="top.continew.admin.common.model.entity.user.UserDO">
 
+    <select id="selectNicknameById" resultType="java.lang.String">
+        select nickname from sys_user where id = #{userId}
     </select>
 </mapper>

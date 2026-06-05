@@ -157,5 +157,7 @@ public interface UserService extends BaseService<UserResp, UserDetailResp, UserQ
      */
     Long countByDeptIds(List<Long> deptIds);
 
-    
+
+    List<UserDO> getUserList();
+
 }

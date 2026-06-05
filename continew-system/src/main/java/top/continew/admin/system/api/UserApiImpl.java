@@ -91,24 +91,5 @@ public class UserApiImpl implements UserApi {
         return BeanUtil.copyProperties(userDO, UserInfo.class);
     }
 
-    @Override
-    public void changePoints(Long userId, Integer points) {
-        UserDO user = baseMapper.selectById(userId);
-        if (user == null) {
-            throw new RuntimeException("用户不存在");
-        }
 
-        Integer currentPoints = user.getPoints();
-        if (currentPoints == null) {
-            currentPoints = 0;
-        }
-
-        Integer newPoints = currentPoints + points;
-        if (newPoints < 0) {
-            throw new RuntimeException("积分不足");
-        }
-
-        user.setPoints(newPoints);
-        baseMapper.updateById(user);
-    }
 }
