@@ -34,7 +34,7 @@ import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.common.context.UserContextHolder;
 import top.continew.admin.common.util.SecureUtils;
 import top.continew.admin.system.enums.SocialSourceEnum;
-import top.continew.admin.hrcommon.model.entity.user.UserSocialDO;
+import top.continew.admin.common.model.entity.user.UserSocialDO;
 import top.continew.admin.system.model.req.user.UserBasicInfoUpdateReq;
 import top.continew.admin.system.model.req.user.UserEmailUpdateReq;
 import top.continew.admin.system.model.req.user.UserPasswordUpdateReq;

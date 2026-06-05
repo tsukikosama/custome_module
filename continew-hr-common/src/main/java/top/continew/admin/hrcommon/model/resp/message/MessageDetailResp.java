@@ -18,8 +18,8 @@ package top.continew.admin.hrcommon.model.resp.message;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import top.continew.admin.hrcommon.model.enums.MessageTypeEnum;
-import top.continew.admin.hrcommon.model.enums.NoticeScopeEnum;
+import top.continew.admin.common.enums.MessageTypeEnum;
+import top.continew.admin.common.enums.NoticeScopeEnum;
 
 import java.io.Serial;
 import java.io.Serializable;

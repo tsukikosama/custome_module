@@ -23,8 +23,8 @@ import lombok.Data;
 import top.continew.admin.common.base.model.resp.BaseDetailResp;
 import top.continew.admin.common.config.excel.DictExcelProperty;
 import top.continew.admin.common.config.excel.ExcelDictConverter;
-import top.continew.admin.hrcommon.model.enums.NoticeScopeEnum;
-import top.continew.admin.hrcommon.model.enums.NoticeStatusEnum;
+import top.continew.admin.common.enums.NoticeScopeEnum;
+import top.continew.admin.common.enums.NoticeStatusEnum;
 import top.continew.starter.excel.converter.ExcelBaseEnumConverter;
 
 import java.io.Serial;

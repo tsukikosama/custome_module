@@ -33,7 +33,7 @@ import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.common.constant.GlobalConstants;
 import top.continew.admin.common.util.SecureUtils;
 import top.continew.admin.system.enums.PasswordPolicyEnum;
-import top.continew.admin.hrcommon.model.entity.user.UserDO;
+import top.continew.admin.common.model.entity.user.UserDO;
 import top.continew.admin.system.model.resp.ClientResp;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.util.validation.CheckUtils;

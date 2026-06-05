@@ -20,8 +20,8 @@ import cn.hutool.core.collection.CollUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.continew.admin.hrcommon.mapper.NoticeLogMapper;
-import top.continew.admin.hrcommon.model.entity.NoticeLogDO;
+import top.continew.admin.common.mapper.notice.NoticeLogMapper;
+import top.continew.admin.common.model.entity.notice.NoticeLogDO;
 import top.continew.admin.system.service.NoticeLogService;
 import top.continew.starter.core.util.CollUtils;
 

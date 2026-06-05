@@ -16,7 +16,7 @@
 
 package top.continew.admin.system.service;
 
-import top.continew.admin.hrcommon.model.entity.user.UserRoleDO;
+import top.continew.admin.common.model.entity.user.UserRoleDO;
 import top.continew.admin.system.model.query.RoleUserQuery;
 import top.continew.admin.hrcommon.model.resp.role.RoleUserResp;
 import top.continew.starter.extension.crud.model.query.PageQuery;

@@ -23,9 +23,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import top.continew.admin.common.constant.ContainerConstants;
 import top.continew.admin.system.mapper.RoleMapper;
-import top.continew.admin.hrcommon.mapper.user.UserRoleMapper;
+import top.continew.admin.common.mapper.user.UserRoleMapper;
 import top.continew.admin.system.model.entity.RoleDO;
-import top.continew.admin.hrcommon.model.entity.user.UserRoleDO;
+import top.continew.admin.common.model.entity.user.UserRoleDO;
 
 import java.util.Collections;
 import java.util.List;

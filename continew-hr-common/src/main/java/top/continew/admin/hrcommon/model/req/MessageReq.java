@@ -22,7 +22,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import top.continew.admin.hrcommon.model.enums.MessageTypeEnum;
+import top.continew.admin.common.enums.MessageTypeEnum;
 
 import java.io.Serial;
 import java.io.Serializable;

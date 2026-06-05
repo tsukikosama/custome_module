@@ -22,8 +22,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.continew.admin.hrcommon.mapper.user.UserPasswordHistoryMapper;
-import top.continew.admin.hrcommon.model.entity.user.UserPasswordHistoryDO;
+import top.continew.admin.common.mapper.user.UserPasswordHistoryMapper;
+import top.continew.admin.common.model.entity.user.UserPasswordHistoryDO;
 import top.continew.admin.system.service.UserPasswordHistoryService;
 import top.continew.starter.core.util.CollUtils;
 

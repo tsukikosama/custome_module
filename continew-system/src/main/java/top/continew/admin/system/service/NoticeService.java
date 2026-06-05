@@ -17,8 +17,8 @@
 package top.continew.admin.system.service;
 
 import top.continew.admin.common.base.service.BaseService;
-import top.continew.admin.hrcommon.model.enums.NoticeMethodEnum;
-import top.continew.admin.hrcommon.model.entity.NoticeDO;
+import top.continew.admin.common.enums.NoticeMethodEnum;
+import top.continew.admin.common.model.entity.notice.NoticeDO;
 import top.continew.admin.hrcommon.model.query.NoticeQuery;
 import top.continew.admin.hrcommon.model.req.NoticeReq;
 import top.continew.admin.hrcommon.model.resp.dashboard.DashboardNoticeResp;

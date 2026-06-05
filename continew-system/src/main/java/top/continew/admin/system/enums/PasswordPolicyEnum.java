@@ -26,7 +26,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import top.continew.admin.common.constant.RegexConstants;
 import top.continew.admin.common.constant.GlobalConstants;
-import top.continew.admin.hrcommon.model.entity.user.UserDO;
+import top.continew.admin.common.model.entity.user.UserDO;
 import top.continew.admin.system.service.OptionService;
 import top.continew.admin.system.service.UserPasswordHistoryService;
 import top.continew.starter.core.util.validation.ValidationUtils;

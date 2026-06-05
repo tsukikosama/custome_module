@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import top.continew.admin.common.base.controller.BaseController;
 import top.continew.admin.system.model.query.DeptQuery;
 import top.continew.admin.system.model.req.DeptReq;
-import top.continew.admin.hrcommon.model.resp.DeptResp;
+import top.continew.admin.common.model.resp.DeptResp;
 import top.continew.admin.system.service.DeptService;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.starter.extension.crud.enums.Api;

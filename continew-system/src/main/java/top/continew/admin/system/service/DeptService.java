@@ -17,10 +17,10 @@
 package top.continew.admin.system.service;
 
 import top.continew.admin.common.base.service.BaseService;
-import top.continew.admin.hrcommon.model.entity.dept.DeptDO;
+import top.continew.admin.common.model.entity.dept.DeptDO;
 import top.continew.admin.system.model.query.DeptQuery;
 import top.continew.admin.system.model.req.DeptReq;
-import top.continew.admin.hrcommon.model.resp.DeptResp;
+import top.continew.admin.common.model.resp.DeptResp;
 import top.continew.starter.data.service.IService;
 
 import java.util.List;

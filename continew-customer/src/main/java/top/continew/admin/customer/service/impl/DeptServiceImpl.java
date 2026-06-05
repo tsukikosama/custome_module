@@ -21,13 +21,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
-import top.continew.admin.hrcommon.mapper.dept.DeptMapper;
-import top.continew.admin.hrcommon.mapper.user.UserMapper;
+import top.continew.admin.common.mapper.dept.DeptMapper;
+import top.continew.admin.common.mapper.user.UserMapper;
 import top.continew.admin.customer.model.resp.ApiDeptDetailResp;
 import top.continew.admin.customer.model.resp.ApiDeptResp;
 import top.continew.admin.customer.service.DeptService;
-import top.continew.admin.hrcommon.model.entity.dept.DeptDO;
-import top.continew.admin.hrcommon.model.entity.user.UserDO;
+import top.continew.admin.common.model.entity.dept.DeptDO;
+import top.continew.admin.common.model.entity.user.UserDO;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -19,8 +19,8 @@ package top.continew.admin.system.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import top.continew.admin.hrcommon.mapper.MessageLogMapper;
-import top.continew.admin.hrcommon.model.entity.MessageLogDO;
+import top.continew.admin.common.mapper.message.MessageLogMapper;
+import top.continew.admin.common.model.entity.message.MessageLogDO;
 import top.continew.admin.system.service.MessageLogService;
 import top.continew.starter.core.util.CollUtils;
 

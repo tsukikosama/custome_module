@@ -25,8 +25,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-import top.continew.admin.hrcommon.model.enums.NoticeScopeEnum;
-import top.continew.admin.hrcommon.model.enums.NoticeStatusEnum;
+import top.continew.admin.common.enums.NoticeScopeEnum;
+import top.continew.admin.common.enums.NoticeStatusEnum;
 
 import java.io.Serial;
 import java.io.Serializable;

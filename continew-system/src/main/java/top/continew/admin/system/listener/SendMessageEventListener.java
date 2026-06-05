@@ -24,7 +24,7 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 import top.continew.admin.common.api.dingDingApi.DingTalkApiService;
 import top.continew.admin.common.api.dingDingApi.request.SendMessageReq;
-import top.continew.admin.hrcommon.model.entity.user.UserDO;
+import top.continew.admin.common.model.entity.user.UserDO;
 import top.continew.admin.system.event.SendMessageEvent;
 
 import java.util.List;

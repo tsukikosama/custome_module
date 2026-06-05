@@ -20,7 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
 import top.continew.admin.common.base.service.BaseService;
-import top.continew.admin.hrcommon.model.entity.user.UserDO;
+import top.continew.admin.common.model.entity.user.UserDO;
 import top.continew.admin.hrcommon.model.resp.user.UserDetailResp;
 import top.continew.admin.system.model.query.UserQuery;
 import top.continew.admin.system.model.req.user.*;

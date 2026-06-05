@@ -20,7 +20,7 @@ import cn.hutool.core.collection.CollUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RestController;
 import top.continew.admin.common.base.controller.BaseController;
-import top.continew.admin.hrcommon.model.enums.NoticeMethodEnum;
+import top.continew.admin.common.enums.NoticeMethodEnum;
 import top.continew.admin.hrcommon.model.query.NoticeQuery;
 import top.continew.admin.hrcommon.model.req.NoticeReq;
 import top.continew.admin.hrcommon.model.resp.notice.NoticeDetailResp;

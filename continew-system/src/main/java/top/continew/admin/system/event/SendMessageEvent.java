@@ -18,7 +18,7 @@ package top.continew.admin.system.event;
 
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
-import top.continew.admin.hrcommon.model.entity.user.UserDO;
+import top.continew.admin.common.model.entity.user.UserDO;
 
 import java.util.List;
 

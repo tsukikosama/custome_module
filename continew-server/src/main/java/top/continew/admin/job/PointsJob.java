@@ -25,7 +25,7 @@ import top.continew.admin.hrcommon.model.enums.PointsTypeEnum;
 import top.continew.admin.system.service.UserService;
 import top.continew.starter.extension.tenant.annotation.TenantIgnore;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import top.continew.admin.hrcommon.model.entity.user.UserDO;
+import top.continew.admin.common.model.entity.user.UserDO;
 import top.continew.admin.system.model.req.user.UserPointChangeReq;
 
 import java.util.List;

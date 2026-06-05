@@ -27,7 +27,7 @@ import lombok.Data;
 import top.continew.admin.common.constant.ContainerConstants;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.enums.GenderEnum;
-import top.continew.admin.hrcommon.api.DeptApi;
+import top.continew.admin.common.api.system.DeptApi;
 
 import java.io.Serial;
 import java.io.Serializable;

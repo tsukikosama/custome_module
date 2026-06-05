@@ -33,7 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 import top.continew.admin.common.base.controller.BaseController;
 import top.continew.admin.common.util.SecureUtils;
 import top.continew.admin.hrcommon.model.enums.PointsTypeEnum;
-import top.continew.admin.hrcommon.model.entity.user.UserDO;
+import top.continew.admin.common.model.entity.user.UserDO;
 import top.continew.admin.hrcommon.model.resp.user.UserDetailResp;
 import top.continew.admin.system.model.query.UserQuery;
 import top.continew.admin.system.model.req.user.UserImportReq;

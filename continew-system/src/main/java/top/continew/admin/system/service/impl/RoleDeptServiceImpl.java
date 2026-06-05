@@ -20,8 +20,8 @@ import cn.hutool.core.collection.CollUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.continew.admin.hrcommon.mapper.dept.RoleDeptMapper;
-import top.continew.admin.hrcommon.model.entity.dept.RoleDeptDO;
+import top.continew.admin.common.mapper.dept.RoleDeptMapper;
+import top.continew.admin.common.model.entity.dept.RoleDeptDO;
 import top.continew.admin.system.service.RoleDeptService;
 import top.continew.starter.core.util.CollUtils;
 

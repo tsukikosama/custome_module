@@ -24,8 +24,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.continew.admin.common.api.system.UserApi;
 import top.continew.admin.common.constant.CacheConstants;
-import top.continew.admin.hrcommon.mapper.user.UserMapper;
-import top.continew.admin.hrcommon.model.entity.user.UserDO;
+import top.continew.admin.common.mapper.user.UserMapper;
+import top.continew.admin.common.model.entity.user.UserDO;
 import top.continew.admin.system.model.req.user.UserPasswordResetReq;
 import top.continew.admin.system.service.UserService;
 

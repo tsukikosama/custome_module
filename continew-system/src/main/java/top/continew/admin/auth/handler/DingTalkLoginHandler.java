@@ -26,7 +26,7 @@ import top.continew.admin.auth.enums.AuthTypeEnum;
 import top.continew.admin.auth.model.req.DingTalkLoginReq;
 import top.continew.admin.auth.model.resp.LoginResp;
 import top.continew.admin.common.api.dingDingApi.DingTalkApiService;
-import top.continew.admin.hrcommon.model.entity.user.UserDO;
+import top.continew.admin.common.model.entity.user.UserDO;
 import top.continew.admin.system.model.resp.ClientResp;
 import top.continew.starter.core.util.validation.ValidationUtils;
 
