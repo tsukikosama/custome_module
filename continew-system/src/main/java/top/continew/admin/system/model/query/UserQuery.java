@@ -77,23 +77,8 @@ public class UserQuery implements Serializable {
     @Schema(description = "角色 ID", example = "1")
     private Long roleId;
 
-    /**
-     * 职位
-     */
-    @Schema(description = "职位", example = "软件工程师")
-    private String jobTitle;
 
-    /**
-     * 入职日期范围
-     */
-    @Schema(description = "入职日期范围", example = "2023-01-01 00:00:00,2023-12-31 23:59:59")
-    @Size(max = 2, message = "入职日期必须是一个范围")
-    private List<LocalDateTime> hiredDate;
 
-    /**
-     * 生日范围
-     */
-    @Schema(description = "生日范围", example = "1990-01-01,2000-12-31")
-    @Size(max = 2, message = "生日必须是一个范围")
-    private List<java.time.LocalDate> birthday;
+
+
 }

@@ -109,18 +109,5 @@ public class UserDO extends BaseDO {
      */
     private Long deptId;
 
-    /**
-     * 职位
-     */
-    private String jobTitle;
 
-    /**
-     * 入职日期
-     */
-    private LocalDateTime hiredDate;
-
-    /**
-     * 生日
-     */
-    private java.time.LocalDate birthday;
 }

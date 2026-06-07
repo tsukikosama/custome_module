@@ -159,30 +159,9 @@ public class UserDetailResp extends BaseDetailResp {
     @Schema(description = "最后一次修改密码时间", example = "2023-08-08 08:08:08", type = "string")
     private LocalDateTime pwdResetTime;
 
-    @Schema(description = "积分", example = "0")
-    private Integer points;
 
-    
-    /**
-     * 职位
-     */
-    @Schema(description = "职位", example = "软件工程师")
-    @ExcelProperty(value = "职位", order = 15)
-    private String jobTitle;
 
-    /**
-     * 入职日期
-     */
-    @Schema(description = "入职日期", example = "2023-01-01T00:00:00", type = "string")
-    @ExcelProperty(value = "入职日期", order = 16)
-    private LocalDateTime hiredDate;
 
-    /**
-     * 生日
-     */
-    @Schema(description = "生日", example = "1995-06-15", type = "string")
-    @ExcelProperty(value = "生日", order = 17)
-    private java.time.LocalDate birthday;
 
     
     @Override
