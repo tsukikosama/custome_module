@@ -1,186 +1,274 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+本文档为 Claude Code（claude.ai/code）在此仓库中工作时的指导说明。
 
-## Project Overview
+## 项目概述
 
-This is an Employee Internal Portal System (员工内部积分商城系统) built on the ContiNew Admin framework. The system allows employees to earn points through overtime and other activities, redeem products, and administrators to manage orders and procurement. It's a multi-module Maven project using Spring Boot 3, Java 17, and follows the ContiNew Admin conventions.
+本项目基于 [ContiNew Admin](https://github.com/continew-org/continew-admin) 框架构建。ContiNew Admin（Continue New Admin）是一个持续迭代优化的前后端分离中后台管理系统框架，开箱即用，旨在提供舒适的开发体验。
 
-## Build and Development Commands
+项目采用多模块 Maven 结构，基于 Spring Boot 3 + Java 17，集成了 MyBatis Plus、Sa-Token、JetCache 等主流技术栈，提供了 RBAC 权限体系、多租户支持、代码生成器等开箱即用的功能。
 
-### Building the Project
+## 构建与开发命令
+
+### 项目构建
 ```bash
-# Clean and compile (includes automatic code formatting via Spotless plugin)
+# 清理编译（含 Spotless 插件自动代码格式化）
 mvn clean compile
 
-# Package the application
+# 打包应用
 mvn clean package
 
-# Skip tests during build (configured by default)
+# 跳过测试构建（默认配置已跳过）
 mvn clean package -DskipTests
 
-# Run specific tests
+# 运行指定测试
 mvn test -Dtest=TestClassName
 
-# Run the application (from continew-server module)
+# 启动应用（在 continew-server 模块下）
 cd continew-server
 mvn spring-boot:run
 ```
 
-### Database Management
+### 数据库管理
 ```bash
-# The project uses Liquibase for database version management
-# SQL scripts are located in: continew-server/src/main/resources/db/changelog/
-# MySQL scripts: continew-server/src/main/resources/db/changelog/mysql/
-# PostgreSQL scripts: continew-server/src/main/resources/db/changelog/postgresql/
+# 使用 Liquibase 进行数据库版本管理
+# SQL 脚本位于：continew-server/src/main/resources/db/changelog/
+# MySQL 脚本：continew-server/src/main/resources/db/changelog/mysql/
+# PostgreSQL 脚本：continew-server/src/main/resources/db/changelog/postgresql/
 ```
 
-## Architecture and Module Structure
+## 架构与模块结构
 
-### Module Organization
-- **continew-server**: Main deployment module with startup class `ContiNewAdminApplication`, contains common controllers and configuration
-- **continew-system**: System management features (users, roles, departments, menus, etc.)
-- **continew-customer**: Client API module for employee-facing features (orders, products, activities)
-- **continew-hr-common**: HR common utilities and shared entities (Order entities, common mappers)
-- **continew-common**: Shared utilities, base classes, common configuration
-- **continew-plugin**: Extensible plugin modules (open API, tenant, schedule, code generator)
-- **continew-extension**: Extension modules (schedule server)
+### 模块组织
+| 模块 | 说明 |
+|------|------|
+| **continew-server** | 主部署模块，启动类 `ContiNewAdminApplication`，包含通用 Controller 和配置 |
+| **continew-system** | 系统管理模块（用户、角色、部门、菜单、字典等） |
+| **continew-customer** | Client API 模块，对外提供 HTTP API 供第三方客户端/门户调用 |
+| **continew-common** | 公共模块（工具类、公共配置、基础实体等） |
+| **continew-plugin** | 插件模块（开放 API、多租户、定时任务、代码生成器） |
+| **continew-extension** | 扩展模块（调度服务端） |
 
-### Key Architectural Patterns
-- **CRUD Base Classes**: Controllers extend `BaseController<Service, Resp, DetailResp, Query, Req>` for automatic CRUD generation
-- **Layer Separation**: Controller → Service → Mapper → Entity (DO) pattern
-- **Naming Conventions**: 
-  - DO suffix for database entities
-  - REQ suffix for request parameters  
-  - RESP suffix for response parameters
-- **MyBatis Plus**: Uses MyBatis Plus with XML mappers for complex multi-table queries
-- **Lombok**: Extensive use of Lombok with global configuration for `@EqualsAndHashCode(callSuper = true)` and `@ToString(callSuper = true)`
+### 核心架构模式
+- **CRUD 基类**：Controller 继承 `BaseController<S, T, DetailResp, Q, Req>` 实现自动 CRUD
+- **分层架构**：Controller → Service → Mapper → 实体(DO) 标准分层
+- **MyBatis Plus**：简单 CRUD 使用 MyBatis Plus，复杂多表查询使用 XML 映射文件
+- **Lombok**：全局配置 `@EqualsAndHashCode(callSuper = true)` 和 `@ToString(callSuper = true)`
 
-## Business Domain Structure
+## 文件存放规范
 
-### Core Business Entities
-- **Order Management** (`biz_order`): Employee product orders with status workflow (pending → processing → delivered → completed)
-- **Product Management** (`biz_product`): Redeemable products with points and monthly limits
-- **Points System** (`biz_points_log`): Points transaction history with types (overtime conversion, redemption, expiration, refund, etc.)
-- **Overtime Tracking** (`biz_overtime`): Employee overtime records with audit workflow
-- **Activity Management** (`biz_activity`, `biz_activity_member`): Company activities with member management
-- **Wish Management** (`biz_wish`): Employee product wishes that can be converted to products
-- **Suggestion Management** (`biz_suggestion`): Employee feedback system
-- **Carousel Images** (`biz_carousel_image`): Homepage banner management
+### Java 源文件目录结构
 
-### Important Business Rules
-- **Order Status Flow**: Pending (1) → Processing (2) → Delivered (5) → Completed (3), with Cancelled (4) as terminal state
-- **Points Transaction**: Positive amounts increase points, negative amounts decrease points
-- **Activity Approval**: Only approved activities (status=2) are visible to employees
-- **Wish to Product**: Admin can convert employee wishes to actual products
+每个业务模块（如 `continew-system`）内按功能包组织，包下按分层建子包：
 
-## Configuration and Environment
+```
+top.continew.admin.{module}.{feature}/
+├── api/              # 内部 API 实现（供其他模块 Feign 调用）
+├── config/           # 配置类
+├── constant/         # 常量类
+├── container/        # 容器类（缓存初始化等）
+├── controller/       # Controller 层
+├── enums/            # 枚举类
+├── handler/          # 策略/处理器类
+├── model/
+│   ├── entity/       # 数据库实体（DO）
+│   ├── query/        # 分页查询参数
+│   ├── req/          # 请求参数
+│   └── resp/         # 响应参数
+├── mapper/           # MyBatis Plus Mapper 接口
+└── service/
+    └── impl/         # Service 实现类
+```
 
-### Configuration Files
-- Main config: `continew-server/src/main/resources/config/application.yml`
-- Environment-specific: `application-dev.yml`, `application-prod.yml`
-- The system supports environment variables for database and Redis configuration
+**各模块文件放置规则：**
 
-### Key Technologies
-- **Authentication**: Sa-Token with JWT (jwt-simple mode)
-- **Database**: MyBatis Plus with CosId for distributed ID generation
-- **Cache**: JetCache with Redis support
-- **API Documentation**: NextDoc4j (Swagger UI alternative) at `/swagger-ui`
-- **File Storage**: X File Storage supporting multiple backends
-- **Scheduling**: Snail Job for distributed task scheduling
-- **Excel Processing**: Fast Excel for import/export functionality
+| 文件类型 | 所属模块 | 说明 |
+|---------|---------|------|
+| `*Controller.java` | 功能模块 或 `continew-server` | API 入口，功能模块内的 Controller 放在对应模块包下，通用的放在 server 模块 |
+| `*Service.java` / `*ServiceImpl.java` | 功能模块 | Service 接口与实现放在同一模块 |
+| `*Mapper.java` / `*Mapper.xml` | 功能模块 或 `continew-common` | Mapper 及 XML 优先放在对应功能模块下；被多个模块复用的放在 `continew-common` |
+| `*DO.java` / `*Req.java` / `*Resp.java` | 功能模块 | 与业务功能相关的模型类放在对应模块的 `model/` 下 |
+| 基类/公共模型 | `continew-common` | 所有模块共享的基类（如 `BaseController`、`BaseDO`）放在 common 模块 |
+| `*Configuration.java` | 功能模块 或 `continew-common` | 特定模块的配置放在自身模块内，全局配置放在 common 模块 |
+| `*ApiImpl.java` | 功能模块 | API 实现类放在调用方模块，API 接口定义在 `continew-common` 的 `api/` 包下 |
+| `application-*.yml` | `continew-server` | 应用配置文件统一放在 server 模块的 `config/` 目录下 |
+| 前端静态资源 | `continew-server` | 模板文件（`.html`等）放在 server 模块的 `resources/templates/` 下 |
 
-### DingTalk Integration
-The system integrates with DingTalk for messaging and user management. Configuration is in `application.yml` under `dingtalk` section with support for environment variables `DINGTALK_APP_ID` and `DINGTALK_APP_SECRET`.
+### 资源文件目录结构
 
-## Code Quality and Standards
+```
+src/main/resources/
+├── config/                # 应用配置（application.yml 等）
+├── db/
+│   └── changelog/         # Liquibase 数据库变更脚本
+│       ├── mysql/         # MySQL 脚本
+│       └── postgresql/    # PostgreSQL 脚本
+├── mapper/                # MyBatis Plus XML 映射文件
+└── templates/             # 模板文件（thymeleaf、导入导出模板等）
+```
 
-### Code Formatting
-- **Automatic Formatting**: The Spotless Maven plugin automatically formats code during compilation
-- **Style Guide**: Follows Alibaba Java Coding Guidelines (黄山版)
-- **Lombok Configuration**: Global settings in `lombok.config` with certain annotations disabled for safety
-- **Comment Coverage**: Project maintains >45% comment coverage
+## 文件命名规范
 
-### Before Committing Code
+### Java 文件命名
+
+| 文件类型 | 后缀/前缀 | 示例 | 说明 |
+|---------|----------|------|------|
+| 数据库实体 | `XxxDO` | `RoleDO.java` | 对应数据库表，使用 `@TableName` 映射 |
+| 请求参数 | `XxxReq` | `DictReq.java` | 接收前端请求参数，使用 Jakarta Validation 注解 |
+| 分页查询参数 | `XxxQuery` | `OnlineUserQuery.java` | 分页列表查询参数 |
+| 列表响应 | `XxxResp` | `DictResp.java` | 列表接口返回值 |
+| 详情响应 | `XxxDetailResp` | `DictDetailResp.java` | 详情接口返回值 |
+| Controller | `XxxController` | `DictController.java` | API 控制器，继承 `BaseController` |
+| Service 接口 | `XxxService` | `DictService.java` | 业务接口，继承 `BaseService` |
+| Service 实现 | `XxxServiceImpl` | `DictServiceImpl.java` | 业务实现，继承 `BaseServiceImpl` |
+| Mapper 接口 | `XxxMapper` | `DictMapper.java` | MyBatis Plus Mapper，继承 `BaseMapper` |
+| Mapper XML | `XxxMapper.xml` | `DictMapper.xml` | 复杂 SQL 映射文件，与 Mapper 接口同名 |
+| 配置类 | `XxxConfiguration` | `SaTokenConfiguration.java` | Spring 配置类，使用 `@Configuration` |
+| 常量类 | `XxxConstants` | `CacheConstants.java` | 常量定义 |
+| 枚举类 | `XxxEnum` | `DataScopeEnum.java` | 枚举定义 |
+| 处理器 | `XxxHandler` | `AccountLoginHandler.java` | 策略模式处理器 |
+| 工厂类 | `XxxFactory` | `LoginHandlerFactory.java` | 策略工厂 |
+| 事件类 | `XxxEvent` | `SendMessageEvent.java` | Spring 事件 |
+| API 接口 | `XxxApi` | `DeptApi.java` | Feign 调用接口，放在 `continew-common` 的 `api/` 下 |
+| API 实现 | `XxxApiImpl` | `DeptApiImpl.java` | Feign 接口实现 |
+
+### 配置文件命名
+
+| 文件 | 命名规则 | 示例 |
+|-----|---------|------|
+| 主配置 | `application.yml` | `application.yml` |
+| 开发环境 | `application-dev.yml` | `application-dev.yml` |
+| 生产环境 | `application-prod.yml` | `application-prod.yml` |
+| 测试环境 | `application-test.yml` | `application-test.yml` |
+| 代码生成 | `application-generator.yml` | `application-generator.yml` |
+| Liquibase 主文件 | `db.changelog-master.yaml` | `db.changelog-master.yaml` |
+
+### SQL/脚本文件命名
+
+| 文件类型 | 命名规则 | 示例 |
+|---------|---------|------|
+| 建表脚本 | `{业务}_table.sql` | `main_table.sql` |
+| 初始化数据 | `{业务}_data.sql` | `main_data.sql` |
+| 字典数据 | `{业务}_dict.sql` | `main_dict.sql` |
+| 菜单数据 | `{业务}_menu.sql` | `main_menu.sql` |
+
+### 命名总则
+- **Java 类名**：采用大驼峰（PascalCase），按后缀区分层次
+- **Java 包名**：全小写，按模块+功能组织
+- **配置文件**：全小写，短横线分隔（kebab-case）
+- **SQL 脚本**：全小写，下划线分隔（snake_case）
+- **数据库表/字段**：全小写，下划线分隔（snake_case）
+
+### 技术栈
+
+| 类别 | 选型 |
+|------|------|
+| 核心框架 | Spring Boot 3.x + JDK 17 |
+| 认证授权 | Sa-Token + JWT（jwt-simple 模式） |
+| ORM | MyBatis Plus + CosId 分布式 ID 生成 |
+| 缓存 | JetCache + Redis |
+| 接口文档 | NextDoc4j，访问 `/doc.html` |
+| 文件存储 | X File Storage，支持多种存储后端 |
+| 任务调度 | Snail Job 分布式调度 |
+| Excel 处理 | Fast Excel 导入导出 |
+| 数据库迁移 | Liquibase |
+| 消息通知 | 站内信通知 |
+
+## API 开发指南
+
+### Controller 开发
+- 继承 `BaseController` 获得自动 CRUD 能力
+- 使用 `@CrudRequestMapping` 注解自动生成 CRUD 端点
+- 管理端 API 使用 `/biz/*` 前缀，客户端 API 使用 `/api/*` 前缀
+- 提供完整的接口文档，包含参数示例说明
+
+### Service 层
+- 业务逻辑放在 ServiceImpl 中，Controller 不含业务逻辑
+- 数据库操作使用 `@Transactional` 事务注解
+- 遵循已有的 Service 接口和实现模式
+
+### 数据库操作
+- 简单 CRUD 使用 MyBatis Plus 基类方法
+- 复杂多表查询在 `src/main/resources/mapper/` 下创建 XML 映射文件实现
+- 多表查询禁止使用 MyBatis Plus 注解实现，必须使用 XML
+- 表名映射到 DO 类，遵循项目命名规范
+
+### 请求/响应规范
+- `Req` 类作为请求参数，使用 Jakarta Validation 校验注解
+- `Resp` 类作为响应参数（列表 Resp、详情 DetailResp）
+- 使用恰当的校验注解并文档化约束条件
+
+## 系统管理功能
+
+### RBAC 权限体系
+- **用户管理**：系统用户账号管理，支持多角色分配
+- **角色管理**：基于角色的权限控制，支持数据权限隔离
+- **部门管理**：树形组织结构管理
+- **菜单管理**：动态菜单配置，支持按钮级别权限
+
+### 其他内置功能
+- **字典管理**：系统字典数据维护
+- **通知公告**：系统通知和公告发布
+- **文件管理**：上传文件统一管理
+- **操作日志**：用户操作审计日志
+- **在线用户**：当前在线用户会话管理
+- **客户端管理**：OAuth2 客户端配置（continew-customer 模块）
+
+### 多租户支持
+- 插件模块提供多租户能力（continew-plugin）
+- 支持租户级别数据隔离
+
+### 代码生成器
+系统内置代码生成器（continew-plugin），可生成约 80-95% 的 CRUD 代码：
+- 管理后台访问（开发工具菜单 → 代码生成）
+- 一键生成 Controller、Service、Mapper、Entity 以及前后端代码
+- 包含接口文档和参数校验
+- 自动遵循项目规范和命名约定
+
+## 配置与环境
+
+### 配置文件
+- 主配置：`continew-server/src/main/resources/config/application.yml`
+- 环境配置：`application-dev.yml`（开发）、`application-prod.yml`（生产）
+- 支持通过环境变量配置数据库和 Redis 连接信息
+
+### 关键配置项
+- `DB_HOST`、`DB_PORT`、`DB_NAME`、`DB_USER`、`DB_PWD`：数据库连接
+- `REDIS_HOST`、`REDIS_PORT`、`REDIS_PWD`：Redis 连接
+
+## 代码质量与规范
+
+### 代码格式化
+- **自动格式化**：Maven 编译时通过 Spotless 插件自动格式化代码，无需手动调整
+- **风格指南**：遵循阿里巴巴 Java 开发手册（黄山版）
+- **Lombok 配置**：`lombok.config` 中全局配置，禁用了部分存在风险的注解
+- **注释覆盖率**：项目保持 >45% 的注释覆盖率
+
+### 提交前准备
 ```bash
-# Close all code windows first to avoid IDE format differences
+# 先关闭所有代码窗口，避免 IDE 格式差异
 mvn compile
-# Then commit without reopening files to preserve formatting
+# 再提交代码（不要重新打开文件以保持格式化）
 ```
 
-### Testing
-- Unit tests are skipped by default in Maven configuration
-- Test classes should be placed in corresponding `src/test/java` directories
-- Main test class: `continew-server/src/test/java/top/continew/admin/ContiNewAdminApplicationTests.java`
+### 测试
+- Maven 配置默认跳过单元测试
+- 测试类应放在对应模块的 `src/test/java` 目录下
+- 主测试类：`continew-server/src/test/java/top/continew/admin/ContiNewAdminApplicationTests.java`
 
-## API Development Guidelines
+## 重要注意事项
 
-### Controller Development
-- Extend `BaseController` for automatic CRUD capabilities
-- Use `@CrudRequestMapping` annotation for automatic CRUD endpoint generation
-- Client APIs use `/api/*` prefix, admin APIs use `/biz/*` prefix
-- Include comprehensive API documentation with parameter examples
+- **不修改已有接口的返回结构**——保持兼容性
+- **不修改与当前任务无关的功能**——最小化变更
+- **优先复用已有 Service**——先检查是否有相似功能再新建
+- **多表 SQL 必须在 XML 映射文件中实现**——禁止在 MyBatis Plus 注解中写复杂 SQL
+- **Controller 不包含业务逻辑**——委托给 Service 层处理
+- **始终使用 Lombok 注解**——遵循项目已有模式
+- **测试黄金路径和边界情况**——确保功能端到端可用
 
-### Service Layer
-- Business logic should be in ServiceImpl classes, not Controllers
-- Use `@Transactional` for database operations
-- Follow the existing service interfaces and implementation patterns
+## 官方资源
 
-### Database Operations
-- Use MyBatis Plus for simple CRUD operations
-- Create XML mappers in `src/main/resources/mapper/` for complex queries
-- Multi-table queries should be implemented in XML mapper files
-- Follow the entity naming: table names map to DO classes
-
-### Request/Response Patterns
-- REQ classes for request parameters with validation annotations
-- RESP classes for response data (list responses, detail responses)
-- Use proper validation annotations and document constraints
-
-## Employee Portal Specific Considerations
-
-### User Context
-- The system manages employee data with points, orders, and activities
-- Employee integration with DingTalk for messaging
-- Department-based organization structure
-
-### Points System Logic
-- Points are earned through overtime (type=1), activities (type=7), or corrections (type=6)
-- Points are spent on product redemption (type=2, negative amount)
-- Points can be refunded when orders are cancelled (type=4, positive amount)
-- All point transactions must create entries in `biz_points_log` table
-
-### Order Processing Workflow
-1. Employee places order → points deducted → status=PENDING
-2. Admin processes procurement → status=PROCESSING  
-3. Admin delivers product → status=DELIVERED
-4. Employee confirms receipt → status=COMPLETED
-5. System auto-completes after 7 days if no confirmation
-
-### Code Generation
-The system includes a code generator that can create 80-95% of CRUD code:
-- Access at admin interface (Development Tools section)
-- Generates Controller, Service, Mapper, Entity classes
-- Includes API documentation and parameter validation
-- Follows project conventions automatically
-
-## Important Notes
-
-- **Do not modify existing interface return structures** - maintain compatibility
-- **Do not modify features unrelated to the current task** - minimize changes
-- **Prioritize reusing existing Services** - check for similar functionality first
-- **Multi-table SQL should be implemented in XML** - don't use MyBatis Plus annotations
-- **Controllers should not contain business logic** - delegate to Service layer
-- **Always use Lombok annotations** - follow project patterns
-- **Test the golden path and edge cases** - verify functionality works end-to-end
-
-## Project Documentation
-
-Comprehensive Chinese documentation is available in `员工内部系统开发文档.md` covering:
-- Detailed API specifications for all modules
-- Complete database schema definitions
-- Business workflow diagrams
-- Request/response examples
-- Error handling specifications
-
-Refer to this document for specific business logic requirements when implementing new features.
+- 项目地址：https://github.com/continew-org/continew-admin
+- 文档中心：https://continew.top/docs/admin/
+- 常见问题：https://continew.top/docs/admin/faq.html
+- 更新日志：https://continew.top/docs/admin/changelog/
