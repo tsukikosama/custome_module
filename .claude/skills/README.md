@@ -15,6 +15,15 @@
 | **适用范围** | 所有 Java 代码生成、修改、审查 |
 | **覆盖内容** | 文件命名、包组织结构、类继承体系、代码风格、API 设计、数据库规范、Javadoc、分层职责等 10 个方面 |
 
+### 2. Docker 镜像构建
+
+| 项目 | 内容 |
+|------|------|
+| **文件名** | `docker-build.md` |
+| **触发方式** | `/docker-build`、"打包 Docker"、"构建镜像"、"docker 部署" |
+| **适用范围** | Docker 镜像构建、docker-compose 部署、CI/CD 流程 |
+| **覆盖内容** | 胖包/瘦包构建模式、Dockerfile 说明、docker-compose 服务配置、本地与 CI/CD 部署流程、多模块扩展指南 |
+
 ---
 
 ## 如何新增 Skill
