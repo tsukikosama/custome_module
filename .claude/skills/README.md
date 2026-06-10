@@ -29,9 +29,17 @@
 ## 如何新增 Skill
 
 ### 文件位置
-所有自定义 Skill 存放在 `.claude/skills/` 目录下，每个 Skill 一个独立的 `.md` 文件。
+所有自定义 Skill 存放在 `.claude/skills/` 目录下，每个 Skill 一个独立的子目录。
 
-### 文件格式
+### 文件结构
+```
+.claude/skills/
+├── <skill-name>/
+│   └── SKILL.md    # Skill 定义文件（必需）
+└── README.md
+```
+
+### SKILL.md 文件格式
 ```markdown
 ---
 name: skill-name
@@ -49,7 +57,7 @@ description: 简短描述，用于 Claude 识别
 - 文件内容可使用 Markdown 格式，Claude 会自动读取并遵循
 
 ### 自动发现
-Skill 文件放入 `.claude/skills/` 后，Claude Code 会自动发现并注册，无需额外配置。
+Skill 文件放入 `.claude/skills/<name>/SKILL.md` 后，Claude Code 会自动发现并注册，无需额外配置。
 
 ---
 

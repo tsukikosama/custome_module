@@ -19,7 +19,12 @@
       "Bash(where mvn *)",
       "Bash(powershell *)",
       "Bash(git commit *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Read(//c/Program Files/Maven/**)",
+      "Read(//c//**)",
+      "Bash(env)",
+      "Bash(d/java17/bin/java -version)",
+      "Bash(/d/java17/bin/java -version)"
     ]
   }
 }

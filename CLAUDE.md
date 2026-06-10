@@ -94,19 +94,6 @@ top.continew.admin.{module}.{feature}/
 | `application-*.yml` | `continew-server` | 应用配置文件统一放在 server 模块的 `config/` 目录下 |
 | 前端静态资源 | `continew-server` | 模板文件（`.html`等）放在 server 模块的 `resources/templates/` 下 |
 
-### 资源文件目录结构
-
-```
-src/main/resources/
-├── config/                # 应用配置（application.yml 等）
-├── db/
-│   └── changelog/         # Liquibase 数据库变更脚本
-│       ├── mysql/         # MySQL 脚本
-│       └── postgresql/    # PostgreSQL 脚本
-├── mapper/                # MyBatis Plus XML 映射文件
-└── templates/             # 模板文件（thymeleaf、导入导出模板等）
-```
-
 ## 文件命名规范
 
 ### Java 文件命名
@@ -126,22 +113,9 @@ src/main/resources/
 | 配置类 | `XxxConfiguration` | `SaTokenConfiguration.java` | Spring 配置类，使用 `@Configuration` |
 | 常量类 | `XxxConstants` | `CacheConstants.java` | 常量定义 |
 | 枚举类 | `XxxEnum` | `DataScopeEnum.java` | 枚举定义 |
-| 处理器 | `XxxHandler` | `AccountLoginHandler.java` | 策略模式处理器 |
-| 工厂类 | `XxxFactory` | `LoginHandlerFactory.java` | 策略工厂 |
-| 事件类 | `XxxEvent` | `SendMessageEvent.java` | Spring 事件 |
 | API 接口 | `XxxApi` | `DeptApi.java` | Feign 调用接口，放在 `continew-common` 的 `api/` 下 |
 | API 实现 | `XxxApiImpl` | `DeptApiImpl.java` | Feign 接口实现 |
 
-### 配置文件命名
-
-| 文件 | 命名规则 | 示例 |
-|-----|---------|------|
-| 主配置 | `application.yml` | `application.yml` |
-| 开发环境 | `application-dev.yml` | `application-dev.yml` |
-| 生产环境 | `application-prod.yml` | `application-prod.yml` |
-| 测试环境 | `application-test.yml` | `application-test.yml` |
-| 代码生成 | `application-generator.yml` | `application-generator.yml` |
-| Liquibase 主文件 | `db.changelog-master.yaml` | `db.changelog-master.yaml` |
 
 ### SQL/脚本文件命名
 
@@ -160,7 +134,6 @@ src/main/resources/
 - **数据库表/字段**：全小写，下划线分隔（snake_case）
 
 ### 技术栈
-
 | 类别 | 选型 |
 |------|------|
 | 核心框架 | Spring Boot 3.x + JDK 17 |
@@ -175,7 +148,6 @@ src/main/resources/
 | 消息通知 | 站内信通知 |
 
 ## API 开发指南
-
 ### Controller 开发
 - 继承 `BaseController` 获得自动 CRUD 能力
 - 使用 `@CrudRequestMapping` 注解自动生成 CRUD 端点
@@ -197,45 +169,8 @@ src/main/resources/
 - `Req` 类作为请求参数，使用 Jakarta Validation 校验注解
 - `Resp` 类作为响应参数（列表 Resp、详情 DetailResp）
 - 使用恰当的校验注解并文档化约束条件
-
-## 系统管理功能
-
-### RBAC 权限体系
-- **用户管理**：系统用户账号管理，支持多角色分配
-- **角色管理**：基于角色的权限控制，支持数据权限隔离
-- **部门管理**：树形组织结构管理
-- **菜单管理**：动态菜单配置，支持按钮级别权限
-
-### 其他内置功能
-- **字典管理**：系统字典数据维护
-- **通知公告**：系统通知和公告发布
-- **文件管理**：上传文件统一管理
-- **操作日志**：用户操作审计日志
-- **在线用户**：当前在线用户会话管理
-- **客户端管理**：OAuth2 客户端配置（continew-customer 模块）
-
-### 多租户支持
-- 插件模块提供多租户能力（continew-plugin）
-- 支持租户级别数据隔离
-
-### 代码生成器
-系统内置代码生成器（continew-plugin），可生成约 80-95% 的 CRUD 代码：
-- 管理后台访问（开发工具菜单 → 代码生成）
-- 一键生成 Controller、Service、Mapper、Entity 以及前后端代码
-- 包含接口文档和参数校验
-- 自动遵循项目规范和命名约定
-
-## 配置与环境
-
-### 配置文件
-- 主配置：`continew-server/src/main/resources/config/application.yml`
-- 环境配置：`application-dev.yml`（开发）、`application-prod.yml`（生产）
-- 支持通过环境变量配置数据库和 Redis 连接信息
-
-### 关键配置项
-- `DB_HOST`、`DB_PORT`、`DB_NAME`、`DB_USER`、`DB_PWD`：数据库连接
-- `REDIS_HOST`、`REDIS_PORT`、`REDIS_PWD`：Redis 连接
-
+- 如果要给前端返回错误提示 需要使用CheckUtils里面的方法
+- 分页的参数是page 和 size 
 ## 代码质量与规范
 
 ### 代码格式化
@@ -243,18 +178,6 @@ src/main/resources/
 - **风格指南**：遵循阿里巴巴 Java 开发手册（黄山版）
 - **Lombok 配置**：`lombok.config` 中全局配置，禁用了部分存在风险的注解
 - **注释覆盖率**：项目保持 >45% 的注释覆盖率
-
-### 提交前准备
-```bash
-# 先关闭所有代码窗口，避免 IDE 格式差异
-mvn compile
-# 再提交代码（不要重新打开文件以保持格式化）
-```
-
-### 测试
-- Maven 配置默认跳过单元测试
-- 测试类应放在对应模块的 `src/test/java` 目录下
-- 主测试类：`continew-server/src/test/java/top/continew/admin/ContiNewAdminApplicationTests.java`
 
 ## 重要注意事项
 
@@ -265,10 +188,6 @@ mvn compile
 - **Controller 不包含业务逻辑**——委托给 Service 层处理
 - **始终使用 Lombok 注解**——遵循项目已有模式
 - **测试黄金路径和边界情况**——确保功能端到端可用
+- **实现完功能之后不需要去**——编译测试
+- **实现功能需要把对应功能写入api接口.md功能文档中 文档的模板在api接口.md里面**--项目文档
 
-## 官方资源
-
-- 项目地址：https://github.com/continew-org/continew-admin
-- 文档中心：https://continew.top/docs/admin/
-- 常见问题：https://continew.top/docs/admin/faq.html
-- 更新日志：https://continew.top/docs/admin/changelog/
