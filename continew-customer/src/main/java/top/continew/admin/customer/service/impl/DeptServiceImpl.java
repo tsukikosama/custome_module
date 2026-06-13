@@ -148,7 +148,6 @@ public class DeptServiceImpl implements DeptService {
         memberResp.setAvatar(user.getAvatar());
         memberResp.setPhone(user.getPhone());
         memberResp.setDescription(user.getDescription());
-        memberResp.setJobTitle(user.getJobTitle());
         return memberResp;
     }
 }

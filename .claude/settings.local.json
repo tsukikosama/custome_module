@@ -24,7 +24,8 @@
       "Read(//c//**)",
       "Bash(env)",
       "Bash(d/java17/bin/java -version)",
-      "Bash(/d/java17/bin/java -version)"
+      "Bash(/d/java17/bin/java -version)",
+      "Bash(./mvnw *)"
     ]
   }
 }
