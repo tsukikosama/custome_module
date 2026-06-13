@@ -77,8 +77,8 @@ public class UserRoleServiceImpl implements UserRoleService {
                 .or()
                 .like("t2.description", description));
         QueryWrapperHelper.sort(queryWrapper, pageQuery.getSort());
-        IPage<RoleUserResp> page = baseMapper
-            .selectUserPage(new Page<>(pageQuery.getPage(), pageQuery.getSize()), queryWrapper);
+        IPage<RoleUserResp> page = baseMapper.selectUserPage(new Page<>(pageQuery.getPage(), pageQuery
+            .getSize()), queryWrapper);
         return PageResp.build(page);
     }
 

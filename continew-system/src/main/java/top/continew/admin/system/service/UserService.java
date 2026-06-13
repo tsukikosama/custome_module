@@ -17,7 +17,6 @@
 package top.continew.admin.system.service;
 
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
 import top.continew.admin.common.base.service.BaseService;
 import top.continew.admin.common.model.entity.user.UserDO;
@@ -156,7 +155,6 @@ public interface UserService extends BaseService<UserResp, UserDetailResp, UserQ
      * @return 用户数量
      */
     Long countByDeptIds(List<Long> deptIds);
-
 
     List<UserDO> getUserList();
 

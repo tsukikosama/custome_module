@@ -26,7 +26,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author weilai
  * @since 2026/05/07
  */
-@SpringBootApplication(scanBasePackages = {"top.continew.admin.customer", "top.continew.admin.common", "top.continew.starter"})
+@SpringBootApplication(scanBasePackages = {"top.continew.admin.customer", "top.continew.admin.common",
+    "top.continew.starter"})
 @EnableFileStorage
 public class CustomerApplication {
 

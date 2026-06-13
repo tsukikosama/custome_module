@@ -77,8 +77,4 @@ public class UserQuery implements Serializable {
     @Schema(description = "角色 ID", example = "1")
     private Long roleId;
 
-
-
-
-
 }

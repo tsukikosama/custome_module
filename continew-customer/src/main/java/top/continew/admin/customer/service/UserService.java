@@ -59,5 +59,4 @@ public interface UserService {
      */
     List<UserRecord> getAllActiveUsers();
 
-
 }

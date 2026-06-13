@@ -3,8 +3,7 @@
 # 若对镜像大小有严格要求，可将当前镜像替换为 alpine 版本
 FROM bellsoft/liberica-openjdk-debian:17.0.14
 
-ARG JAR_FILE=./bin/*.jar
-COPY ${JAR_FILE} /app/bin/app.jar
+COPY continew-server/target/*.jar /app/bin/app.jar
 WORKDIR /app/bin
 
 ENTRYPOINT ["java", \

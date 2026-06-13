@@ -16,23 +16,16 @@
 
 package top.continew.admin.customer.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
-import com.alicp.jetcache.anno.CacheType;
-import com.alicp.jetcache.anno.Cached;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.customer.model.req.PasswordUpdateReq;
 import top.continew.admin.customer.model.resp.UserInfoResp;
 import top.continew.admin.customer.model.resp.UserRecord;
 import top.continew.admin.customer.model.resp.UserStatResp;
 import top.continew.admin.customer.service.UserService;
 import top.continew.admin.common.mapper.user.UserMapper;
-
-
 
 import java.util.List;
 

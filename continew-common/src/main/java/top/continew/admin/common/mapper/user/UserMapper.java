@@ -87,7 +87,5 @@ public interface UserMapper extends DataPermissionMapper<UserDO> {
     @Select("SELECT * FROM sys_user WHERE email = #{email} AND deleted = 0")
     UserDO selectByEmail(@FieldEncrypt @Param("email") String email);
 
-
-
-    String selectNicknameById(@Param("userId")Long id);
+    String selectNicknameById(@Param("userId") Long id);
 }

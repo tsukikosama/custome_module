@@ -16,7 +16,6 @@
 
 package top.continew.admin.customer.controller;
 
-import cn.dev33.satoken.annotation.SaIgnore;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -71,4 +70,4 @@ public class ApiUserController {
         return userService.getAllActiveUsers();
     }
 
- }
+}

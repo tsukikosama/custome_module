@@ -159,11 +159,6 @@ public class UserDetailResp extends BaseDetailResp {
     @Schema(description = "最后一次修改密码时间", example = "2023-08-08 08:08:08", type = "string")
     private LocalDateTime pwdResetTime;
 
-
-
-
-
-    
     @Override
     public Boolean getDisabled() {
         return this.getIsSystem() || Objects.equals(this.getId(), UserContextHolder.getUserId());

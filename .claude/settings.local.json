@@ -25,7 +25,13 @@
       "Bash(env)",
       "Bash(d/java17/bin/java -version)",
       "Bash(/d/java17/bin/java -version)",
-      "Bash(./mvnw *)"
+      "Bash(./mvnw *)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" --connect-timeout 5 http://localhost:18000/)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" --connect-timeout 5 http://localhost:18000/doc.html)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" --connect-timeout 5 http://localhost:18002/)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" --connect-timeout 5 http://localhost:18002/doc.html)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" --connect-timeout 5 http://localhost:18001/snail-job)",
+      "Bash(docker exec *)"
     ]
   }
 }

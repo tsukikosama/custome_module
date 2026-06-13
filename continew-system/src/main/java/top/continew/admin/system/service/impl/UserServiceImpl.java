@@ -19,7 +19,6 @@ package top.continew.admin.system.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.UUID;
@@ -449,8 +448,6 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
         baseMapper.lambdaUpdate().set(UserDO::getEmail, newEmail).eq(UserDO::getId, id).update();
     }
 
-    
-    
     @Override
     public UserDO getByUsername(String username) {
         return baseMapper.selectByUsername(username);
@@ -478,7 +475,6 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, UserDO, UserRes
     public List<UserDO> getUserList() {
         return baseMapper.selectList(null);
     }
-
 
     @Override
     protected <E> List<E> list(UserQuery query, SortQuery sortQuery, Class<E> targetClass) {

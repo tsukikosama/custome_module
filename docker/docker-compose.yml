@@ -5,15 +5,15 @@ services:
     container_name: mysql
     restart: always
     ports:
-      - '3306:3306'
+      - '3307:3306'
     volumes:
       - /docker/mysql/conf/:/etc/mysql/conf.d/
       - /docker/mysql/data/:/var/lib/mysql/
     environment:
       TZ: Asia/Shanghai
-      MYSQL_ROOT_PASSWORD: 你的root用户密码
+      MYSQL_ROOT_PASSWORD: 2270398619
       # 初始化数据库（后续的初始化 SQL 会在这个库执行）
-      MYSQL_DATABASE: continew_admin
+      MYSQL_DATABASE: hr2
       #MYSQL_USER: 你的数据库用户名
       #MYSQL_PASSWORD: 你的数据库密码
     command:
@@ -41,15 +41,12 @@ services:
     restart: always
     ports:
       - '6379:6379'
-    volumes:
-      - /docker/redis/conf/redis.conf:/usr/local/redis/config/redis.conf
-      - /docker/redis/data/:/data/
-      - /docker/redis/logs/:/logs/
     environment:
       TZ: Asia/Shanghai
-    command: 'redis-server /usr/local/redis/config/redis.conf --appendonly yes'
   continew-server:
-    build: ./continew-admin
+    build:
+      context: ..
+      dockerfile: docker/continew-admin/Dockerfile
     image: continew-server:4.2.0-SNAPSHOT
     container_name: continew-server
     restart: always
@@ -63,38 +60,70 @@ services:
       - /docker/continew-admin/lib/:/app/lib/
     environment:
       TZ: Asia/Shanghai
-      DB_HOST: 172.17.0.1
+      DB_HOST: mysql
       DB_PORT: 3306
-      DB_USER: 你的数据库用户名
-      DB_PWD: 你的数据库密码
-      DB_NAME: continew_admin
-      REDIS_HOST: 172.17.0.1
+      DB_USER: root
+      DB_PWD: 2270398619
+      DB_NAME: hr2
+      REDIS_HOST: redis
       REDIS_PORT: 6379
-      REDIS_PWD: 你的 Redis 密码
-      REDIS_DB: 0
+      REDIS_PWD: ""
+      REDIS_DB: 2
       SCHEDULE_HOST: 172.17.0.1
       SCHEDULE_PORT: 1788
-      SCHEDULE_TOKEN: 任务调度服务端 Token
+      SCHEDULE_TOKEN: SJ_Wyz3dmsdbDOkDujOTSSoBjGQP1BMsVnj
     depends_on:
       - redis
       - mysql
-  continew-web:
-    image: nginx:1.27.0
-    container_name: continew-web
+  continew-customer:
+    build:
+      context: ..
+      dockerfile: docker/continew-customer/Dockerfile
+    image: continew-customer:4.2.0-SNAPSHOT
+    container_name: continew-customer
     restart: always
     ports:
-      - '80:80'
-      - '443:443'
+      - '18002:18002'
     volumes:
-      - /docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
-      - /docker/nginx/cert/:/etc/nginx/cert/
-      - /docker/nginx/logs/:/var/log/nginx/
-      # 前端页面目录
-      - /docker/continew-admin/web/:/usr/share/nginx/html/
+      - /docker/continew-customer/config/:/app/config/
+      - /docker/continew-customer/data/file/:/app/data/file/
+      - /docker/continew-customer/logs/:/app/logs/
     environment:
       TZ: Asia/Shanghai
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PWD: 2270398619
+      DB_NAME: hr2
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PWD: ""
+      REDIS_DB: 2
+      SCHEDULE_HOST: 172.17.0.1
+      SCHEDULE_PORT: 1788
+      SCHEDULE_TOKEN: SJ_Wyz3dmsdbDOkDujOTSSoBjGQP1BMsVnj
+    depends_on:
+      - redis
+      - mysql
+#  continew-web:
+#    image: nginx:1.27.0
+#    container_name: continew-web
+#    restart: always
+#    ports:
+#      - '80:80'
+#      - '443:443'
+#    volumes:
+#      - /docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+#      - /docker/nginx/cert/:/etc/nginx/cert/
+#      - /docker/nginx/logs/:/var/log/nginx/
+#      # 前端页面目录
+#      - /docker/continew-admin/web/:/usr/share/nginx/html/
+#    environment:
+#      TZ: Asia/Shanghai
   schedule-server:
-    build: ./schedule-server
+    build:
+      context: ..
+      dockerfile: docker/schedule-server/Dockerfile
     image: schedule-server:1.8.0
     container_name: schedule-server
     restart: always
@@ -105,10 +134,10 @@ services:
       - /docker/schedule-server/logs/:/app/logs/
     environment:
       TZ: Asia/Shanghai
-      DB_HOST: 172.17.0.1
+      DB_HOST: mysql
       DB_PORT: 3306
-      DB_USER: 你的数据库用户名
-      DB_PWD: 你的数据库密码
+      DB_USER: root
+      DB_PWD: 2270398619
       DB_NAME: continew_admin_job
     depends_on:
       - mysql

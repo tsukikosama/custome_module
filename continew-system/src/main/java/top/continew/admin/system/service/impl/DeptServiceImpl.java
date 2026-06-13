@@ -18,15 +18,12 @@ package top.continew.admin.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.common.base.service.BaseServiceImpl;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.api.system.DeptApi;
@@ -60,7 +57,7 @@ public class DeptServiceImpl extends BaseServiceImpl<DeptMapper, DeptDO, DeptRes
     private final RoleDeptService roleDeptService;
     private final DataSource dataSource;
 
-        @Lazy
+    @Lazy
     @Resource
     private UserService userService;
 
@@ -140,7 +137,6 @@ public class DeptServiceImpl extends BaseServiceImpl<DeptMapper, DeptDO, DeptRes
         return (int)this.count(Wrappers.<DeptDO>lambdaQuery().in(DeptDO::getName, deptNames));
     }
 
-    
     /**
      * 检查名称是否重复
      *

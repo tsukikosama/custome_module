@@ -91,5 +91,4 @@ public class UserApiImpl implements UserApi {
         return BeanUtil.copyProperties(userDO, UserInfo.class);
     }
 
-
 }

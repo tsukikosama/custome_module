@@ -75,9 +75,7 @@ public class DeptServiceImpl implements DeptService {
             directResp.setId(dept.getId());
             directResp.setName(dept.getName());
             directResp.setDescription(dept.getDescription());
-            directResp.setMembers(directMembers.stream()
-                .map(this::convertToMemberResp)
-                .collect(Collectors.toList()));
+            directResp.setMembers(directMembers.stream().map(this::convertToMemberResp).collect(Collectors.toList()));
             result.add(directResp);
         }
 

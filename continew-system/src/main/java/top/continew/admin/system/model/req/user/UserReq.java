@@ -28,8 +28,6 @@ import top.continew.starter.extension.crud.validation.CrudValidationGroup;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -116,7 +114,5 @@ public class UserReq implements Serializable {
      */
     @Schema(description = "状态", example = "1")
     private DisEnableStatusEnum status;
-
-
 
 }

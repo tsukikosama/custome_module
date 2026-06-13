@@ -58,5 +58,4 @@ public interface DeptService extends BaseService<DeptResp, DeptResp, DeptQuery, 
      */
     int countByNames(Set<String> deptNames);
 
-    
 }
