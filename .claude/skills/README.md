@@ -24,6 +24,23 @@
 | **适用范围** | Docker 镜像构建、docker-compose 部署、CI/CD 流程 |
 | **覆盖内容** | 胖包/瘦包构建模式、Dockerfile 说明、docker-compose 服务配置、本地与 CI/CD 部署流程、多模块扩展指南 |
 
+### 3. 代码审查
+
+| 项目 | 内容 |
+|------|------|
+| **文件名** | `code-review.md` |
+| **触发方式** | `/code-review`、"检查代码"、"代码审查"、"审查提交" |
+| **适用范围** | 提交代码前的自动检查 |
+| **覆盖内容** | License Header、文件命名规范、代码规范（序列化/包路径/注解/API兼容性）、危险操作检查、格式化检查 |
+
+**自动触发：** 该 skill 同时配置了 git pre-commit hook（`.git/hooks/pre-commit`），在每次 `git commit` 时自动执行以下检查：
+1. License Header 完整性检查
+2. 危险代码模式检查（`System.out.println`、`e.printStackTrace()`、`@Autowired` 等）
+3. 新增文件命名规范检查
+4. Spotless 格式检查（需安装 Maven）
+
+检查不通过时会阻止提交，并给出修复提示。也可通过 `git commit --no-verify` 临时跳过。
+
 ---
 
 ## 如何新增 Skill
