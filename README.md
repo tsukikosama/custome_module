@@ -206,6 +206,9 @@ docker-compose up -d
 - `Req` 类作为请求参数，使用 Jakarta Validation 校验注解
 - `Resp` 类作为响应参数（列表 Resp、详情 DetailResp）
 
+### git提交
+- 本项目有实现git 提交的代码检查最好让claude code 帮你实现git 提交
+
 ## 官方资源
 
 - ContiNew Admin 项目地址：https://github.com/continew-org/continew-admin
