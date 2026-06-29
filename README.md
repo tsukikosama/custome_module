@@ -213,3 +213,6 @@ docker-compose up -d
 
 - ContiNew Admin 项目地址：https://github.com/continew-org/continew-admin
 - 文档中心：https://continew.top/docs/admin/
+
+## 模板规范
+- 如果用户没有描述具体实现 你要参考其他的模块进行系统的实现 保证代码的统一性
